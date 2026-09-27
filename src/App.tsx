@@ -1,0 +1,123 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { BrowserRouter, MemoryRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import type { AppConfig, AthleteSummary } from '@shared/types'
+import { api, STATIC_DEMO } from './api'
+import { RosterPage } from './pages/Roster'
+import { AthletePage } from './pages/Athlete'
+import { PortalPage } from './pages/Portal'
+import { ConnectPage } from './pages/Connect'
+import { formState } from './lib/theme'
+
+interface Ctx {
+  config: AppConfig | null
+  athletes: AthleteSummary[] | null
+  reloadAthletes: () => void
+}
+const AppCtx = createContext<Ctx>({ config: null, athletes: null, reloadAthletes: () => {} })
+export const useApp = () => useContext(AppCtx)
+
+export default function App() {
+  const [config, setConfig] = useState<AppConfig | null>(null)
+  const [athletes, setAthletes] = useState<AthleteSummary[] | null>(null)
+  const reloadAthletes = () => api.athletes().then(setAthletes).catch(() => setAthletes([]))
+  useEffect(() => {
+    api.config().then(setConfig).catch(() => setConfig(null))
+    reloadAthletes()
+  }, [])
+
+  const Router = STATIC_DEMO ? MemoryRouter : BrowserRouter
+  return (
+    <AppCtx.Provider value={{ config, athletes, reloadAthletes }}>
+      <Router>
+        <Routes>
+          <Route path="/portaal/:id" element={<PortalPage />} />
+          <Route
+            path="*"
+            element={
+              <Shell>
+                <Routes>
+                  <Route path="/" element={<RosterPage />} />
+                  <Route path="/atleet/:id" element={<AthletePage />} />
+                  <Route path="/koppelen" element={<ConnectPage />} />
+                </Routes>
+              </Shell>
+            }
+          />
+        </Routes>
+      </Router>
+    </AppCtx.Provider>
+  )
+}
+
+function Shell({ children }: { children: ReactNode }) {
+  const { athletes, config } = useApp()
+  const loc = useLocation()
+  const [open, setOpen] = useState(false)
+  useEffect(() => setOpen(false), [loc.pathname])
+
+  return (
+    <div className="min-h-screen md:grid md:grid-cols-[248px_1fr]">
+      <aside className="border-b md:border-b-0 md:border-r border-line bg-surface md:sticky md:top-0 md:h-screen flex flex-col">
+        <div className="flex items-center justify-between px-4 h-14 md:h-16">
+          <NavLink to="/" className="flex items-center gap-2.5 no-underline text-ink">
+            <Mark />
+            <span className="font-semibold tracking-tight text-[15px]">Koersplan</span>
+            <span className="chip !h-5 !text-[10.5px]">coach</span>
+          </NavLink>
+          <button className="btn btn-sm btn-ghost md:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+            Atleten
+          </button>
+        </div>
+        <nav className={`${open ? 'block' : 'hidden'} md:flex flex-col flex-1 min-h-0 px-2 pb-3`}>
+          <NavLink to="/" end className={navCls}>
+            Overzicht
+          </NavLink>
+          <div className="eyebrow px-3 mt-4 mb-1.5">Atleten</div>
+          <div className="flex-1 overflow-auto">
+            {athletes === null && <div className="px-3 text-muted text-xs">Laden…</div>}
+            {athletes?.map((a) => {
+              const st = formState(a.tsb)
+              return (
+                <NavLink key={a.id} to={`/atleet/${a.id}`} className={navCls}>
+                  <span className="truncate">{a.name}</span>
+                  <span className="ml-auto flex items-center gap-1.5">
+                    {a.flags.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-warn" title={a.flags.join(', ')} />}
+                    <span className={`num text-[11.5px] ${st.tone === 'crit' ? 'text-crit' : 'text-muted'}`}>{a.tsb > 0 ? '+' : ''}{Math.round(a.tsb)}</span>
+                  </span>
+                </NavLink>
+              )
+            })}
+          </div>
+          <NavLink to="/koppelen" className={navCls}>
+            + Atleet koppelen
+          </NavLink>
+          <div className="px-3 pt-3 mt-2 border-t border-line text-[11px] text-muted leading-relaxed">
+            {config?.mode === 'static-demo' ? (
+              <>Demo met voorbeelddata. Publiceren wordt gesimuleerd.</>
+            ) : (
+              <>
+                intervals.icu: {config?.oauthEnabled ? 'OAuth' : config?.apiKeyEnabled ? 'API-key' : 'niet gekoppeld'}
+                <br />
+                AI: {config?.aiEnabled ? config.aiModel : 'regelgebaseerd'}
+              </>
+            )}
+          </div>
+        </nav>
+      </aside>
+      <main className="min-w-0 px-4 md:px-8 py-6 md:py-8 max-w-[1400px]">{children}</main>
+    </div>
+  )
+}
+
+const navCls = ({ isActive }: { isActive: boolean }) =>
+  `flex items-center gap-2 h-9 px-3 rounded-lg text-[13px] no-underline ${isActive ? 'bg-raised text-ink font-medium' : 'text-ink-2 hover:bg-raised'}`
+
+function Mark() {
+  // Beeldmerk: een oplopende vermogenslijn in een vierkant
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden>
+      <rect x="0.5" y="0.5" width="21" height="21" rx="5" fill="var(--primary-bg)" />
+      <path d="M4 15 L8 11 L11 13 L17.5 6" stroke="var(--primary-fg)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}

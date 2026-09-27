@@ -1,0 +1,349 @@
+@import 'tailwindcss';
+
+/* ── Tokens ─────────────────────────────────────────────────────────────
+   Licht op :root, donker via prefers-color-scheme én data-theme="dark".
+   Grafiekkleuren gevalideerd met de dataviz-validator (CVD-veilig). */
+:root {
+  color-scheme: light;
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --raised: #eef1f5;
+  --line: #dde2e9;
+  --line-strong: #c8d0da;
+  --text: #0f141a;
+  --text-2: #4b5664;
+  --muted: #7a8594;
+  --accent: #2f5fd0;
+  --accent-soft: #e4ebfb;
+  --primary-bg: #0f141a;
+  --primary-fg: #ffffff;
+
+  --ctl: #2a78d6;
+  --atl: #eb6834;
+  --wbal: #1baf7a;
+  --plan: #7c8795;
+  --tsb-pos: #2a78d6;
+  --tsb-neg: #e34948;
+
+  --good: #1f8a4c;
+  --warn: #b7791f;
+  --crit: #c83a3a;
+  --good-soft: #e3f4ea;
+  --warn-soft: #fbf0dc;
+  --crit-soft: #fbe5e5;
+
+  --z1: #b7d3f6;
+  --z2: #86b6ef;
+  --z3: #5598e7;
+  --z4: #2a78d6;
+  --z5: #1c5cab;
+  --z6: #104281;
+  --z7: #0d366b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0b0e12;
+    --surface: #12161c;
+    --raised: #181d25;
+    --line: #232a34;
+    --line-strong: #323b47;
+    --text: #e8ecf1;
+    --text-2: #a3aebb;
+    --muted: #6f7b89;
+    --accent: #7aa2ff;
+    --accent-soft: #1a2540;
+    --primary-bg: #e8ecf1;
+    --primary-fg: #0b0e12;
+    --ctl: #3987e5;
+    --atl: #d95926;
+    --wbal: #199e70;
+    --plan: #8a95a3;
+    --tsb-pos: #3987e5;
+    --tsb-neg: #e66767;
+    --good: #4cc27f;
+    --warn: #e0a93f;
+    --crit: #ef6b6b;
+    --good-soft: #13281c;
+    --warn-soft: #2b2212;
+    --crit-soft: #2e1616;
+    --z1: #184f95;
+    --z2: #1c5cab;
+    --z3: #256abf;
+    --z4: #3987e5;
+    --z5: #6da7ec;
+    --z6: #9ec5f4;
+    --z7: #cde2fb;
+  }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0e12;
+  --surface: #12161c;
+  --raised: #181d25;
+  --line: #232a34;
+  --line-strong: #323b47;
+  --text: #e8ecf1;
+  --text-2: #a3aebb;
+  --muted: #6f7b89;
+  --accent: #7aa2ff;
+  --accent-soft: #1a2540;
+  --primary-bg: #e8ecf1;
+  --primary-fg: #0b0e12;
+  --ctl: #3987e5;
+  --atl: #d95926;
+  --wbal: #199e70;
+  --plan: #8a95a3;
+  --tsb-pos: #3987e5;
+  --tsb-neg: #e66767;
+  --good: #4cc27f;
+  --warn: #e0a93f;
+  --crit: #ef6b6b;
+  --good-soft: #13281c;
+  --warn-soft: #2b2212;
+  --crit-soft: #2e1616;
+  --z1: #184f95;
+  --z2: #1c5cab;
+  --z3: #256abf;
+  --z4: #3987e5;
+  --z5: #6da7ec;
+  --z6: #9ec5f4;
+  --z7: #cde2fb;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-primary: var(--primary-bg);
+  --color-on-primary: var(--primary-fg);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-crit: var(--crit);
+  --color-good-soft: var(--good-soft);
+  --color-warn-soft: var(--warn-soft);
+  --color-crit-soft: var(--crit-soft);
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  margin: 0;
+  font-size: 14px;
+}
+
+@layer base {
+  /* grid-items mogen smaller worden dan hun inhoud (tabellen scrollen dan zelf) */
+  .grid > *,
+  .flex > * {
+    min-width: 0;
+  }
+}
+
+@layer components {
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+.btn:hover {
+  background: var(--raised);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--primary-bg);
+  color: var(--primary-fg);
+  border-color: var(--primary-bg);
+}
+.btn-primary:hover {
+  background: var(--primary-bg);
+  opacity: 0.88;
+}
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.btn-sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.field {
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+textarea.field {
+  height: auto;
+  padding: 8px 10px;
+  line-height: 1.45;
+}
+.field:focus,
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.field-sm {
+  height: 28px;
+  padding: 0 6px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  background: var(--raised);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.chip-good {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.chip-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.chip-crit {
+  background: var(--crit-soft);
+  color: var(--crit);
+}
+.chip-accent {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.tab {
+  height: 36px;
+  padding: 0 2px;
+  margin-right: 20px;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+}
+.tab[aria-selected='true'] {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.data th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.data td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+table.data tr:last-child td {
+  border-bottom: 0;
+}
+table.data tbody tr:hover td {
+  background: var(--raised);
+}
+
+}
+
+/* Recharts tooltip */
+.tt {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+  min-width: 150px;
+}
+.recharts-cartesian-axis-tick-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
