@@ -1,0 +1,107 @@
+/* Koersplan — componentstijlen. Overgenomen uit src/styles.css van luukloohuis/koersplan
+   en omgezet naar de tokens van dit systeem (tokens.css). Handgeschreven, geen bundle.js. */
+
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { text-wrap: balance; font-family: var(--font-display); margin: 0; }
+
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+
+/* Paneel / kaart */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card); }
+.panel-header { display: flex; align-items: center; gap: var(--space-3); padding: 14px var(--space-4) 4px; }
+.panel-header h3 { font-family: var(--font-sans); font-size: 13px; font-weight: 600; }
+.panel-header .action { margin-left: auto; }
+.panel-body { padding: var(--space-4); padding-top: 8px; }
+
+/* Hoogtelijnen (contourtextuur): alleen op hero, lege states, coachkaarten. Nooit onder data. */
+.contour { position: relative; isolation: isolate; overflow: hidden; }
+.contour::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'><g fill='none' stroke='%231e3a41' stroke-width='1'><path d='M-20 150 C 40 110, 80 170, 140 130 S 240 90, 340 120'/><path d='M-20 120 C 40 80, 90 140, 150 100 S 250 60, 340 90'/><path d='M-20 90 C 50 50, 100 110, 160 70 S 260 30, 340 60'/><path d='M-20 180 C 40 140, 80 200, 140 160 S 240 120, 340 150'/><path d='M-20 60 C 50 20, 110 80, 170 40 S 270 0, 340 30'/><path d='M-20 30 C 60 -10, 120 50, 180 10 S 280 -30, 340 0'/></g></svg>");
+  background-size: 320px 200px;
+}
+[data-theme="light"] .contour::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'><g fill='none' stroke='%23dce2dd' stroke-width='1'><path d='M-20 150 C 40 110, 80 170, 140 130 S 240 90, 340 120'/><path d='M-20 120 C 40 80, 90 140, 150 100 S 250 60, 340 90'/><path d='M-20 90 C 50 50, 100 110, 160 70 S 260 30, 340 60'/><path d='M-20 180 C 40 140, 80 200, 140 160 S 240 120, 340 150'/><path d='M-20 60 C 50 20, 110 80, 170 40 S 270 0, 340 30'/><path d='M-20 30 C 60 -10, 120 50, 180 10 S 280 -30, 340 0'/></g></svg>");
+}
+
+/* Knoppen (code: .btn, .btn-primary, .btn-ghost, .btn-sm) */
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: var(--radius-control); font: inherit; font-weight: 500; font-size: 13px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; white-space: nowrap; transition: background 0.12s, border-color 0.12s, opacity 0.12s; }
+.btn:hover { background: var(--surface-raised); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent); opacity: 0.88; }
+.btn-coach { background: var(--coach); color: var(--on-coach); border-color: var(--coach); }
+.btn-coach:hover { opacity: 0.88; }
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-sm { height: 28px; padding: 0 10px; font-size: 12px; }
+.btn-lg { height: 44px; padding: 0 20px; font-size: 14px; }
+.btn svg { width: 16px; height: 16px; stroke-width: 1.5; }
+
+/* Velden (code: .field, .field-sm) */
+.field { width: 100%; box-sizing: border-box; height: 34px; padding: 0 10px; border-radius: var(--radius-control); border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+.field::placeholder { color: var(--text-muted); }
+textarea.field { height: auto; padding: 8px 10px; line-height: 1.45; resize: vertical; }
+.field-sm { height: 28px; padding: 0 6px; font-size: 12px; border-radius: var(--radius-sm); }
+.field:focus, .btn:focus-visible, button:focus-visible, a:focus-visible, [role="tab"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.field[aria-invalid="true"] { border-color: var(--delta-neg); }
+.label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+.hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+.hint-error { color: var(--delta-neg); }
+
+/* Chips (code: .chip + tonen; brief: statussen met icoon + kleur, nooit alleen kleur) */
+.chip { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: var(--radius-pill); font-size: 11.5px; font-weight: 500; background: var(--surface-raised); color: var(--text); white-space: nowrap; }
+.chip svg { width: 12px; height: 12px; stroke-width: 2; }
+.chip-good { background: var(--good-soft); color: var(--delta-pos); }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-crit { background: var(--crit-soft); color: var(--delta-neg); }
+.chip-ai { background: var(--ai-soft); color: var(--ai-text); font-family: var(--font-mono); }
+.chip-coach { background: var(--coach-soft); color: var(--coach-text); }
+.chip-coach-solid { background: var(--coach); color: var(--on-coach); }
+.chip-accent { background: var(--accent-soft); color: var(--accent-text); }
+
+/* Tabs (code: .tab) */
+.tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tab { height: 36px; padding: 0 2px; margin-right: 20px; border: 0; border-bottom: 2px solid transparent; color: var(--text-muted); font: inherit; font-weight: 500; cursor: pointer; background: none; }
+.tab[aria-selected="true"] { color: var(--text); border-color: var(--text); }
+
+/* Tabel (code: table.data) */
+table.data { width: 100%; border-collapse: collapse; color: inherit; font: inherit; }
+table.data th { text-align: left; font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.data td { padding: 9px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.data tr:last-child td { border-bottom: 0; }
+table.data tbody tr:hover td { background: var(--surface-raised); }
+
+/* Tooltip (code: .tt) */
+.tt { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-control); padding: 8px 10px; font-size: 12px; box-shadow: var(--shadow-tooltip); min-width: 150px; }
+
+/* Toast (code: Toast) */
+.toast { display: flex; align-items: flex-start; gap: var(--space-3); border-radius: var(--radius-control); padding: 10px 14px; font-size: 13px; }
+.toast-good { background: var(--good-soft); color: var(--delta-pos); }
+.toast-warn { background: var(--warn-soft); color: var(--warn); }
+.toast-crit { background: var(--crit-soft); color: var(--delta-neg); }
+
+/* De twee stemmen */
+.voice-ai { font-family: var(--font-mono); font-size: 13px; line-height: 1.55; color: var(--ai-text); background: var(--ai-soft); border: 1px dashed var(--ai); border-radius: var(--radius-card); padding: 12px 14px; }
+.voice-ai summary { cursor: pointer; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; list-style: none; display: flex; align-items: center; gap: 8px; }
+.voice-ai summary::-webkit-details-marker { display: none; }
+.voice-ai[open] summary { margin-bottom: 8px; }
+.voice-coach { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; background: var(--coach-soft); border: 1px solid var(--coach); border-radius: var(--radius-card); padding: 12px 14px; }
+.voice-coach .avatar { width: 32px; height: 32px; border-radius: var(--radius-pill); background: var(--coach); color: var(--on-coach); display: grid; place-items: center; font: 600 12px var(--font-sans); }
+.voice-coach .who { font-size: 12px; color: var(--coach-text); font-weight: 500; }
+.voice-coach .note { font-family: var(--font-serif); font-style: italic; font-size: 15px; line-height: 1.45; color: var(--text); margin-top: 2px; }
+
+/* was → wordt */
+.correction { display: inline-flex; align-items: baseline; gap: 8px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 13px; }
+.correction .was { color: var(--ai-text); text-decoration: line-through; text-decoration-thickness: 1px; opacity: 0.85; font-weight: 300; }
+.correction .arrow { color: var(--text-muted); }
+.correction .wordt { color: var(--coach-text); font-weight: 600; }
+
+/* Koerslijn: route met waypoints */
+.koerslijn .route-ai { fill: none; stroke: var(--ai); stroke-width: 2; stroke-dasharray: 2 6; stroke-linecap: round; }
+.koerslijn .route-coach { fill: none; stroke: var(--coach); stroke-width: 2.5; stroke-linecap: round; }
+.koerslijn .wp { fill: var(--surface); stroke: var(--ai); stroke-width: 2; }
+.koerslijn .wp-done { fill: var(--coach); stroke: var(--coach); }
+.koerslijn .wp-label { font: 11px var(--font-mono); fill: var(--text-muted); text-anchor: middle; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

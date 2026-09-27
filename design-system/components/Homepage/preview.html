@@ -1,0 +1,229 @@
+<!-- @dsCard group="Pagina's" height=3900 width=1440 page subtitle="Homepage met hero-variant A (vormgrafiek + route), de banner, Hoe het werkt, Onze coaches, Prijzen, FAQ en footer" -->
+<div class="home" data-theme="dark">
+<style>/* homepage-stijlen (alleen in deze preview) */
+.home{font-family:var(--font-sans);color:var(--text);background:var(--bg)}
+.home a{color:inherit;text-decoration:none}
+.wrapx{max-width:1200px;margin:0 auto;padding:0 32px}
+.nav{display:flex;align-items:center;gap:28px;height:64px;font-size:13px;font-weight:500}
+.nav .brand{font:700 20px var(--font-display);letter-spacing:-.02em;margin-right:12px}
+.nav .sp{flex:1}
+.nav a{color:var(--text-muted)}
+.nav a.btn{color:var(--on-accent)}
+/* hero A */
+.hero{background:var(--bg);color:var(--text);padding:72px 0 80px}
+.hero-in{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero-h{font:800 68px/.95 var(--font-display);letter-spacing:-.03em;margin:0 0 22px}
+.hero-h-b{font-size:88px;margin:18px auto 22px}
+.hb-coach{color:var(--coach)}
+.hero-p{font-size:17px;line-height:1.5;color:var(--text-muted);max-width:520px;margin:0 0 28px}
+.hero-cta{display:flex;gap:12px;margin-bottom:22px}
+.hero-meta{font-size:11.5px;color:var(--text-muted)}
+.hero-demo{padding:14px 16px 10px;background:var(--surface)}
+.hd-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hd-svg{display:block;width:100%}
+.hd-svg .grid line{stroke:var(--line)}
+.hd-svg .today-l{stroke:var(--text-muted);stroke-dasharray:3 3}
+.hd-svg .today-t{font:10px var(--font-mono);fill:var(--text-muted)}
+.hd-svg .glow{filter:drop-shadow(0 0 4px var(--accent))}
+.hd-svg .glow-c{filter:drop-shadow(0 0 5px var(--coach))}
+.hd-svg .wp{fill:var(--surface);stroke:var(--ai);stroke-width:2}
+.hd-svg .wp-co{fill:var(--coach);stroke:var(--coach)}
+.hd-svg .wl{font:10px var(--font-mono);fill:var(--text-muted);text-anchor:middle}
+.hd-svg .wk-d{font:11px var(--font-mono);fill:var(--text-muted)}
+.hd-svg .wk-n{font:500 11.5px var(--font-sans);fill:var(--text)}
+.hd-svg .wk-ai{font:11px var(--font-mono);fill:var(--ai)}
+.hd-svg .wk-was{font:300 11px var(--font-mono);fill:var(--ai);text-decoration:line-through}
+.hd-svg .wk-wordt{font:600 11px var(--font-mono);fill:var(--coach)}
+/* hero B */
+.hero-b{text-align:center;padding:64px 0 48px}
+.hero-b-in{max-width:1200px;margin:0 auto;padding:0 32px}
+.hb-week{position:relative;margin-top:44px}
+.hb-line{position:absolute;left:0;right:0;top:50%;height:40px;width:100%;transform:translateY(-50%);z-index:0}
+.hb-days{position:relative;z-index:1;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.hb-day{background:var(--surface);border:1px dashed var(--ai);border-radius:var(--radius-card);padding:14px 12px 12px;text-align:left;transition:border-color .4s,background .4s;min-height:96px}
+.hb-day .d{font:11px var(--font-mono);color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.hb-day .n{font:500 13.5px var(--font-sans);margin:6px 0 3px}
+.hb-day .m{font:11.5px var(--font-mono);color:var(--ai)}
+.hb-day.co{border-style:solid;border-color:var(--coach)}
+.hb-day.co .m{color:var(--coach)}
+.hb-day .was{font-weight:300;text-decoration:line-through;color:var(--ai);margin-right:6px}
+.hb-day.rest{opacity:.55}
+.hb-cap{margin-top:18px;display:flex;justify-content:center;gap:10px;align-items:center;min-height:24px}
+.hb-av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:999px;background:var(--coach);color:var(--on-coach);font:600 10px var(--font-sans)}
+/* secties */
+.sec{padding:88px 0}
+.sec-h{font:700 40px/1 var(--font-display);letter-spacing:-.02em;margin:0 0 12px}
+.sec-p{color:var(--text-muted);font-size:16px;max-width:560px;margin:0 0 40px}
+.light{background:var(--bg);color:var(--text)}
+/* hoe het werkt */
+.how{position:relative;padding-left:64px}
+.how::before{content:"";position:absolute;left:19px;top:0;bottom:0;border-left:2px dashed var(--ai)}
+.how-step{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding:36px 0;border-bottom:1px solid var(--line);position:relative}
+.how-step::before{content:"";position:absolute;left:-51px;top:50%;width:10px;height:10px;margin-top:-7px;border-radius:999px;background:var(--surface);border:2px solid var(--ai)}
+.how-step:last-child{border-bottom:0}
+.how-step:last-child::before{background:var(--coach);border-color:var(--coach);width:14px;height:14px;left:-53px;margin-top:-9px}
+.how-step:last-child::after{content:"";position:absolute;left:-45px;top:50%;bottom:0;border-left:2.5px solid var(--coach)}
+.how-k{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.how-t{font:700 26px/1.15 var(--font-display);letter-spacing:-.015em;margin:0 0 10px}
+.how-p{color:var(--text-muted);font-size:15px;line-height:1.5;margin:0}
+.how-vis{border-radius:var(--radius-card);border:1px solid var(--line);background:var(--surface);padding:16px;min-height:120px}
+/* coaches */
+.coaches{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.coach{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:22px;border-radius:var(--radius-card-lg)}
+.coach-b{min-width:0}
+.coach-ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--ph);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display)}
+.coach-n{font:700 20px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.coach-loc{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-muted);margin-bottom:10px}
+.coach-loc svg{width:13px;height:13px}
+.coach-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.coach-q{font:italic 16px/1.35 var(--font-serif);color:var(--coach-text);margin-bottom:14px}
+.coach-f{display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* prijzen */
+.pricing{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:880px}
+.price{padding:32px;border-radius:var(--radius-card-lg);position:relative;display:flex;flex-direction:column}
+.price-coach{background:var(--surface);color:var(--text);border-color:var(--coach)}
+.price-pill{position:absolute;top:-11px;right:24px}
+.price-n{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}
+.price-n .num{font:800 48px/1 var(--font-display);letter-spacing:-.03em}
+.price-u{color:var(--text-muted);font-family:var(--font-mono);font-size:13px}
+.price-p{color:var(--text-muted);font-size:14px;margin:0 0 20px}
+.price-l{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:10px;font-size:14px;flex:1}
+.price-l li{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start}
+.price-l li::before{content:"";width:16px;height:16px;border-radius:999px;background:var(--accent);margin-top:2px;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat}
+.price-coach .price-l li::before{background:var(--coach)}
+/* faq */
+.faq{max-width:720px;display:grid;gap:8px}
+.faq details{border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);padding:0 18px}
+.faq summary{cursor:pointer;padding:16px 0;font-weight:500;font-size:15px;list-style:none;display:flex;justify-content:space-between}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--text-muted);font-family:var(--font-mono)}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 16px;color:var(--text-muted);font-size:14px;line-height:1.5}
+/* footer */
+.foot{border-top:1px solid var(--line);padding:40px 0;font-size:13px;color:var(--text-muted)}
+.foot-in{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px}
+.foot .brand{font:700 18px var(--font-display);color:var(--text);margin-bottom:8px}
+.foot h4{margin:0 0 10px;font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){.hb-day{transition:none}}
+
+.brand{font:600 16px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}
+</style>
+<div data-theme="dark" style="background:var(--bg);color:var(--text)"><nav class="nav wrapx"><span class="brand">VELORI<b>Q</b></span><a href="#">Hoe het werkt</a><a href="#">Coaches</a><a href="#prijzen">Prijzen</a><span class="sp"></span><a href="#">Inloggen</a><a class="btn btn-primary btn-sm" href="#">Start je koers</a></nav></div>
+<section class="hero contour" data-theme="dark">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <div class="eyebrow" style="color:var(--accent-text);margin-bottom:18px">Trainen met AI én een echte coach</div>
+      <h1 class="hero-h">AI rekent.<br>Je coach beslist.</h1>
+      <p class="hero-p">Koppel Intervals.icu. De AI leest je belasting, vorm en herstel en zet je koers voor de week uit. Je coach stuurt bij, bevestigt, en de training staat op je fietscomputer.</p>
+      <div class="hero-cta"><a class="btn btn-primary btn-lg" href="#">Start je koers</a><a class="btn btn-lg" href="#prijzen">Bekijk prijzen</a></div>
+      <div class="hero-meta num">Werkt met Intervals.icu · Garmin · Wahoo · Zwift</div>
+    </div>
+    <div class="hero-demo panel" id="ha">
+      <div class="hd-top"><span class="eyebrow">Sanne · week 40</span><span class="chip chip-ai hd-status" id="ha-st"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/></svg>AI rekent…</span></div>
+      <svg viewBox="0 0 520 250" class="hd-svg">
+        <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".4"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".02"/></linearGradient></defs>
+        <g class="grid"><line x1="16" x2="504" y1="40" y2="40"/><line x1="16" x2="504" y1="80" y2="80"/><line x1="16" x2="504" y1="120" y2="120"/></g>
+        <path id="ha-area" fill="url(#hg)" opacity="0"/>
+        <path id="ha-ctl" fill="none" stroke="var(--accent)" stroke-width="2" class="glow"/>
+        <path id="ha-atl" fill="none" stroke="var(--fatigue)" stroke-width="1.5"/>
+        <line x1="330" x2="330" y1="20" y2="150" class="today-l"/><text x="334" y="30" class="today-t">vandaag</text>
+        <g id="ha-route" opacity="0">
+          <path id="ha-rai" d="M340 112 C 360 100, 372 84, 392 86 S 424 118, 448 100 S 480 70, 504 78" fill="none" stroke="var(--ai)" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/>
+          <path id="ha-rco" d="M340 112 C 360 100, 372 84, 392 86 S 424 118, 448 100 S 480 70, 504 78" fill="none" stroke="var(--coach)" stroke-width="2.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+          <g id="ha-wps"></g>
+          <g id="ha-av" opacity="0"><circle cx="420" cy="104" r="11" fill="var(--coach)" class="glow-c"/><text x="420" y="108" text-anchor="middle" style="font:600 10px var(--font-sans);fill:var(--on-coach)">RV</text></g>
+        </g>
+        <g class="hd-week" id="ha-week"></g>
+        <text id="ha-cap" x="16" y="242" style="font:11px var(--font-mono);fill:var(--text-muted)"></text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section data-theme="light" style="background:var(--bg)"><img src="/_blob/bff8070dd66777fc930e2053361be6ee" alt="VELORIQ — AI Coaching met persoonlijke benadering. Betere koersen beginnen bij jou." style="display:block;width:100%;height:auto"></section>
+<section class="sec light" data-theme="light" style="background:var(--bg);color:var(--text)"><div class="wrapx"><h2 class="sec-h">Hoe het werkt</h2><p class="sec-p">Vier waypoints, elke week opnieuw.</p><div class="how">
+  <div class="how-steps">
+  <div class="how-step"><div><div class="how-k">01 · Koppel</div><h3 class="how-t">Koppel Intervals.icu</h3><p class="how-p">Daarmee ook Garmin, Wahoo en Zwift. Activiteiten, belasting, conditie, vermoeidheid, vorm en FTP komen automatisch binnen. Eén keer koppelen, daarna nooit meer uploaden.</p></div><div class="how-vis"><div style="display:flex;gap:8px;align-items:center"><span class="chip chip-good">✓ Verbonden</span><span class="num" style="font-size:12px;color:var(--text-muted)">laatste sync 07:42 · 1.284 ritten</span></div><div class="num" style="margin-top:12px;font-size:12px;color:var(--text-muted)">FTP 292 W · 68 kg · 4,29 W/kg</div></div></div>
+  <div class="how-step"><div><div class="how-k">02 · Analyse</div><h3 class="how-t">De AI leest je data</h3><p class="how-p">Belasting, vorm, herstel en je doelen. Niet alleen wat je reed, maar wat het met je conditie deed en wat er nog in zit richting je A-koers.</p></div><div class="how-vis voice-ai" style="border-radius:var(--radius-card)">Vorm −13 (Optimaal) · helling +4,1/wk · 34 dagen tot Amstel Gold Race. Ruimte voor één drempelsessie; herstel op woensdag houdt de vermoeidheid onder 75.</div></div>
+  <div class="how-step"><div><div class="how-k">03 · Koers</div><h3 class="how-t">Je koers voor de week wordt uitgezet</h3><p class="how-p">Zeven waypoints, met per training de duur, de intensiteit en de onderbouwing. Uitklapbaar: "Waarom deze koers".</p></div><div class="how-vis"><svg viewBox="0 0 320 60" style="width:100%;display:block"><path d="M12 44 C 50 40, 70 16, 110 22 S 180 50, 220 30 S 280 10, 308 18" fill="none" stroke="var(--ai)" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/><g fill="var(--surface)" stroke="var(--ai)" stroke-width="2"><circle cx="12" cy="44" r="4"/><circle cx="60" cy="30" r="4"/><circle cx="110" cy="22" r="4"/><circle cx="160" cy="38" r="4"/><circle cx="220" cy="30" r="4"/><circle cx="268" cy="16" r="4"/><circle cx="308" cy="18" r="4"/></g></svg><div class="chip chip-ai" style="margin-top:8px">Uitgezet · 7 trainingen · 502 TSS</div></div></div>
+  <div class="how-step"><div><div class="how-k">04 · Bevestigd</div><h3 class="how-t">Je coach stuurt bij en bevestigt</h3><p class="how-p">Een echte coach bekijkt elke koers, schuift wat moet schuiven en bevestigt. Pas dan staat het in je schema en gaat het naar je fietscomputer.</p></div><div class="how-vis"><div class="voice-coach" style="border-radius:var(--radius-card)"><div class="avatar">RV</div><div><div class="who">Ruud stuurde bij · za 27 sep</div><div class="note">VO2 naar zaterdag, donderdag rustig duur. Je slaap was matig.</div></div></div><div style="margin-top:10px;display:flex;gap:8px"><span class="chip chip-coach-solid">✓ Bevestigd</span><span class="chip">Op je fietscomputer</span></div></div></div>
+  </div>
+</div>
+</div></section>
+<section class="sec" data-theme="dark" style="background:var(--bg);color:var(--text)"><div class="wrapx"><h2 class="sec-h">Onze coaches</h2><p class="sec-p">Echte mensen, met een eigen kijk. Je kiest zelf.</p><div class="coaches">
+  <article class="coach panel contour"><div class="coach-ph" style="--ph:var(--coach)">RV</div><div class="coach-b"><h3 class="coach-n">Ruud Verhoeven</h3><div class="coach-loc num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Utrecht</div><div class="coach-tags"><span class="chip">weg</span><span class="chip">gravel</span><span class="chip">tijdrijden</span></div><div class="coach-q">“Rustig opbouwen, de vorm komt vanzelf.”</div><div class="coach-f"><span class="chip chip-accent">3 plekken vrij</span><a class="btn btn-sm" href="#">Train met Ruud</a></div></div></article>
+  <article class="coach panel contour"><div class="coach-ph" style="--ph:var(--zone-4)">MK</div><div class="coach-b"><h3 class="coach-n">Marieke Kok</h3><div class="coach-loc num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Nijmegen</div><div class="coach-tags"><span class="chip">MTB</span><span class="chip">gravel</span><span class="chip">triatlon</span></div><div class="coach-q">“Data vertelt wat er gebeurde. Jij vertelt hoe het voelde.”</div><div class="coach-f"><span class="chip chip-accent">1 plek vrij</span><a class="btn btn-sm" href="#">Train met Marieke</a></div></div></article>
+  <article class="coach panel contour"><div class="coach-ph" style="--ph:var(--fatigue)">JB</div><div class="coach-b"><h3 class="coach-n">Jasper de Boer</h3><div class="coach-loc num"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>Groningen</div><div class="coach-tags"><span class="chip">weg</span><span class="chip">klimmen</span></div><div class="coach-q">“Een goede week heeft één harde dag te weinig, nooit één te veel.”</div><div class="coach-f"><span class="chip">Vol · wachtlijst</span><a class="btn btn-sm" href="#">Bekijk profiel</a></div></div></article>
+</div>
+</div></section>
+<section class="sec light" data-theme="light" style="background:var(--bg);color:var(--text)"><div class="wrapx"><img src="/_blob/c7a9ec29cfe258c35a7a293f84fc5932" alt="VELORIQ" style="height:120px;display:block;margin:0 0 20px -12px"><h2 class="sec-h">Prijzen</h2><p class="sec-p">Maandelijks opzegbaar. Eerste koers gratis.</p><div class="pricing" id="prijzen">
+  <div class="price panel">
+    <div class="eyebrow">VELORIQ AI</div>
+    <div class="price-n"><span class="num">€9,99</span><span class="price-u">p/m</span></div>
+    <p class="price-p">Voor wie zelf stuurt, met een AI die elke rit meeleest.</p>
+    <ul class="price-l">
+      <li>AI analyseert na elke rit</li>
+      <li>Wekelijks een nieuwe koers, met "Waarom deze koers"</li>
+      <li>Je bevestigt en schuift zelf</li>
+      <li>Automatisch naar Intervals.icu en je fietscomputer</li>
+      <li>Vormgrafiek met doelprojectie</li>
+    </ul>
+    <a class="btn btn-lg" href="#">Start met AI</a>
+  </div>
+  <div class="price price-coach panel" data-theme="dark">
+    <span class="chip chip-coach-solid price-pill">Meest gekozen</span>
+    <div class="eyebrow" style="color:var(--coach)">VELORIQ Coach</div>
+    <div class="price-n"><span class="num">€29,99</span><span class="price-u">p/m</span></div>
+    <p class="price-p">Alles van AI, plus een coach die elke koers checkt, bijstuurt en bevestigt.</p>
+    <ul class="price-l">
+      <li>Alles van VELORIQ AI</li>
+      <li>Elke koers gecheckt, bijgestuurd en bevestigd door je eigen coach</li>
+      <li>Zelf je coach kiezen</li>
+      <li>Wekelijkse check-in via chat</li>
+      <li>Coachnotities bij je trainingen</li>
+    </ul>
+    <a class="btn btn-coach btn-lg" href="#">Kies je coach</a>
+  </div>
+</div>
+</div></section>
+<section class="sec light" data-theme="light" style="background:var(--bg);color:var(--text);padding-top:0"><div class="wrapx"><h2 class="sec-h">Veelgestelde vragen</h2><div style="height:28px"></div><div class="faq">
+  <details><summary>Werkt het zonder Intervals.icu?</summary><p>Nee. Intervals.icu is de databron en de weg naar je fietscomputer. Een gratis account volstaat; Garmin, Wahoo en Zwift koppel je daar.</p></details>
+  <details><summary>Wat doet de coach precies?</summary><p>Bij VELORIQ Coach bekijkt je coach elk voorstel van de AI vóór het in je schema komt. Wat verandert zie je als "was → wordt", met een korte notitie. Eén keer per week is er een check-in via chat.</p></details>
+  <details><summary>Hoe snel is een koers bevestigd?</summary><p>Uiterlijk de volgende dag. Zolang de koers bij je coach ligt zie je dat in de app, en blijft je vorige koers staan.</p></details>
+  <details><summary>Wat gebeurt er met mijn gezondheidsgegevens?</summary><p>Hartslag, HRV en slaap zijn gezondheidsgegevens. We vragen expliciete toestemming, hosten in de EU en trainen geen modellen op jouw data. Opzeggen kan elke maand.</p></details>
+</div>
+</div></section>
+<div data-theme="dark" style="background:var(--bg);color:var(--text)"><footer class="foot"><div class="foot-in"><div><div class="brand">VELORI<b>Q</b></div>AI rekent. Je coach beslist.<br><span class="num">© 2026 · Utrecht</span></div><div><h4>Product</h4><ul><li>Hoe het werkt</li><li>Prijzen</li><li>Coaches</li><li>Vormgrafiek</li></ul></div><div><h4>Coaches</h4><ul><li>Coach worden</li><li>Inloggen</li></ul></div><div><h4>Over</h4><ul><li>Privacy</li><li>Voorwaarden</li><li>Contact</li></ul></div></div></footer>
+</div>
+</div>
+<script>(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var svgNS='http://www.w3.org/2000/svg';
+  function mk(t,a){var e=document.createElementNS(svgNS,t);for(var k in a)e.setAttribute(k,a[k]);return e}
+  // mini vormgrafiek: 60 dagen conditie/vermoeidheid als EWMA
+  var ctl=46,atl=46,C=[],A=[],s=7;function r(){s=(s*9301+49297)%233280;return s/233280}
+  for(var i=0;i<60;i++){var dow=i%7,t=[0,86,66,38,94,120,66][dow]*(Math.floor(i/7)%4===3?.6:1)*(.92+r()*.16);ctl+=(t-ctl)/42;atl+=(t-atl)/7;C.push(ctl);A.push(atl)}
+  var mx=Math.max.apply(0,A)*1.05,x=function(i){return 16+i/59*314},y=function(v){return 150-v/mx*120};
+  var pc='',pa='';C.forEach(function(v,i){pc+=(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' '});A.forEach(function(v,i){pa+=(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)+' '});
+  var eC=document.getElementById('ha-ctl'),eA=document.getElementById('ha-atl'),eAr=document.getElementById('ha-area');
+  eC.setAttribute('d',pc);eA.setAttribute('d',pa);eAr.setAttribute('d',pc+'L330 150 L16 150 Z');
+  var st=document.getElementById('ha-st'),cap=document.getElementById('ha-cap'),route=document.getElementById('ha-route'),rco=document.getElementById('ha-rco'),av=document.getElementById('ha-av'),wps=document.getElementById('ha-wps'),week=document.getElementById('ha-week');
+  var days=['ma','di','wo','do','vr','za','zo'],pts=[[340,112],[366,96],[392,86],[420,104],[448,100],[476,76],[504,78]];
+  var plan=[['Rust',''],['Drempel','TSS 88'],['Duur Z2','TSS 68'],['VO2max','TSS 96'],['Herstel','TSS 38'],['Lang','TSS 150'],['Duur Z2','TSS 66']];
+  function build(){wps.innerHTML='';pts.forEach(function(p,i){wps.appendChild(mk('circle',{class:'wp',cx:p[0],cy:p[1],r:4.5,'data-i':i}));var t=mk('text',{class:'wl',x:p[0],y:p[1]-10});t.textContent=days[i];wps.appendChild(t)});
+    week.innerHTML='';plan.forEach(function(p,i){var gx=16+i*70,gy=176;var d=mk('text',{class:'wk-d',x:gx,y:gy});d.textContent=days[i];week.appendChild(d);var n=mk('text',{class:'wk-n',x:gx,y:gy+16,'data-n':i});n.textContent=p[0];week.appendChild(n);var m=mk('text',{class:'wk-ai',x:gx,y:gy+30,'data-m':i});m.textContent=p[1];week.appendChild(m)})}
+  build();
+  function draw(el,ms){var L=el.getTotalLength();el.style.transition='none';el.style.strokeDasharray=L;el.style.strokeDashoffset=L;void el.getBoundingClientRect();el.style.transition='stroke-dashoffset '+ms+'ms ease-out';el.style.strokeDashoffset='0'}
+  function phase0(){st.className='chip chip-ai hd-status';st.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/></svg>AI rekent…';cap.textContent='';route.style.opacity='0';rco.style.strokeDashoffset='1';rco.style.transition='none';av.style.opacity='0';week.style.opacity='0';wps.querySelectorAll('.wp').forEach(function(c){c.classList.remove('wp-co')});
+    var n3=week.querySelector('[data-n="3"]'),m3=week.querySelector('[data-m="3"]');n3.textContent='VO2max';n3.setAttribute('class','wk-n');m3.textContent='TSS 96';m3.setAttribute('class','wk-ai');
+    if(reduce){eC.style.strokeDasharray='none';eA.style.strokeDasharray='none';eAr.style.opacity='1';return phase1()}
+    eAr.style.opacity='0';draw(eC,1400);draw(eA,1400);setTimeout(function(){eAr.style.transition='opacity .6s';eAr.style.opacity='1'},900);setTimeout(phase1,1700)}
+  function phase1(){route.style.transition=reduce?'none':'opacity .5s';route.style.opacity='1';week.style.transition=reduce?'none':'opacity .5s';week.style.opacity='1';st.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/></svg>Koers uitgezet';cap.textContent='Koers uitgezet voor week 40 · 7 trainingen · 502 TSS';cap.style.fill='var(--ai-text)';if(reduce)return phase2();setTimeout(phase2,1800)}
+  function phase2(){av.style.transition=reduce?'none':'opacity .3s';av.style.opacity='1';st.className='chip chip-coach hd-status';st.innerHTML='Ruud stuurt bij';
+    var n3=week.querySelector('[data-n="3"]'),m3=week.querySelector('[data-m="3"]');n3.innerHTML='<tspan class="wk-was">VO2</tspan> <tspan class="wk-wordt">Duur</tspan>';m3.innerHTML='<tspan class="wk-was">96</tspan> <tspan class="wk-wordt">TSS 70</tspan>';
+    var w3=wps.querySelector('[data-i="3"]');w3.style.transition=reduce?'none':'cy .5s';w3.setAttribute('cy',118);cap.textContent='Ruud stuurde bij: donderdag rustiger, je slaap was matig.';cap.style.fill='var(--coach-text)';if(reduce)return phase3();setTimeout(phase3,1500)}
+  function phase3(){rco.style.transition=reduce?'none':'stroke-dashoffset 1.1s ease-in-out';rco.style.strokeDashoffset='0';setTimeout(function(){wps.querySelectorAll('.wp').forEach(function(c){c.classList.add('wp-co')});st.className='chip chip-coach-solid hd-status';st.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Bevestigd';cap.textContent='Bevestigd door Ruud · za 27 sep · staat op je fietscomputer';if(!reduce)setTimeout(phase0,4200)},reduce?0:1000)}
+  phase0();
+})();
+</script>

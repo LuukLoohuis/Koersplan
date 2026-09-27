@@ -1,0 +1,57 @@
+<!-- @dsCard group="Coach" height=760 width=1440 page subtitle="Mijn atleten (cockpit): 'Te doen'-strook, tabel met vorm-sparkline, op koers %, open voorstellen, volgende koers en signalen; sorteren en filteren" -->
+<div class="ro" data-theme="light" id="ro">
+<style>
+.ro{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px;min-height:760px}
+.ro .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.ro .top .brand img{height:18px;display:block;margin-right:8px}
+.ro .top a{color:var(--text-muted);font-weight:500}
+.ro .top a[aria-current]{color:var(--text)}
+.ro .top .sp{flex:1}
+.ro .av{width:24px;height:24px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.ro .body{padding:20px 24px;display:grid;gap:16px}
+.ro h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.ro .todo{display:flex;gap:10px;align-items:center;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card)}
+.ro .todo .t{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-right:6px}
+.ro .todo .sp{flex:1}
+.ro .tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ro .tools .sp{flex:1}
+.ro .chipbtn{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--text-muted);font:500 12px var(--font-sans);cursor:pointer}
+.ro .chipbtn[aria-pressed="true"]{color:var(--text);border-color:var(--text-muted)}
+.ro table.data td{white-space:normal;vertical-align:middle}
+.ro .who{display:flex;align-items:center;gap:10px}
+.ro .ph{width:30px;height:30px;border-radius:999px;display:grid;place-items:center;font:600 11px var(--font-sans);color:var(--on-coach);flex:none}
+.ro .who b{font-weight:500;display:block}
+.ro .who small{color:var(--text-muted);font-family:var(--font-mono);font-size:11px}
+.ro .vorm{display:flex;align-items:center;gap:8px}
+.ro .vorm .n{font:700 15px var(--font-display);font-variant-numeric:tabular-nums;min-width:32px}
+.ro .sig{display:flex;gap:4px;flex-wrap:wrap}
+.ro .cd{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.ro .cd.now{color:var(--coach-text);font-weight:500}
+.ro th.sort{cursor:pointer}
+.ro th.sort[aria-sort]::after{content:" ↓";color:var(--text)}
+</style>
+<div class="top"><span class="brand"><img src="/_blob/6707f0f4c1df89cbb27b8be3d0ab9ef2" alt="VELORIQ"></span><a aria-current="page">Mijn atleten</a><a>Check-ins</a><a>Bibliotheek</a><span class="sp"></span><span class="chip chip-coach">4 koersen wachten</span><span class="av">RV</span></div>
+<div class="body">
+  <h1>Mijn atleten</h1>
+  <div class="todo"><span class="t">Te doen</span><span class="chip chip-coach">4 koersen wachten</span><span class="chip chip-warn">2 check-ins open</span><span class="chip chip-crit">1 sync-fout</span><span class="sp"></span><span style="color:var(--text-muted);font-family:var(--font-mono);font-size:11.5px">12 atleten · 3 plekken vrij</span></div>
+  <div class="tools"><button class="chipbtn" aria-pressed="true">Alle</button><button class="chipbtn">Koers wacht</button><button class="chipbtn">Signalen</button><button class="chipbtn">Coach</button><button class="chipbtn">AI</button><span class="sp"></span><input class="field field-sm" placeholder="Zoek atleet" style="width:180px"><span style="color:var(--text-muted);font-size:12px">Sorteer op</span><select class="field field-sm" style="width:140px"><option>Urgentie</option><option>Vorm</option><option>Helling</option><option>Op koers %</option><option>Naam</option></select></div>
+  <div class="panel" style="overflow:hidden"><table class="data" id="ro-t"><thead><tr><th>Atleet</th><th>Abo</th><th class="sort" aria-sort="descending">Vorm · 28 d</th><th>Conditie</th><th>Op koers 7d</th><th>Voorstellen</th><th>Volgende koers</th><th>Signalen</th></tr></thead><tbody></tbody></table></div>
+</div>
+<script>
+(function(){
+  var s=11;function r(){s=(s*9301+49297)%233280;return s/233280}
+  function series(end,vol){var out=[],v=end-(r()*20-10);for(var i=0;i<28;i++){v+=(r()-.5)*vol;out.push(v)}var d=end-out[27];return out.map(function(x){return x+d})}
+  function spark(vals){var mn=Math.min.apply(0,vals),mx=Math.max.apply(0,vals),rg=mx-mn||1,w=80,h=22;var p=vals.map(function(v,i){return (i/27*w).toFixed(1)+' '+(h-2-(v-mn)/rg*(h-4)).toFixed(1)}).join(' L ');var last=vals[27];var c=last>20?'var(--text-muted)':last>5?'var(--delta-pos)':last>-10?'var(--text-muted)':last>-30?'var(--accent-text)':'var(--delta-neg)';return '<svg width="80" height="22" viewBox="0 0 80 22"><line x1="0" x2="80" y1="'+(h-2-(0-mn)/rg*(h-4)).toFixed(1)+'" y2="'+(h-2-(0-mn)/rg*(h-4)).toFixed(1)+'" stroke="var(--line)"/><path d="M '+p+'" fill="none" stroke="'+c+'" stroke-width="1.5"/><circle cx="80" cy="'+(h-2-(last-mn)/rg*(h-4)).toFixed(1)+'" r="2.5" fill="'+c+'"/></svg>'}
+  function zone(t){return t>20?['Overgang','']:t>5?['Fris','']:t>-10?['Grijze zone','']:t>-30?['Optimaal','chip-accent']:['Hoog risico','chip-crit']}
+  var A=[['Sanne Visser','SV','var(--coach)','Coach',-13,58,2.7,92,1,'over 2 d',['check-in']],
+  ['Daan de Vries','DV','var(--zone-4)','AI',9,44,-1.1,67,0,'vandaag',['⚠ helling 8,4','2 gemist']],
+  ['Iris Bakker','IB','var(--fatigue)','Coach',-34,71,5.0,100,1,'over 5 d',['sync-fout']],
+  ['Tom Jansen','TJ','var(--zone-2)','Coach',-8,52,3.1,88,1,'over 1 d',[]],
+  ['Fleur Smit','FS','var(--delta-pos)','Coach',4,39,1.8,75,0,'over 4 d',['check-in']],
+  ['Noor van Dijk','ND','var(--zone-5)','AI',-19,63,4.4,96,0,'over 3 d',[]],
+  ['Bram Mulder','BM','var(--warn)','Coach',24,47,-2.6,40,1,'vandaag',['3 gemist']],
+  ['Lotte Peters','LP','var(--zone-3)','Coach',-12,55,2.2,90,0,'over 6 d',[]]];
+  document.querySelector('#ro-t tbody').innerHTML=A.map(function(a){var z=zone(a[4]);return '<tr><td><div class="who"><span class="ph" style="background:'+a[2]+'">'+a[1]+'</span><span><b>'+a[0]+'</b><small>FTP '+(250+Math.round(r()*80))+' W</small></span></div></td><td><span class="chip '+(a[3]==='Coach'?'chip-coach':'chip-ai')+'">'+a[3]+'</span></td><td><div class="vorm"><span class="n">'+(a[4]>0?'+':a[4]<0?'−':'')+Math.abs(a[4])+'</span>'+spark(series(a[4],6))+'<span class="chip '+z[1]+'" style="height:18px;font-size:10.5px">'+z[0]+'</span></div></td><td class="num">'+a[5]+' <span style="color:var(--'+(a[6]>=0?'delta-pos':'delta-neg')+')">'+(a[6]>=0?'▲':'▼')+String(Math.abs(a[6])).replace('.',',')+'</span></td><td class="num">'+a[7]+'%</td><td>'+(a[8]?'<span class="chip chip-coach">1 wacht</span>':'<span style="color:var(--text-muted)">—</span>')+'</td><td class="cd'+(a[9]==='vandaag'?' now':'')+'">'+a[9]+'</td><td><div class="sig">'+(a[10].length?a[10].map(function(sg){return '<span class="chip '+(/sync/.test(sg)?'chip-crit':'chip-warn')+'">'+sg+'</span>'}).join(''):'<span style="color:var(--text-muted)">—</span>')+'</div></td></tr>'}).join('');
+})();
+</script>
+</div>

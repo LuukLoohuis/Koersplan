@@ -1,0 +1,70 @@
+<!-- @dsCard group="Status" height=480 width=1000 subtitle="Lege en foutstates met hoogtelijnen als illustratie: Intervals niet gekoppeld, te weinig historie, AI zet koers uit, koers wacht op coach, sync mislukt, coach zonder atleten, rustdag" -->
+<div class="app es" data-theme="dark" style="background:var(--bg)">
+<style>.app{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px}
+.app .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.app .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.app .top a{color:var(--text-muted);font-weight:500}
+.app .top a[aria-current]{color:var(--text)}
+.app .top .sp{flex:1}
+.app .av{width:26px;height:26px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.app .body{padding:20px 24px;display:grid;gap:16px}
+.app h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.app h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.app .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.app .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 12px}
+.app .f{display:grid;gap:6px}
+.app .f label{font-size:12px;font-weight:500}
+.app .f .hint{font-size:11.5px;color:var(--text-muted)}
+.app .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.app .tags{display:flex;gap:6px;flex-wrap:wrap}
+.app .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 12px var(--font-sans);color:var(--text-muted);cursor:pointer}
+.app .tag[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-text);color:var(--accent-text)}
+.app .sw{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.app .sw i{width:36px;height:20px;border-radius:999px;background:var(--accent);position:relative;display:inline-block}
+.app .sw i::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:999px;background:var(--on-accent)}
+.app .sw.off i{background:var(--line)}.app .sw.off i::after{right:auto;left:2px;background:var(--surface)}
+.app .cnt{font:11px var(--font-mono);color:var(--text-muted);text-align:right}
+.app .ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display);position:relative;overflow:hidden}
+.app .ph b{position:absolute;inset:0;border:2px dashed var(--on-coach);opacity:.5;border-radius:var(--radius-card);margin:10px}
+/* koerslijn voortgang */
+.app .prog{position:relative;padding:8px 0 22px}
+.app .prog svg{display:block;width:100%;height:56px}
+.app .prog .wl{font:500 10.5px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.04em}
+.app .prog .wl.on{fill:var(--text)}
+/* auth */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:720px}
+.auth .left{position:relative;padding:40px 48px;display:flex;flex-direction:column}
+.auth .left .brand{font:700 20px var(--font-display);letter-spacing:-.02em}
+.auth .left .quote{margin-top:auto;font:italic 22px/1.3 var(--font-serif);color:var(--coach);max-width:420px}
+.auth .left .who{font:12px var(--font-mono);color:var(--text-muted);margin-top:10px}
+.auth .mini{margin:40px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;max-width:440px}
+.auth .mini svg{display:block;width:100%}
+.auth .right{display:grid;place-items:center;padding:40px}
+.auth .form{width:360px;display:grid;gap:14px}
+.auth .form h1{font:700 30px var(--font-display);letter-spacing:-.02em;margin:0}
+.auth .or{display:flex;align-items:center;gap:10px;color:var(--text-muted);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.auth .or::before,.auth .or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.auth .states{display:flex;gap:6px;flex-wrap:wrap}
+.auth .btn{justify-content:center}
+.auth .spin{width:14px;height:14px;border-radius:999px;border:2px solid var(--on-accent);border-top-color:transparent;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth .spin{animation:none}}
+/* admin */
+.app .bar{height:6px;border-radius:3px;background:var(--surface-raised);position:relative;width:120px;display:inline-block;vertical-align:middle;margin-right:8px}
+.app .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--zone-4)}
+/* empty states */
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}
+.es .e{min-height:200px;display:grid;place-items:center;text-align:center;padding:24px;border-radius:var(--radius-card)}
+.es .e .ic{width:40px;height:40px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;margin:0 auto 12px}
+.es .e .ic svg{width:20px;height:20px;stroke-width:1.5}
+.es .e h4{font:700 17px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.es .e p{margin:0 0 12px;color:var(--text-muted);font-size:12.5px;line-height:1.45;max-width:240px}
+.brand{font:600 15px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}</style>
+<div class="panel contour e"><div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div><h4>Intervals.icu niet gekoppeld</h4><p>Zonder koppeling komen er geen ritten binnen en kan de AI niets uitzetten.</p><button class="btn btn-primary btn-sm">Koppel Intervals.icu</button></div></div>
+<div class="panel contour e"><div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-8 4 5"/></svg></div><h4>Conditie kalibreert nog</h4><p>3 van 6 weken historie. Vanaf 6 weken is de vormgrafiek betrouwbaar.</p><div class="chip chip-accent" style="height:20px">Nog 21 dagen</div></div></div>
+<div class="panel contour e"><div><div class="ic" style="background:var(--ai-soft);color:var(--ai-text)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/></svg></div><h4>AI zet je koers uit</h4><p>Belasting, vorm en doelen worden gelezen. Dit duurt meestal een minuut.</p><div class="chip chip-ai" style="height:20px">Bezig…</div></div></div>
+<div class="panel contour e"><div><div class="ic" style="background:var(--coach-soft);color:var(--coach-text)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h4>Koers ligt bij Ruud</h4><p>Week 40 wordt uiterlijk morgen bevestigd. Tot dan staat je huidige koers.</p><div class="chip chip-coach" style="height:20px">Bij coach · 1 dag</div></div></div>
+<div class="panel contour e"><div><div class="ic" style="background:var(--crit-soft);color:var(--delta-neg)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3zM12 10v5M12 18h.01"/></svg></div><h4>Sync mislukt</h4><p>Intervals.icu gaf 401: de koppeling is verlopen. Koppel opnieuw; je koers blijft staan.</p><button class="btn btn-sm">Opnieuw koppelen</button></div></div>
+<div class="panel contour e"><div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h4>Nog geen atleten</h4><p>Zet je profiel op beschikbaar; atleten kiezen je bij het aanmelden.</p><button class="btn btn-sm">Profiel bewerken</button></div></div>
+<div class="panel contour e" style="grid-column:span 3;min-height:120px"><div><h4>Rustdag</h4><p style="max-width:none">Vandaag niets op de koers. Vermoeidheid 71 → morgen ± 66. Slaap goed.</p></div></div>
+</div>

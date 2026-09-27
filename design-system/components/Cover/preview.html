@@ -1,0 +1,33 @@
+<!-- @dsCard height=288 -->
+<div style="position:relative;width:960px;height:288px;background:var(--bg);overflow:hidden;font-family:var(--font-display)">
+<!--
+blocks: accent (goud) 200×288 (space-8 multiples), line (petrol-lijn; surface vanishes on Kalk) 160×176 + coach 120×112 stacked, ai 96×64; corners radius-card 16 / radius-card-lg 20, ai pill rx 32
+arrangement: one tall gold slab bleeding off the right edge, satellites (teal, brons, ijs-teal) staggered left of it
+pattern: the brand's literal motif — one koerslijn: dotted ai route (dash 2 6 = space-2/space-1 pitch) with 5 waypoints (r 6) that turns solid coach after the 4th, the coach waypoint filled — "uitzetten en bijsturen" is the one idea the system is built on
+scales: space-4 gaps, space-8 offsets, radius-card 16, radius-card-lg 20, radius-pill
+-->
+<svg width="960" height="288" viewBox="0 0 960 288" style="position:absolute;inset:0;display:block" aria-hidden="true">
+  <style>
+    .accent{fill:var(--accent)} .surf{fill:var(--line)} .cop{fill:var(--coach)} .ice{fill:var(--ai)}
+    .tile{rx:var(--radius-card)} .tile-lg{rx:var(--radius-card-lg)}
+    .rt-ai{fill:none;stroke:var(--ai);stroke-width:2.5;stroke-dasharray:2 6;stroke-linecap:round}
+    .rt-co{fill:none;stroke:var(--coach);stroke-width:3;stroke-linecap:round}
+    .wp{fill:var(--bg);stroke:var(--ai);stroke-width:2.5} .wp-co{fill:var(--coach);stroke:var(--coach);stroke-width:2.5}
+  </style>
+  <rect class="accent tile-lg" x="792" y="0" width="200" height="288"/>
+  <rect class="surf tile" x="616" y="32" width="160" height="176"/>
+  <rect class="cop tile" x="656" y="176" width="120" height="112"/>
+  <rect class="ice" x="504" y="112" width="96" height="64" rx="32"/>
+  <path class="rt-ai" d="M496 232 C 540 232, 560 150, 616 150 S 690 90, 740 100 S 800 140, 860 120"/>
+  <path class="rt-co" d="M740 100 S 800 140, 860 120 S 930 80, 990 84"/>
+  <circle class="wp" cx="552" cy="180" r="6"/>
+  <circle class="wp" cx="616" cy="150" r="6"/>
+  <circle class="wp" cx="680" cy="104" r="6"/>
+  <circle class="wp-co" cx="740" cy="100" r="8"/>
+  <circle class="wp-co" cx="860" cy="120" r="6"/>
+</svg>
+<div style="position:absolute;left:48px;bottom:40px;max-width:440px">
+  <div style="font-size:96px;font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--text)">VELORIQ</div>
+  <div style="font-family:var(--font-sans);font-size:14px;color:var(--text-muted);margin-top:12px">AI rekent. Je coach beslist.</div>
+</div>
+</div>

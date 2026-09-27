@@ -1,0 +1,100 @@
+<!-- @dsCard group="Auth & onboarding" height=720 width=1440 page subtitle="Inloggen (split-screen): links donker met hoogtelijnen en mini-vormgrafiek, rechts het formulier op kalk. Wissel de state: standaard, laden, fout, verstuurd." -->
+<div class="app auth" id="au">
+<style>.app{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px}
+.app .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.app .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.app .top a{color:var(--text-muted);font-weight:500}
+.app .top a[aria-current]{color:var(--text)}
+.app .top .sp{flex:1}
+.app .av{width:26px;height:26px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.app .body{padding:20px 24px;display:grid;gap:16px}
+.app h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.app h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.app .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.app .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 12px}
+.app .f{display:grid;gap:6px}
+.app .f label{font-size:12px;font-weight:500}
+.app .f .hint{font-size:11.5px;color:var(--text-muted)}
+.app .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.app .tags{display:flex;gap:6px;flex-wrap:wrap}
+.app .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 12px var(--font-sans);color:var(--text-muted);cursor:pointer}
+.app .tag[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-text);color:var(--accent-text)}
+.app .sw{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.app .sw i{width:36px;height:20px;border-radius:999px;background:var(--accent);position:relative;display:inline-block}
+.app .sw i::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:999px;background:var(--on-accent)}
+.app .sw.off i{background:var(--line)}.app .sw.off i::after{right:auto;left:2px;background:var(--surface)}
+.app .cnt{font:11px var(--font-mono);color:var(--text-muted);text-align:right}
+.app .ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display);position:relative;overflow:hidden}
+.app .ph b{position:absolute;inset:0;border:2px dashed var(--on-coach);opacity:.5;border-radius:var(--radius-card);margin:10px}
+/* koerslijn voortgang */
+.app .prog{position:relative;padding:8px 0 22px}
+.app .prog svg{display:block;width:100%;height:56px}
+.app .prog .wl{font:500 10.5px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.04em}
+.app .prog .wl.on{fill:var(--text)}
+/* auth */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:720px}
+.auth .left{position:relative;padding:40px 48px;display:flex;flex-direction:column}
+.auth .left .brand{font:700 20px var(--font-display);letter-spacing:-.02em}
+.auth .left .quote{margin-top:auto;font:italic 22px/1.3 var(--font-serif);color:var(--coach);max-width:420px}
+.auth .left .who{font:12px var(--font-mono);color:var(--text-muted);margin-top:10px}
+.auth .mini{margin:40px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;max-width:440px}
+.auth .mini svg{display:block;width:100%}
+.auth .right{display:grid;place-items:center;padding:40px}
+.auth .form{width:360px;display:grid;gap:14px}
+.auth .form h1{font:700 30px var(--font-display);letter-spacing:-.02em;margin:0}
+.auth .or{display:flex;align-items:center;gap:10px;color:var(--text-muted);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.auth .or::before,.auth .or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.auth .states{display:flex;gap:6px;flex-wrap:wrap}
+.auth .btn{justify-content:center}
+.auth .spin{width:14px;height:14px;border-radius:999px;border:2px solid var(--on-accent);border-top-color:transparent;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth .spin{animation:none}}
+/* admin */
+.app .bar{height:6px;border-radius:3px;background:var(--surface-raised);position:relative;width:120px;display:inline-block;vertical-align:middle;margin-right:8px}
+.app .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--zone-4)}
+/* empty states */
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}
+.es .e{min-height:200px;display:grid;place-items:center;text-align:center;padding:24px;border-radius:var(--radius-card)}
+.es .e .ic{width:40px;height:40px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;margin:0 auto 12px}
+.es .e .ic svg{width:20px;height:20px;stroke-width:1.5}
+.es .e h4{font:700 17px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.es .e p{margin:0 0 12px;color:var(--text-muted);font-size:12.5px;line-height:1.45;max-width:240px}
+.brand{font:600 15px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}</style>
+<div class="left contour" data-theme="dark" style="background:var(--bg);color:var(--text)">
+  <div class="brand">VELORI<b>Q</b></div>
+  <div class="mini"><div style="font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Sanne · vorm deze maand</div><svg viewBox="0 0 416 120" id="au-svg"></svg></div>
+  <div class="quote">“De AI ziet wat je reed. Ik zie wat je nodig hebt.”</div><div class="who">Ruud Verhoeven · coach in Utrecht</div>
+</div>
+<div class="right" data-theme="light" style="background:var(--bg);color:var(--text)">
+  <div class="form">
+    <div class="states"><button class="chipbtn tag" data-s="idle" aria-pressed="true">Standaard</button><button class="tag" data-s="loading">Laden</button><button class="tag" data-s="error">Fout</button><button class="tag" data-s="sent">Verstuurd</button></div>
+    <div id="au-idle">
+      <h1>Inloggen</h1><p style="color:var(--text-muted);margin:6px 0 14px">Welkom terug. Je koers staat klaar.</p>
+      <div style="display:grid;gap:12px">
+        <button class="btn btn-lg"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 12.2c0-.7-.1-1.3-.2-1.9H12v3.7h5.4c-.2 1.2-.9 2.3-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3z"/><path fill="currentColor" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6C4.8 19.8 8.1 22 12 22z"/><path fill="currentColor" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1C2.4 8.8 2 10.4 2 12s.4 3.2 1.1 4.6L6.4 14z"/><path fill="currentColor" d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9C17 2.9 14.7 2 12 2 8.1 2 4.8 4.2 3.1 7.4L6.4 10c.8-2.3 3-4.1 5.6-4.1z"/></svg>Doorgaan met Google</button>
+        <div class="or">of</div>
+        <div class="f"><label>E-mail</label><input class="field" id="au-mail" value="sanne@voorbeeld.nl"></div>
+        <div class="f"><label style="display:flex;justify-content:space-between">Wachtwoord <a style="color:var(--accent-text);font-weight:500">Vergeten?</a></label><input class="field" type="password" id="au-pw" value="••••••••••"><div class="hint hint-error" id="au-err" style="display:none">E-mail of wachtwoord klopt niet. Probeer opnieuw of vraag een magic link.</div></div>
+        <button class="btn btn-primary btn-lg" id="au-go">Inloggen</button>
+        <button class="btn btn-ghost">Stuur me een magic link</button>
+        <div style="text-align:center;color:var(--text-muted);font-size:12.5px">Nog geen account? <a style="color:var(--accent-text);font-weight:500">Account aanmaken</a></div>
+      </div>
+    </div>
+    <div id="au-sent" style="display:none">
+      <div class="panel contour" style="padding:28px;text-align:center"><div style="width:44px;height:44px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;margin:0 auto 14px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div><h1 style="font-size:24px">Check je mail</h1><p style="color:var(--text-muted);margin:6px 0 16px">We stuurden een magic link naar <b style="color:var(--text)">sanne@voorbeeld.nl</b>. De link werkt 15 minuten.</p><button class="btn">Opnieuw versturen</button><div style="margin-top:12px;font:11px var(--font-mono);color:var(--text-muted)">Niets ontvangen? Kijk in je spam of <a style="color:var(--accent-text)">gebruik een wachtwoord</a>.</div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var s=5;function r(){s=(s*9301+49297)%233280;return s/233280}var ctl=50,atl=52,P=[];for(var i=0;i<30;i++){var t=[0,86,66,38,94,120,66][i%7]*(.9+r()*.2);ctl+=(t-ctl)/42;atl+=(t-atl)/7;P.push(ctl-atl)}
+  var x=function(i){return 8+i/29*400},y=function(v){return 10+(20-v)/50*100};function sm(A){var d='M'+A[0][0].toFixed(1)+' '+A[0][1].toFixed(1);for(var k=0;k<A.length-1;k++){var p0=A[k-1]||A[k],p1=A[k],p2=A[k+1],p3=A[k+2]||p2;d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)}return d}
+  var pts=P.map(function(v,i){return [x(i),y(v)]});
+  document.getElementById('au-svg').innerHTML='<rect x="8" y="'+y(-10)+'" width="400" height="'+(y(-30)-y(-10))+'" fill="var(--accent)" opacity=".09"/><rect x="8" y="'+y(20)+'" width="400" height="'+(y(5)-y(20))+'" fill="var(--delta-pos)" opacity=".08"/><path d="'+sm(pts)+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 0 4px var(--accent))"/><circle cx="'+pts[29][0]+'" cy="'+pts[29][1]+'" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><text x="'+(pts[29][0]-8)+'" y="'+(pts[29][1]-10)+'" text-anchor="end" style="font:11px var(--font-mono);fill:var(--text)">'+(P[29]>0?'+':'−')+Math.abs(Math.round(P[29]))+' · Optimaal</text>';
+  var go=document.getElementById('au-go'),err=document.getElementById('au-err'),pw=document.getElementById('au-pw');
+  function set(st){document.querySelectorAll('[data-s]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.s===st))});document.getElementById('au-idle').style.display=st==='sent'?'none':'';document.getElementById('au-sent').style.display=st==='sent'?'':'none';
+    go.disabled=st==='loading';go.innerHTML=st==='loading'?'<span class="spin"></span>Bezig met inloggen…':'Inloggen';err.style.display=st==='error'?'':'none';pw.setAttribute('aria-invalid',st==='error'?'true':'false')}
+  document.querySelectorAll('[data-s]').forEach(function(b){b.onclick=function(){set(b.dataset.s)}});
+})();
+</script>
+</div>

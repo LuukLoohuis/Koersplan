@@ -1,0 +1,9 @@
+Koers reviewen: het hart van het product voor de coach. Drie kolommen op licht; de grafiek in een donker paneel.
+
+- **Links, context**: mini-vormgrafiek (donker `surface`) met 28 dagen historie en twee projecties van 21 dagen — `chart-projection-ai` (gestippeld ijs-teal) en `chart-projection-coach` (gestippeld brons) die **live meebeweegt** zodra de coach iets wijzigt; eindwaarden als mono-label. Daaronder vorige week gepland (gestippelde balk) vs gereden, "op koers %", gevoel 1–5 en de opmerking van de atleet, en de eerstvolgende koers met verwachte vorm (volgt de coachprojectie).
+- **Midden, de uitgezette week**: koerslijn met 7 waypoints boven de dagen (waypoint wordt brons zodra die dag is bijgestuurd); per dag een rij met dag/datum, training (select uit de bibliotheek), intensiteitsprofiel in `zone-1…7`, duur, TSS, status en acties (naar vorige/volgende dag, verwijderen). Elke wijziging toont **was → wordt** (Correction) en kleurt de rijrand `coach`. Onderaan geplande TSS en uren, plus de verwachte conditie-delta.
+- **Rechts, actie**: "Waarom deze koers" (Voice, AI), notitie aan de atleet (textarea in `coach-note`-stijl), **Bevestigen** (`btn-coach`, 44px) met de animatie gestippeld → doorgetrokken over de koerslijn, waarna de status "Bevestigd door Ruud · za 27 sep" verschijnt; "Opnieuw laten uitzetten" met instructieveld; "Later" als ghost.
+- Slepen is hier vervangen door pijltjes (toetsenbordvriendelijk); in code kan drag-and-drop erbij, met dezelfde was → wordt-weergave.
+- De consumer levert de atleet, de AI-planning met onderbouwing, de bibliotheek, de historie voor de projectie en de handlers voor bevestigen/opnieuw/later.
+
+Handgeschreven uit de ontwerpbrief; de repo heeft een eenvoudiger editor (`src/components/WorkoutEditor.tsx`, `src/pages/PlanTab.tsx`) met live PMC-projectie, waar dit op voortbouwt.

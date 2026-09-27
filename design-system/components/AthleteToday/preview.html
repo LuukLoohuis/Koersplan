@@ -1,0 +1,148 @@
+<!-- @dsCard group="Atleet" height=900 width=390 subtitle="Vandaag (mobiel, donker): trainingskaart met intensiteitsprofiel, vormsnapshot, weekstrip, laatste coachnotitie, laatste rit, banner 'ligt bij Ruud'" -->
+<style>.ath{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px;position:relative}
+.ath.m{width:390px;min-height:844px;padding:0 0 76px;box-sizing:border-box}
+.ath .hdr{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
+.ath .hdr .brand{font:700 17px var(--font-display);letter-spacing:-.02em}
+.ath .hdr .sp{flex:1}
+.ath .hdr .av{width:28px;height:28px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.ath h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.ath .sub{color:var(--text-muted);font:12px var(--font-mono)}
+.ath .stack{display:grid;gap:12px;padding:8px 16px}
+.ath .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:14px}
+.ath .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.ath .card h3 a{color:var(--accent-text);font:500 11px var(--font-sans);text-transform:none;letter-spacing:0}
+.ath .banner{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--coach);background:var(--coach-soft);border-radius:var(--radius-card);font-size:12.5px}
+.ath .banner .av{width:28px;height:28px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.ath .banner b{font-weight:500;color:var(--coach-text)}
+.ath .wname{font:700 20px var(--font-display);letter-spacing:-.015em;margin:2px 0 4px}
+.ath .meta{font:12px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .prof{display:flex;gap:3px;height:56px;align-items:flex-end;margin:12px 0 6px}
+.ath .prof i{flex:1;border-radius:3px 3px 1px 1px;min-height:4px}
+.ath .zl{display:flex;justify-content:space-between;font:10px var(--font-mono);color:var(--text-muted)}
+.ath .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ath .snap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.ath .snap .k{font:500 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .snap .v{font:700 22px var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.ath .snap .d{font:11px var(--font-mono)}
+.ath .band{height:34px;border-radius:8px;position:relative;margin-top:10px;overflow:hidden;display:flex}
+.ath .band i{flex:1;opacity:.35}
+.ath .band b{position:absolute;top:4px;bottom:4px;width:3px;border-radius:2px;background:var(--accent);box-shadow:var(--shadow-glow-accent)}
+.ath .band span{position:absolute;top:0;bottom:0;display:grid;align-items:center;font:10px var(--font-mono);color:var(--text)}
+.ath .week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ath .week .d{text-align:center;padding:8px 0 6px;border-radius:10px;background:var(--surface-raised)}
+.ath .week .d small{display:block;font:10px var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.ath .week .d i{display:block;width:8px;height:8px;border-radius:999px;margin:6px auto 0}
+.ath .week .d.today{outline:1px solid var(--accent-text)}
+.ath .week .d b{display:block;font:500 11px var(--font-mono);margin-top:4px;font-variant-numeric:tabular-nums}
+.ath .cmp{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;font:12px var(--font-mono);font-variant-numeric:tabular-nums}
+.ath .cmp .b{height:8px;border-radius:4px;background:var(--surface-raised);position:relative}
+.ath .cmp .b i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.ath .tabs{position:absolute;left:0;right:0;bottom:0;height:64px;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:6px}
+.ath .tabs a{display:grid;justify-items:center;gap:3px;font:500 10.5px var(--font-sans);color:var(--text-muted)}
+.ath .tabs a[aria-current]{color:var(--text)}
+.ath .tabs svg{width:20px;height:20px;stroke-width:1.5}
+.ath .tabs a[aria-current] svg{color:var(--accent)}
+.ath .tabs .dot{position:relative}
+.ath .tabs .dot::after{content:"";position:absolute;top:-2px;right:-6px;width:7px;height:7px;border-radius:999px;background:var(--coach)}
+/* schema desktop */
+.ath.d{min-height:900px}
+.ath.d .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.ath.d .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.ath.d .top a{color:var(--text-muted);font-weight:500}
+.ath.d .top a[aria-current]{color:var(--text)}
+.ath.d .top .sp{flex:1}
+.ath.d .body{padding:20px 24px;display:grid;gap:14px}
+.ath .whead{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ath .whead .kv{display:flex;gap:18px;font:12px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .whead .kv b{color:var(--text);font-weight:500}
+.ath .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
+.ath .seg button{height:26px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--text-muted);font:500 12px var(--font-sans);cursor:pointer}
+.ath .seg button[aria-pressed="true"]{background:var(--surface-raised);color:var(--text)}
+.ath .cols7{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.ath .dayc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;min-height:220px;display:grid;align-content:start;gap:8px}
+.ath .dayc.today{border-color:var(--accent-text)}
+.ath .dayc.past{opacity:.85}
+.ath .dayc .dh{display:flex;justify-content:space-between;align-items:baseline}
+.ath .dayc .dh small{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .dayc .dh span{font:11px var(--font-mono);color:var(--text-muted)}
+.ath .dayc .n{font:600 14px var(--font-sans)}
+.ath .dayc .mp{display:flex;gap:2px;height:24px;align-items:flex-end}
+.ath .dayc .mp i{flex:1;border-radius:2px}
+.ath .dayc .gg{font:11px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .dayc .gg b{color:var(--text);font-weight:500}
+/* koerslijn variant */
+.ath .kl{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.ath .kl svg{display:block;width:100%}
+.ath .kl .wpl{font:500 11px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.06em}
+.ath .kl .wn{font:600 12.5px var(--font-sans);fill:var(--text);text-anchor:middle}
+.ath .kl .wm{font:11px var(--font-mono);fill:var(--text-muted);text-anchor:middle}
+/* mobiel schema lijst */
+.ath .lst{display:grid;gap:8px}
+.ath .li{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:10px 12px}
+.ath .li.today{border-color:var(--accent-text)}
+.ath .li .dd{text-align:center}
+.ath .li .dd small{display:block;font:500 10px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .li .dd b{font:700 16px var(--font-display)}
+.ath .li .n{font-weight:600}
+.ath .li .m{font:11px var(--font-mono);color:var(--text-muted);margin-top:2px}
+.ath .li .mp{display:flex;gap:2px;height:14px;align-items:flex-end;margin-top:6px;width:120px}
+.ath .li .mp i{flex:1;border-radius:1px}
+/* workout detail */
+.ath .wo{height:140px;position:relative}
+.ath .wo svg{display:block;width:100%;height:100%}
+.ath .steps{display:grid;gap:0}
+.ath .st{display:grid;grid-template-columns:10px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.ath .st:last-child{border-bottom:0}
+.ath .st i{width:10px;height:10px;border-radius:2px}
+.ath .st .m{font:11.5px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .st .rep{color:var(--text-muted);font:500 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;grid-column:1/-1;padding-top:8px}
+.ath .sync{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
+.ath .btn{justify-content:center}
+
+.brand{font:600 16px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}
+</style>
+<div class="ath m" data-theme="dark">
+<div class="hdr"><span class="brand">VELORI<b>Q</b></span><span class="sp"></span><span class="chip chip-accent" style="height:20px">Op koers · 92%</span><span class="av">SV</span></div>
+<div style="padding:4px 16px 6px"><h1>Vandaag</h1><div class="sub">za 27 sep · week 39 · dag 6</div></div>
+<div class="stack">
+  <div class="banner"><span class="av">RV</span><div><b>Je nieuwe koers ligt bij Ruud</b><br>Week 40 · uiterlijk morgen bevestigd</div></div>
+  <div class="card">
+    <h3>Training van vandaag <span class="chip chip-coach-solid" style="height:18px;font-size:10.5px">✓ Bevestigd</span></h3>
+    <div class="wname">Lange duurrit</div>
+    <div class="meta">4:00 · TSS 150 · IF 0,68 · Z2 met 3× 5 min Z3</div>
+    <div class="prof" id="td-prof"></div>
+    <div class="zl"><span>0:00</span><span>1:00</span><span>2:00</span><span>3:00</span><span>4:00</span></div>
+    <div class="row" style="margin-top:12px"><a class="btn btn-primary" style="flex:1">Bekijk training</a><a class="btn">Waarom</a></div>
+  </div>
+  <div class="card">
+    <h3>Vorm <a>Volledige grafiek →</a></h3>
+    <div class="snap"><div><div class="k">Conditie</div><div class="v">58</div><div class="d" style="color:var(--delta-pos)">▲ 2,7</div></div><div><div class="k">Vermoeidheid</div><div class="v">71</div><div class="d" style="color:var(--delta-pos)">▲ 14,1</div></div><div><div class="k">Vorm</div><div class="v">−13</div><div class="d" style="color:var(--accent-text)">Optimaal</div></div></div>
+    <div class="band"><i style="background:var(--delta-neg)"></i><i style="background:var(--accent)"></i><i style="background:var(--text-muted)"></i><i style="background:var(--delta-pos)"></i><i style="background:var(--text-muted)"></i><b style="left:34%"></b><span style="left:8px">−30</span><span style="right:8px">+20</span></div>
+  </div>
+  <div class="card">
+    <h3>Deze week <span class="meta">486 / 502 TSS</span></h3>
+    <div class="week" id="td-week"></div>
+  </div>
+  <div class="voice-coach"><div class="avatar">RV</div><div><div class="who">Ruud · do 25 sep</div><div class="note">Goed gedaan dinsdag. Zaterdag lekker lang, rustig tempo — geen heldenwerk.</div></div></div>
+  <div class="card">
+    <h3>Laatste rit · do 25 sep <span class="chip chip-good" style="height:18px;font-size:10.5px">Op koers 94%</span></h3>
+    <div style="font-weight:600;margin-bottom:8px">VO2max 5×3 <span class="meta">· via Intervals.icu</span></div>
+    <div class="cmp"><span>Duur</span><div class="b"><i style="width:96%;background:var(--zone-3)"></i></div><span>1:12 / 1:15</span><span>TSS</span><div class="b"><i style="width:92%;background:var(--zone-5)"></i></div><span>88 / 96</span><span>NP</span><div class="b"><i style="width:100%;background:var(--zone-4)"></i></div><span>261 W</span></div>
+  </div>
+</div>
+<nav class="tabs">
+<a aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>Vandaag</a>
+<a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 5-8 4 5"/></svg>Vorm</a>
+<a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Schema</a>
+<a class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c4 0 4-12 8-12s4 12 8 12"/><circle cx="12" cy="6" r="2"/></svg>Voorstellen</a>
+<a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/></svg>Check-in</a>
+</nav>
+
+<script>
+(function(){
+  var p=document.getElementById('td-prof');var z=[1,2,2,2,3,2,2,3,2,2,3,2,2,2,1];p.innerHTML=z.map(function(v){return '<i style="height:'+(v*14+8)+'%;background:var(--zone-'+v+')"></i>'}).join('');
+  var w=document.getElementById('td-week');var d=[['ma','',0,'r'],['di','88','g','gereden'],['wo','68','g','gereden'],['do','88','g','gereden'],['vr','40','g','gereden'],['za','150','t','vandaag'],['zo','66','p','gepland']];
+  w.innerHTML=d.map(function(x){var c=x[2]==='g'?'var(--delta-pos)':x[2]==='t'?'var(--accent)':x[2]==='p'?'var(--ai)':'var(--line)';return '<div class="d'+(x[2]==='t'?' today':'')+'"><small>'+x[0]+'</small><i style="background:'+c+'"></i><b>'+(x[1]||'—')+'</b></div>'}).join('');
+})();
+</script>
+</div>

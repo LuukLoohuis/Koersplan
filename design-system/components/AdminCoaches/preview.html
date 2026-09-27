@@ -1,0 +1,75 @@
+<!-- @dsCard group="Admin" height=560 width=1440 page subtitle="Admin · Coaches: uitnodigen, goedkeuren, pauzeren; overzicht van atleten per coach" -->
+<div class="app" data-theme="light">
+<style>.app{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px}
+.app .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.app .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.app .top a{color:var(--text-muted);font-weight:500}
+.app .top a[aria-current]{color:var(--text)}
+.app .top .sp{flex:1}
+.app .av{width:26px;height:26px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.app .body{padding:20px 24px;display:grid;gap:16px}
+.app h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.app h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.app .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.app .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 12px}
+.app .f{display:grid;gap:6px}
+.app .f label{font-size:12px;font-weight:500}
+.app .f .hint{font-size:11.5px;color:var(--text-muted)}
+.app .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.app .tags{display:flex;gap:6px;flex-wrap:wrap}
+.app .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 12px var(--font-sans);color:var(--text-muted);cursor:pointer}
+.app .tag[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-text);color:var(--accent-text)}
+.app .sw{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.app .sw i{width:36px;height:20px;border-radius:999px;background:var(--accent);position:relative;display:inline-block}
+.app .sw i::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:999px;background:var(--on-accent)}
+.app .sw.off i{background:var(--line)}.app .sw.off i::after{right:auto;left:2px;background:var(--surface)}
+.app .cnt{font:11px var(--font-mono);color:var(--text-muted);text-align:right}
+.app .ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display);position:relative;overflow:hidden}
+.app .ph b{position:absolute;inset:0;border:2px dashed var(--on-coach);opacity:.5;border-radius:var(--radius-card);margin:10px}
+/* koerslijn voortgang */
+.app .prog{position:relative;padding:8px 0 22px}
+.app .prog svg{display:block;width:100%;height:56px}
+.app .prog .wl{font:500 10.5px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.04em}
+.app .prog .wl.on{fill:var(--text)}
+/* auth */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:720px}
+.auth .left{position:relative;padding:40px 48px;display:flex;flex-direction:column}
+.auth .left .brand{font:700 20px var(--font-display);letter-spacing:-.02em}
+.auth .left .quote{margin-top:auto;font:italic 22px/1.3 var(--font-serif);color:var(--coach);max-width:420px}
+.auth .left .who{font:12px var(--font-mono);color:var(--text-muted);margin-top:10px}
+.auth .mini{margin:40px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;max-width:440px}
+.auth .mini svg{display:block;width:100%}
+.auth .right{display:grid;place-items:center;padding:40px}
+.auth .form{width:360px;display:grid;gap:14px}
+.auth .form h1{font:700 30px var(--font-display);letter-spacing:-.02em;margin:0}
+.auth .or{display:flex;align-items:center;gap:10px;color:var(--text-muted);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.auth .or::before,.auth .or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.auth .states{display:flex;gap:6px;flex-wrap:wrap}
+.auth .btn{justify-content:center}
+.auth .spin{width:14px;height:14px;border-radius:999px;border:2px solid var(--on-accent);border-top-color:transparent;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth .spin{animation:none}}
+/* admin */
+.app .bar{height:6px;border-radius:3px;background:var(--surface-raised);position:relative;width:120px;display:inline-block;vertical-align:middle;margin-right:8px}
+.app .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--zone-4)}
+/* empty states */
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}
+.es .e{min-height:200px;display:grid;place-items:center;text-align:center;padding:24px;border-radius:var(--radius-card)}
+.es .e .ic{width:40px;height:40px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;margin:0 auto 12px}
+.es .e .ic svg{width:20px;height:20px;stroke-width:1.5}
+.es .e h4{font:700 17px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.es .e p{margin:0 0 12px;color:var(--text-muted);font-size:12.5px;line-height:1.45;max-width:240px}
+.brand{font:600 15px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}</style>
+<div class="top"><span class="brand"><img src="/_blob/6707f0f4c1df89cbb27b8be3d0ab9ef2" alt="VELORIQ"></span><a aria-current="page">Coaches</a><a>Atleten</a><a>Abonnementen</a><span class="sp"></span><span class="chip">Admin</span></div>
+<div class="body">
+  <div style="display:flex;align-items:center;gap:14px"><h1>Coaches</h1><span class="sub" style="color:var(--text-muted);font:12px var(--font-mono)">6 actief · 1 wacht op goedkeuring · 1 gepauzeerd</span><span style="flex:1"></span><button class="btn btn-primary">Coach uitnodigen</button></div>
+  <div class="panel" style="overflow:hidden"><table class="data"><thead><tr><th>Coach</th><th>Woonplaats</th><th>Status</th><th>Atleten</th><th>Beschikbaar</th><th>Sinds</th><th></th></tr></thead><tbody>
+    <tr><td><b style="font-weight:500">Ruud Verhoeven</b><br><small style="font:11px var(--font-mono);color:var(--text-muted)">ruud@voorbeeld.nl</small></td><td>Utrecht</td><td><span class="chip chip-good">✓ Actief</span></td><td><span class="bar"><i style="width:80%"></i></span><span class="num">12 / 15</span></td><td>Ja · 3 plekken</td><td class="num">mrt 2026</td><td style="text-align:right"><button class="btn btn-sm btn-ghost">Pauzeren</button></td></tr>
+    <tr><td><b style="font-weight:500">Marieke Kok</b><br><small style="font:11px var(--font-mono);color:var(--text-muted)">marieke@voorbeeld.nl</small></td><td>Nijmegen</td><td><span class="chip chip-good">✓ Actief</span></td><td><span class="bar"><i style="width:90%"></i></span><span class="num">9 / 10</span></td><td>Ja · 1 plek</td><td class="num">apr 2026</td><td style="text-align:right"><button class="btn btn-sm btn-ghost">Pauzeren</button></td></tr>
+    <tr><td><b style="font-weight:500">Jasper de Boer</b><br><small style="font:11px var(--font-mono);color:var(--text-muted)">jasper@voorbeeld.nl</small></td><td>Groningen</td><td><span class="chip chip-good">✓ Actief</span></td><td><span class="bar"><i style="width:100%"></i></span><span class="num">12 / 12</span></td><td>Nee · vol</td><td class="num">mei 2026</td><td style="text-align:right"><button class="btn btn-sm btn-ghost">Pauzeren</button></td></tr>
+    <tr style="background:var(--warn-soft)"><td><b style="font-weight:500">Eva Willems</b><br><small style="font:11px var(--font-mono);color:var(--text-muted)">eva@voorbeeld.nl</small></td><td>Eindhoven</td><td><span class="chip chip-warn">Wacht op goedkeuring</span></td><td><span class="bar"><i style="width:0"></i></span><span class="num">0 / 10</span></td><td>—</td><td class="num">aanvraag 25 sep</td><td style="text-align:right"><button class="btn btn-sm btn-primary">Goedkeuren</button> <button class="btn btn-sm btn-ghost">Afwijzen</button></td></tr>
+    <tr style="opacity:.7"><td><b style="font-weight:500">Pieter Bos</b><br><small style="font:11px var(--font-mono);color:var(--text-muted)">pieter@voorbeeld.nl</small></td><td>Zwolle</td><td><span class="chip">Gepauzeerd</span></td><td><span class="bar"><i style="width:40%;background:var(--text-muted)"></i></span><span class="num">4 / 10</span></td><td>Nee</td><td class="num">feb 2026</td><td style="text-align:right"><button class="btn btn-sm">Hervatten</button></td></tr>
+  </tbody></table></div>
+  <div class="grid2" style="max-width:720px"><div class="card"><h3>Uitnodiging</h3><div class="f"><label>E-mail van de coach</label><div style="display:flex;gap:8px"><input class="field" placeholder="naam@voorbeeld.nl"><button class="btn">Verstuur</button></div><div class="hint">De coach maakt een account, vult het profiel in en verschijnt hier ter goedkeuring.</div></div></div><div class="card"><h3>Totaal</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="hint">Atleten bij een coach</div><div style="font:700 26px var(--font-display)">37</div></div><div><div class="hint">Vrije plekken</div><div style="font:700 26px var(--font-display)">4</div></div></div></div></div>
+</div>
+</div>

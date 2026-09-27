@@ -1,0 +1,99 @@
+<!-- @dsCard group="Coach" height=720 width=1440 page subtitle="Coachprofiel bewerken: velden links (foto, naam, woonplaats, bio met teller, specialismen, certificering, plekken, beschikbaar), live voorbeeld van de publieke coachkaart rechts" -->
+<div class="app" data-theme="light" id="cp">
+<style>.app{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px}
+.app .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.app .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.app .top a{color:var(--text-muted);font-weight:500}
+.app .top a[aria-current]{color:var(--text)}
+.app .top .sp{flex:1}
+.app .av{width:26px;height:26px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.app .body{padding:20px 24px;display:grid;gap:16px}
+.app h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.app h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.app .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.app .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 12px}
+.app .f{display:grid;gap:6px}
+.app .f label{font-size:12px;font-weight:500}
+.app .f .hint{font-size:11.5px;color:var(--text-muted)}
+.app .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.app .tags{display:flex;gap:6px;flex-wrap:wrap}
+.app .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 12px var(--font-sans);color:var(--text-muted);cursor:pointer}
+.app .tag[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-text);color:var(--accent-text)}
+.app .sw{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.app .sw i{width:36px;height:20px;border-radius:999px;background:var(--accent);position:relative;display:inline-block}
+.app .sw i::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:999px;background:var(--on-accent)}
+.app .sw.off i{background:var(--line)}.app .sw.off i::after{right:auto;left:2px;background:var(--surface)}
+.app .cnt{font:11px var(--font-mono);color:var(--text-muted);text-align:right}
+.app .ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display);position:relative;overflow:hidden}
+.app .ph b{position:absolute;inset:0;border:2px dashed var(--on-coach);opacity:.5;border-radius:var(--radius-card);margin:10px}
+/* koerslijn voortgang */
+.app .prog{position:relative;padding:8px 0 22px}
+.app .prog svg{display:block;width:100%;height:56px}
+.app .prog .wl{font:500 10.5px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.04em}
+.app .prog .wl.on{fill:var(--text)}
+/* auth */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:720px}
+.auth .left{position:relative;padding:40px 48px;display:flex;flex-direction:column}
+.auth .left .brand{font:700 20px var(--font-display);letter-spacing:-.02em}
+.auth .left .quote{margin-top:auto;font:italic 22px/1.3 var(--font-serif);color:var(--coach);max-width:420px}
+.auth .left .who{font:12px var(--font-mono);color:var(--text-muted);margin-top:10px}
+.auth .mini{margin:40px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;max-width:440px}
+.auth .mini svg{display:block;width:100%}
+.auth .right{display:grid;place-items:center;padding:40px}
+.auth .form{width:360px;display:grid;gap:14px}
+.auth .form h1{font:700 30px var(--font-display);letter-spacing:-.02em;margin:0}
+.auth .or{display:flex;align-items:center;gap:10px;color:var(--text-muted);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.auth .or::before,.auth .or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.auth .states{display:flex;gap:6px;flex-wrap:wrap}
+.auth .btn{justify-content:center}
+.auth .spin{width:14px;height:14px;border-radius:999px;border:2px solid var(--on-accent);border-top-color:transparent;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth .spin{animation:none}}
+/* admin */
+.app .bar{height:6px;border-radius:3px;background:var(--surface-raised);position:relative;width:120px;display:inline-block;vertical-align:middle;margin-right:8px}
+.app .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--zone-4)}
+/* empty states */
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}
+.es .e{min-height:200px;display:grid;place-items:center;text-align:center;padding:24px;border-radius:var(--radius-card)}
+.es .e .ic{width:40px;height:40px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;margin:0 auto 12px}
+.es .e .ic svg{width:20px;height:20px;stroke-width:1.5}
+.es .e h4{font:700 17px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.es .e p{margin:0 0 12px;color:var(--text-muted);font-size:12.5px;line-height:1.45;max-width:240px}
+ .cp-cols{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start}
+.pc{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:22px;border-radius:var(--radius-card-lg)}
+.pc .n{font:700 20px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.pc .loc{font:12px var(--font-mono);color:var(--text-muted);margin-bottom:10px}
+.pc .q{font:italic 16px/1.35 var(--font-serif);color:var(--coach-text);margin:12px 0}
+.pc .f{display:flex;justify-content:space-between;align-items:center;gap:8px}.brand{font:600 15px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}</style>
+<div class="top"><span class="brand"><img src="/_blob/6707f0f4c1df89cbb27b8be3d0ab9ef2" alt="VELORIQ"></span><a>Mijn atleten</a><a>Check-ins</a><a aria-current="page">Mijn profiel</a><span class="sp"></span><span class="av">RV</span></div>
+<div class="body cp-cols">
+  <div style="display:grid;gap:14px">
+    <h1>Mijn profiel</h1>
+    <div class="card" style="display:grid;gap:14px">
+      <div style="display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center"><div class="ph">RV<b></b></div><div class="f"><label>Foto</label><div style="display:flex;gap:8px"><button class="btn btn-sm">Upload foto</button><button class="btn btn-sm btn-ghost">Bijsnijden</button></div><div class="hint">Staand, minimaal 600×750 px. Je wordt herkend aan deze foto in de app.</div></div></div>
+      <div class="grid2"><div class="f"><label>Naam</label><input class="field" id="cp-name" value="Ruud Verhoeven"></div><div class="f"><label>Woonplaats</label><input class="field" id="cp-loc" value="Utrecht"></div></div>
+      <div class="f"><label>Korte bio</label><textarea class="field" id="cp-bio" rows="3">Klimmer, gravelrijder en al 12 jaar trainer. Ik geloof in rustig opbouwen en één harde dag te weinig.</textarea><div class="cnt" id="cp-cnt">0 / 280</div></div>
+      <div class="f"><label>Specialismen</label><div class="tags" id="cp-tags"><button class="tag" aria-pressed="true">weg</button><button class="tag" aria-pressed="true">gravel</button><button class="tag">MTB</button><button class="tag" aria-pressed="true">tijdrijden</button><button class="tag">triatlon</button></div></div>
+      <div class="grid2"><div class="f"><label>Certificering</label><input class="field" value="KNWU Wielertrainer 3"></div><div class="f"><label>Ervaring</label><input class="field" value="12 jaar"></div></div>
+      <div class="grid2"><div class="f"><label>Max. aantal atleten</label><input class="field" id="cp-max" value="15" style="width:100px"></div><div class="f"><label>Beschikbaar voor nieuwe atleten</label><span class="sw" id="cp-av"><i></i><span>Ja</span></span></div></div>
+      <div class="f"><label>Citaat op je kaart</label><input class="field" id="cp-q" value="Rustig opbouwen, de vorm komt vanzelf."></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn btn-ghost">Annuleren</button><button class="btn btn-primary">Opslaan</button></div>
+    </div>
+  </div>
+  <div style="display:grid;gap:10px;position:sticky;top:20px"><h3 style="font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0">Zo zien atleten je</h3>
+    <article class="panel contour pc" data-theme="dark" style="background:var(--surface);color:var(--text)"><div class="ph" style="border-radius:var(--radius-card)">RV</div><div><h3 class="n" id="pv-name">Ruud Verhoeven</h3><div class="loc">⌖ <span id="pv-loc">Utrecht</span></div><div class="tags" id="pv-tags"></div><div class="q" id="pv-q"></div><div class="f"><span class="chip chip-accent" id="pv-slots">3 plekken vrij</span><button class="btn btn-sm">Train met <span id="pv-first">Ruud</span></button></div></div></article>
+    <div style="font-size:12px;color:var(--text-muted)">Je hebt nu <b style="color:var(--text)">12</b> atleten. Met max. <b style="color:var(--text)" id="pv-max">15</b> zijn er <b style="color:var(--text)" id="pv-free">3</b> plekken vrij.</div>
+  </div>
+</div>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  function upd(){$('pv-name').textContent=$('cp-name').value;$('pv-first').textContent=$('cp-name').value.split(' ')[0];$('pv-loc').textContent=$('cp-loc').value;$('pv-q').textContent='“'+$('cp-q').value+'”';$('cp-cnt').textContent=$('cp-bio').value.length+' / 280';$('cp-cnt').style.color=$('cp-bio').value.length>280?'var(--delta-neg)':'';
+    $('pv-tags').innerHTML=[].map.call(document.querySelectorAll('#cp-tags .tag[aria-pressed="true"]'),function(t){return '<span class="chip">'+t.textContent+'</span>'}).join('');
+    var free=Math.max(0,(+$('cp-max').value||0)-12),av=!$('cp-av').classList.contains('off');$('pv-max').textContent=$('cp-max').value;$('pv-free').textContent=free;var s=$('pv-slots');s.className='chip '+(av&&free?'chip-accent':'');s.textContent=av&&free?free+(free===1?' plek vrij':' plekken vrij'):'Vol · wachtlijst'}
+  ['cp-name','cp-loc','cp-q','cp-bio','cp-max'].forEach(function(id){$(id).addEventListener('input',upd)});
+  document.querySelectorAll('#cp-tags .tag').forEach(function(t){t.onclick=function(){t.setAttribute('aria-pressed',String(t.getAttribute('aria-pressed')!=='true'));upd()}});
+  $('cp-av').onclick=function(){this.classList.toggle('off');this.querySelector('span').textContent=this.classList.contains('off')?'Nee':'Ja';upd()};upd();
+})();
+</script>
+</div>

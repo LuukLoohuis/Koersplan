@@ -1,0 +1,135 @@
+/* VELORIQ design tokens — gegenereerd uit design-system/tokens.json. Donker is het standaardthema; zet data-theme="light" op <html> of een sectie voor het lichte thema. */
+:root, [data-theme="dark"] {
+  --bg: #0b1614;
+  --surface: #142826;
+  --surface-raised: #1a3330;
+  --line: #24403c;
+  --text: #ece6d8;
+  --text-muted: #9aa8a0;
+  --accent: #c8a46a;
+  --on-accent: #142826;
+  --accent-text: #c8a46a;
+  --accent-soft: #c8a46a26;
+  --ai: #8ed4cb;
+  --ai-text: #8ed4cb;
+  --ai-soft: #8ed4cb1f;
+  --coach: #c47a3a;
+  --on-coach: #142826;
+  --coach-text: #d98b48;
+  --coach-soft: #c47a3a1f;
+  --fatigue: #86a5cc;
+  --fatigue-text: #86a5cc;
+  --delta-pos: #5cc98f;
+  --delta-neg: #ff5a5f;
+  --warn: #e0a93f;
+  --good-soft: #13281c;
+  --warn-soft: #2b2212;
+  --crit-soft: #2e1616;
+  --chart-ctl: var(--accent);
+  --chart-atl: var(--fatigue);
+  --chart-tsb-pos: var(--delta-pos);
+  --chart-tsb-neg: var(--delta-neg);
+  --chart-projection-ai: var(--ai);
+  --chart-projection-coach: var(--coach);
+  --chart-plan: #8a95a3;
+  --chart-wbal: #199e70;
+  --zone-1: #184f95;
+  --zone-2: #1c5cab;
+  --zone-3: #256abf;
+  --zone-4: #3987e5;
+  --zone-5: #6da7ec;
+  --zone-6: #9ec5f4;
+  --zone-7: #cde2fb;
+  --focus: var(--accent-text);
+  --contour: #24403c;
+  --shadow-tooltip: 0 6px 24px #0000002e;
+  --shadow-glow-accent: 0 0 12px #c8a46a80;
+  --shadow-glow-coach: 0 0 10px #c47a3a80;
+}
+[data-theme="light"] {
+  --bg: #f5f1e8;
+  --surface: #ffffff;
+  --surface-raised: #ece7dc;
+  --line: #e2ddd0;
+  --text: #142826;
+  --text-muted: #5e6b66;
+  --accent: #c8a46a;
+  --on-accent: #142826;
+  --accent-text: #7c5e2a;
+  --accent-soft: #c8a46a40;
+  --ai: #8ed4cb;
+  --ai-text: #1f6f66;
+  --ai-soft: #8ed4cb3d;
+  --coach: #c47a3a;
+  --on-coach: #142826;
+  --coach-text: #8f4f1c;
+  --coach-soft: #c47a3a30;
+  --fatigue: #86a5cc;
+  --fatigue-text: #4f6a85;
+  --delta-pos: #1f8a4c;
+  --delta-neg: #c83a3a;
+  --warn: #b7791f;
+  --good-soft: #e3f4ea;
+  --warn-soft: #fbf0dc;
+  --crit-soft: #fbe5e5;
+  --chart-ctl: var(--accent);
+  --chart-atl: var(--fatigue);
+  --chart-tsb-pos: var(--delta-pos);
+  --chart-tsb-neg: var(--delta-neg);
+  --chart-projection-ai: var(--ai);
+  --chart-projection-coach: var(--coach);
+  --chart-plan: #7c8795;
+  --chart-wbal: #1baf7a;
+  --zone-1: #b7d3f6;
+  --zone-2: #86b6ef;
+  --zone-3: #5598e7;
+  --zone-4: #2a78d6;
+  --zone-5: #1c5cab;
+  --zone-6: #104281;
+  --zone-7: #0d366b;
+  --focus: var(--accent-text);
+  --contour: #e2ddd0;
+  --shadow-tooltip: 0 6px 24px #0000002e;
+  --shadow-glow-accent: 0 0 8px #c8a46a66;
+  --shadow-glow-coach: 0 0 10px #c47a3a80;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-16: 64px;
+  --radius-sm: 6px;
+  --radius-control: 8px;
+  --radius-card: 16px;
+  --radius-card-lg: 20px;
+  --radius-pill: 999px;
+  --font-display: "Bricolage Grotesque", "Geist", system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+@font-face { font-family: "Bricolage Grotesque"; src: url(./fonts/BricolageGrotesque-Variable.woff2) format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist"; src: url(./fonts/Geist-Variable.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url(./fonts/GeistMono-Variable.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url(./fonts/InstrumentSerif-Regular.woff2) format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url(./fonts/InstrumentSerif-Italic.woff2) format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+.display-hero { font-family: var(--font-display); font-size: 64px; line-height: 0.95; font-weight: 800; letter-spacing: -0.03em; }
+.display-lg { font-family: var(--font-display); font-size: 40px; line-height: 1.0; font-weight: 700; letter-spacing: -0.02em; }
+.h1 { font-family: var(--font-display); font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; }
+.h2 { font-family: var(--font-display); font-size: 18px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.kpi { font-family: var(--font-display); font-size: 22px; line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
+.body { font-family: var(--font-sans); font-size: 14px; line-height: 1.45; font-weight: 400; }
+.body-medium { font-family: var(--font-sans); font-size: 13px; line-height: 1.4; font-weight: 500; }
+.caption { font-family: var(--font-sans); font-size: 12px; line-height: 1.4; font-weight: 400; }
+.micro { font-family: var(--font-sans); font-size: 11.5px; line-height: 1.3; font-weight: 500; }
+.num { font-family: var(--font-mono); font-size: 13px; line-height: 1.4; font-weight: 500; letter-spacing: -0.01em; }
+.label { font-family: var(--font-mono); font-size: 11px; line-height: 1.2; font-weight: 500; letter-spacing: 0.06em; }
+.ai-voice { font-family: var(--font-mono); font-size: 13px; line-height: 1.55; font-weight: 400; }
+.axis { font-family: var(--font-mono); font-size: 11px; line-height: 1.2; font-weight: 400; }
+.coach-quote { font-family: var(--font-serif); font-size: 22px; line-height: 1.3; font-weight: 400; font-style: italic; }
+.coach-note { font-family: var(--font-serif); font-size: 15px; line-height: 1.45; font-weight: 400; font-style: italic; }

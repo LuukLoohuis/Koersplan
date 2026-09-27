@@ -1,0 +1,124 @@
+<!-- @dsCard group="Atleet" height=560 width=1440 page subtitle="Schema desktop: 7 kolommen met gepland vs gereden, plus de koerslijn-variant (toggle rechtsboven)" -->
+<style>.ath{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px;position:relative}
+.ath.m{width:390px;min-height:844px;padding:0 0 76px;box-sizing:border-box}
+.ath .hdr{display:flex;align-items:center;gap:10px;padding:14px 16px 8px}
+.ath .hdr .brand{font:700 17px var(--font-display);letter-spacing:-.02em}
+.ath .hdr .sp{flex:1}
+.ath .hdr .av{width:28px;height:28px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.ath h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.ath .sub{color:var(--text-muted);font:12px var(--font-mono)}
+.ath .stack{display:grid;gap:12px;padding:8px 16px}
+.ath .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:14px}
+.ath .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.ath .card h3 a{color:var(--accent-text);font:500 11px var(--font-sans);text-transform:none;letter-spacing:0}
+.ath .banner{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--coach);background:var(--coach-soft);border-radius:var(--radius-card);font-size:12.5px}
+.ath .banner .av{width:28px;height:28px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.ath .banner b{font-weight:500;color:var(--coach-text)}
+.ath .wname{font:700 20px var(--font-display);letter-spacing:-.015em;margin:2px 0 4px}
+.ath .meta{font:12px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .prof{display:flex;gap:3px;height:56px;align-items:flex-end;margin:12px 0 6px}
+.ath .prof i{flex:1;border-radius:3px 3px 1px 1px;min-height:4px}
+.ath .zl{display:flex;justify-content:space-between;font:10px var(--font-mono);color:var(--text-muted)}
+.ath .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ath .snap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.ath .snap .k{font:500 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .snap .v{font:700 22px var(--font-display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:2px}
+.ath .snap .d{font:11px var(--font-mono)}
+.ath .band{height:34px;border-radius:8px;position:relative;margin-top:10px;overflow:hidden;display:flex}
+.ath .band i{flex:1;opacity:.35}
+.ath .band b{position:absolute;top:4px;bottom:4px;width:3px;border-radius:2px;background:var(--accent);box-shadow:var(--shadow-glow-accent)}
+.ath .band span{position:absolute;top:0;bottom:0;display:grid;align-items:center;font:10px var(--font-mono);color:var(--text)}
+.ath .week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ath .week .d{text-align:center;padding:8px 0 6px;border-radius:10px;background:var(--surface-raised)}
+.ath .week .d small{display:block;font:10px var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em}
+.ath .week .d i{display:block;width:8px;height:8px;border-radius:999px;margin:6px auto 0}
+.ath .week .d.today{outline:1px solid var(--accent-text)}
+.ath .week .d b{display:block;font:500 11px var(--font-mono);margin-top:4px;font-variant-numeric:tabular-nums}
+.ath .cmp{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;font:12px var(--font-mono);font-variant-numeric:tabular-nums}
+.ath .cmp .b{height:8px;border-radius:4px;background:var(--surface-raised);position:relative}
+.ath .cmp .b i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.ath .tabs{position:absolute;left:0;right:0;bottom:0;height:64px;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:6px}
+.ath .tabs a{display:grid;justify-items:center;gap:3px;font:500 10.5px var(--font-sans);color:var(--text-muted)}
+.ath .tabs a[aria-current]{color:var(--text)}
+.ath .tabs svg{width:20px;height:20px;stroke-width:1.5}
+.ath .tabs a[aria-current] svg{color:var(--accent)}
+.ath .tabs .dot{position:relative}
+.ath .tabs .dot::after{content:"";position:absolute;top:-2px;right:-6px;width:7px;height:7px;border-radius:999px;background:var(--coach)}
+/* schema desktop */
+.ath.d{min-height:900px}
+.ath.d .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.ath.d .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.ath.d .top a{color:var(--text-muted);font-weight:500}
+.ath.d .top a[aria-current]{color:var(--text)}
+.ath.d .top .sp{flex:1}
+.ath.d .body{padding:20px 24px;display:grid;gap:14px}
+.ath .whead{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ath .whead .kv{display:flex;gap:18px;font:12px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .whead .kv b{color:var(--text);font-weight:500}
+.ath .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
+.ath .seg button{height:26px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--text-muted);font:500 12px var(--font-sans);cursor:pointer}
+.ath .seg button[aria-pressed="true"]{background:var(--surface-raised);color:var(--text)}
+.ath .cols7{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.ath .dayc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;min-height:220px;display:grid;align-content:start;gap:8px}
+.ath .dayc.today{border-color:var(--accent-text)}
+.ath .dayc.past{opacity:.85}
+.ath .dayc .dh{display:flex;justify-content:space-between;align-items:baseline}
+.ath .dayc .dh small{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .dayc .dh span{font:11px var(--font-mono);color:var(--text-muted)}
+.ath .dayc .n{font:600 14px var(--font-sans)}
+.ath .dayc .mp{display:flex;gap:2px;height:24px;align-items:flex-end}
+.ath .dayc .mp i{flex:1;border-radius:2px}
+.ath .dayc .gg{font:11px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .dayc .gg b{color:var(--text);font-weight:500}
+/* koerslijn variant */
+.ath .kl{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.ath .kl svg{display:block;width:100%}
+.ath .kl .wpl{font:500 11px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.06em}
+.ath .kl .wn{font:600 12.5px var(--font-sans);fill:var(--text);text-anchor:middle}
+.ath .kl .wm{font:11px var(--font-mono);fill:var(--text-muted);text-anchor:middle}
+/* mobiel schema lijst */
+.ath .lst{display:grid;gap:8px}
+.ath .li{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:10px 12px}
+.ath .li.today{border-color:var(--accent-text)}
+.ath .li .dd{text-align:center}
+.ath .li .dd small{display:block;font:500 10px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.ath .li .dd b{font:700 16px var(--font-display)}
+.ath .li .n{font-weight:600}
+.ath .li .m{font:11px var(--font-mono);color:var(--text-muted);margin-top:2px}
+.ath .li .mp{display:flex;gap:2px;height:14px;align-items:flex-end;margin-top:6px;width:120px}
+.ath .li .mp i{flex:1;border-radius:1px}
+/* workout detail */
+.ath .wo{height:140px;position:relative}
+.ath .wo svg{display:block;width:100%;height:100%}
+.ath .steps{display:grid;gap:0}
+.ath .st{display:grid;grid-template-columns:10px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.ath .st:last-child{border-bottom:0}
+.ath .st i{width:10px;height:10px;border-radius:2px}
+.ath .st .m{font:11.5px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums}
+.ath .st .rep{color:var(--text-muted);font:500 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;grid-column:1/-1;padding-top:8px}
+.ath .sync{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)}
+.ath .btn{justify-content:center}
+
+.brand{font:600 16px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}
+</style>
+<div class="ath d" data-theme="dark">
+<div class="top"><span class="brand">VELORI<b>Q</b></span><a>Vandaag</a><a>Vorm</a><a aria-current="page">Schema</a><a>Voorstellen</a><a>Check-in</a><span class="sp"></span><span class="chip chip-coach">Week 40 ligt bij Ruud</span><span class="av" style="width:26px;height:26px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;font:600 10px var(--font-sans)">SV</span></div>
+<div class="body">
+  <div class="whead"><h1>Week 39</h1><span class="sub">22 – 28 sep</span><span class="seg" id="sc-seg"><button aria-pressed="true" data-v="grid">Kolommen</button><button aria-pressed="false" data-v="line">Koerslijn</button></span><span style="flex:1"></span><div class="kv"><span>Gepland <b>502 TSS · 12,5 u</b></span><span>Gereden <b>486 TSS · 12,1 u</b></span><span>Op koers <b>92%</b></span><span>Verwachte conditie <b style="color:var(--delta-pos)">▲ 2,1</b></span></div></div>
+  <div class="cols7" id="sc-grid"></div>
+  <div class="kl" id="sc-line" style="display:none"><svg viewBox="0 0 1392 260"></svg></div>
+</div>
+<script>
+(function(){
+  var D=[['ma','22 sep','Rustdag',0,0,[],'r',0,0],['di','23 sep','Drempel 2×20','1:30',88,[2,4,2,4,2],'g',84,'1:28'],['wo','24 sep','Duur Z2','2:00',68,[2,2,2,2],'g',71,'2:05'],['do','25 sep','VO2max 5×3','1:15',96,[2,5,2,5,2,5,2,5,2,5,2],'g',88,'1:12'],['vr','26 sep','Herstelrit','1:00',38,[1,1,1],'g',40,'1:02'],['za','27 sep','Lange duurrit','4:00',150,[1,2,2,3,2,2,3,2,2,3,2,1],'t',0,0],['zo','28 sep','Duur Z2','2:00',66,[2,2,2,2],'p',0,0]];
+  var st={r:'<span class="chip" style="height:18px;font-size:10.5px">Rustdag</span>',g:'<span class="chip chip-good" style="height:18px;font-size:10.5px">✓ Gereden</span>',t:'<span class="chip chip-coach-solid" style="height:18px;font-size:10.5px">Vandaag</span>',p:'<span class="chip chip-coach" style="height:18px;font-size:10.5px">Bevestigd</span>'};
+  document.getElementById('sc-grid').innerHTML=D.map(function(d){return '<div class="dayc'+(d[6]==='t'?' today':d[6]==='g'?' past':'')+'"><div class="dh"><small>'+d[0]+'</small><span>'+d[1]+'</span></div><div class="n">'+d[2]+'</div>'+(d[4]?'<div class="gg">'+d[3]+' · TSS '+d[4]+'</div><div class="mp">'+d[5].map(function(z){return '<i style="height:'+(z*18)+'%;background:var(--zone-'+z+')"></i>'}).join('')+'</div>':'<div class="gg">—</div>')+'<div>'+st[d[6]]+'</div>'+(d[6]==='g'?'<div class="gg">gereden <b>'+d[7]+'</b> / '+d[4]+' · <b>'+d[8]+'</b> · op koers '+Math.round(Math.min(d[7]/d[4],1.05)*100)+'%</div>':'')+'</div>'}).join('');
+  var svg=document.querySelector('#sc-line svg'),W=1392,pts=[[60,180],[280,120],[500,140],[720,80],[940,150],[1160,100],[1340,120]];
+  function sm(P){var d='M'+P[0][0]+' '+P[0][1];for(var k=0;k<P.length-1;k++){var p0=P[k-1]||P[k],p1=P[k],p2=P[k+1],p3=P[k+2]||p2;d+=' C'+(p1[0]+(p2[0]-p0[0])/6)+' '+(p1[1]+(p2[1]-p0[1])/6)+' '+(p2[0]-(p3[0]-p1[0])/6)+' '+(p2[1]-(p3[1]-p1[1])/6)+' '+p2[0]+' '+p2[1]}return d}
+  var h='<path d="'+sm(pts)+'" fill="none" stroke="var(--coach)" stroke-width="2.5" stroke-linecap="round"/><path d="'+sm(pts.slice(5))+'" fill="none" stroke="var(--surface)" stroke-width="5"/><path d="'+sm(pts.slice(5))+'" fill="none" stroke="var(--coach)" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/>';
+  D.forEach(function(d,i){var p=pts[i],c=d[6]==='g'?'var(--delta-pos)':d[6]==='t'?'var(--accent)':d[6]==='p'?'var(--coach)':'var(--surface-raised)';h+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(d[6]==='t'?10:7)+'" fill="'+c+'" stroke="var(--surface)" stroke-width="3"/><text class="wpl" x="'+p[0]+'" y="'+(p[1]-22)+'">'+d[0]+' · '+d[1]+'</text><text class="wn" x="'+p[0]+'" y="'+(p[1]+34)+'">'+d[2]+'</text><text class="wm" x="'+p[0]+'" y="'+(p[1]+50)+'">'+(d[4]?d[3]+' · TSS '+d[4]+(d[6]==='g'?' · gereden '+d[7]:''):'—')+'</text>'});
+  svg.innerHTML=h;
+  document.querySelectorAll('#sc-seg button').forEach(function(b){b.onclick=function(){document.querySelectorAll('#sc-seg button').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');var line=b.dataset.v==='line';document.getElementById('sc-grid').style.display=line?'none':'';document.getElementById('sc-line').style.display=line?'':'none'}});
+})();
+</script>
+</div>

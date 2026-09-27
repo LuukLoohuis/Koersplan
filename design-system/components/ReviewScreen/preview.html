@@ -1,0 +1,129 @@
+<!-- @dsCard group="Coach" height=900 width=1440 page subtitle="Koers reviewen: context links (projectie beweegt live mee), de uitgezette week in het midden (bewerkbaar, was → wordt), actie rechts (Waarom, notitie, Bevestigen)" -->
+<div class="rv" data-theme="light" id="rv">
+<style>
+.rv{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px;min-height:900px}
+.rv .top{display:flex;align-items:center;gap:16px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.rv .top .brand img{height:18px;display:block}
+.rv .top .crumb{color:var(--text-muted)}
+.rv .top .crumb b{color:var(--text);font-weight:500}
+.rv .top .sp{flex:1}
+.rv .cols{display:grid;grid-template-columns:300px 1fr 320px;gap:16px;padding:20px 24px}
+.rv .col{display:grid;gap:12px;align-content:start}
+.rv h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.rv .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:14px}
+.rv .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 10px}
+.rv .mini{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;color:var(--text)}
+.rv .mini svg{display:block;width:100%}
+.rv .legend{display:flex;gap:12px;margin-top:8px;font:11px var(--font-mono);color:var(--text-muted)}
+.rv .legend i{display:inline-block;width:14px;border-top:2px dashed var(--c);vertical-align:middle;margin-right:5px}
+.rv .kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:12px}
+.rv .kv span:nth-child(odd){color:var(--text-muted);font-family:var(--font-sans)}
+.rv .gv{display:grid;gap:6px}
+.rv .gv .r{display:grid;grid-template-columns:28px 1fr 44px;gap:8px;align-items:center;font:11px var(--font-mono)}
+.rv .gv .b{height:8px;border-radius:4px;background:var(--surface-raised);position:relative;overflow:hidden}
+.rv .gv .b i{position:absolute;left:0;top:0;bottom:0;background:var(--zone-3);border-radius:4px}
+.rv .gv .b i.p{background:transparent;border:1px dashed var(--text-muted);box-sizing:border-box}
+.rv .feel{display:flex;gap:6px;align-items:center}
+.rv .feel b{width:22px;height:22px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;font:500 11px var(--font-mono);color:var(--text-muted)}
+.rv .feel b.on{background:var(--accent);color:var(--on-accent)}
+.rv .route{height:44px;position:relative;margin:0 4px}
+.rv .route svg{width:100%;height:44px;display:block}
+.rv .week{display:grid;gap:8px}
+.rv .day{display:grid;grid-template-columns:44px 1fr 92px 80px 64px 96px;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);transition:border-color .3s}
+.rv .day.rest{opacity:.7}
+.rv .day.changed{border-color:var(--coach)}
+.rv .day .d{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.rv .day .d small{display:block;letter-spacing:0;text-transform:none;font-size:10.5px;opacity:.8}
+.rv .day .prof{display:flex;gap:2px;height:22px;align-items:flex-end;margin-top:4px}
+.rv .day .prof i{flex:1;border-radius:2px;background:var(--zone-2)}
+.rv select.field,.rv input.field{height:30px;font-size:12.5px}
+.rv .was{font:300 11px var(--font-mono);color:var(--ai-text);text-decoration:line-through;display:block;margin-top:2px}
+.rv .num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.rv .acts{display:flex;gap:4px;justify-content:flex-end}
+.rv .ib{width:28px;height:28px;border-radius:var(--radius-control);border:1px solid transparent;background:transparent;color:var(--text-muted);cursor:pointer;display:grid;place-items:center;font:12px var(--font-mono)}
+.rv .ib:hover{background:var(--surface-raised);color:var(--text)}
+.rv .tot{display:flex;gap:16px;justify-content:flex-end;font:12px var(--font-mono);color:var(--text-muted);padding:0 4px}
+.rv .tot b{color:var(--text);font-weight:500}
+.rv textarea.field{font:italic 15px/1.45 var(--font-serif);color:var(--coach-text);min-height:96px}
+.rv .btn-coach{width:100%;justify-content:center;height:44px;font-size:14px}
+.rv .stack{display:grid;gap:8px}
+.rv .conf{display:none;align-items:center;gap:8px;color:var(--coach-text);font:italic 14px var(--font-serif)}
+.rv.done .conf{display:flex}
+.rv.done .day{border-color:var(--coach)}
+.rv .av{width:24px;height:24px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+</style>
+<div class="top"><span class="brand"><img src="/_blob/6707f0f4c1df89cbb27b8be3d0ab9ef2" alt="VELORIQ"></span><span class="crumb">Mijn atleten / <b>Sanne Visser</b> / Koers week 40</span><span class="sp"></span><span class="chip">Bij coach · 2 dagen</span><span class="chip chip-ai">Uitgezet door AI · vr 26 sep</span><span class="av" title="Ruud Verhoeven">RV</span></div>
+<div class="cols">
+  <div class="col">
+    <h2>Context</h2>
+    <div class="mini" data-theme="dark"><h3 style="font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 8px">Vorm · projectie beweegt mee</h3><svg id="rv-mini" viewBox="0 0 272 150"></svg><div class="legend"><span><i style="--c:var(--ai)"></i>AI-koers</span><span><i style="--c:var(--coach)"></i>Na jouw bijsturing</span></div></div>
+    <div class="card"><h3>Vorige week · gepland vs gereden</h3><div class="gv" id="rv-prev"></div><div class="kv" style="margin-top:10px"><span>Op koers</span><span>92%</span><span>Gereden</span><span>486 / 502 TSS</span></div></div>
+    <div class="card"><h3>Gevoel en notities van Sanne</h3><div class="feel"><b>1</b><b>2</b><b class="on">3</b><b>4</b><b>5</b><span style="margin-left:6px;color:var(--text-muted)">slaap matig · stress hoog</span></div><p style="margin:10px 0 0;line-height:1.45">"Donderdag na de VO2 echt kapot, zaterdag ging juist goed. Volgende week examenweek."</p></div>
+    <div class="card"><h3>Eerstvolgende koers</h3><div class="kv"><span>A · Amstel Gold Race Toerversie</span><span>18 d</span><span>Verwachte vorm</span><span id="rv-goal">+12 · Fris</span></div></div>
+  </div>
+  <div class="col">
+    <div style="display:flex;align-items:center;gap:12px"><h2>Week 40 · 29 sep – 5 okt</h2><span class="chip chip-ai" id="rv-st">Uitgezet</span><span class="sp" style="flex:1"></span><span class="conf"><span class="av">RV</span>Bevestigd door Ruud · za 27 sep</span></div>
+    <div class="route"><svg viewBox="0 0 700 44" preserveAspectRatio="none"><path id="rv-rai" d="M14 22 H686" stroke="var(--ai)" stroke-width="2" stroke-dasharray="2 6" fill="none"/><path id="rv-rco" d="M14 22 H686" stroke="var(--coach)" stroke-width="2.5" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/><g id="rv-wps"></g></svg></div>
+    <div class="week" id="rv-week"></div>
+    <div class="tot" id="rv-tot"></div>
+  </div>
+  <div class="col">
+    <h2>Actie</h2>
+    <details class="voice-ai" open><summary>Waarom deze koers</summary>Vorm −13 (Optimaal), helling +3,7/wk, 18 dagen tot de A-koers. Eén VO2-prikkel en één drempelsessie houden de vorm rond −10; zaterdag lang op Z2 bouwt conditie zonder de vermoeidheid boven 75 te duwen. Examenweek niet bekend bij het uitzetten.</details>
+    <div class="card"><h3>Notitie aan Sanne</h3><textarea class="field" id="rv-note">VO2 naar zaterdag geschoven, donderdag rustig duur: je slaap was matig. Examenweek meegenomen.</textarea></div>
+    <div class="stack">
+      <button class="btn btn-coach" id="rv-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Bevestigen</button>
+      <div class="card" style="padding:10px 12px"><h3 style="margin-bottom:6px">Opnieuw laten uitzetten</h3><input class="field" placeholder="bijv. minder volume, examenweek"><button class="btn btn-sm" style="margin-top:8px">Opnieuw uitzetten</button></div>
+      <button class="btn btn-ghost" id="rv-later">Later</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var root=document.getElementById('rv'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LIB=[['Rustdag',0,0,[]],['Herstelrit',60,38,[1,1,1]],['Duur Z2',120,68,[2,2,2,2]],['Lange duurrit',240,150,[2,2,2,2,2,2]],['Tempo 3×15',90,82,[2,3,2,3,2,3,2]],['Drempel 2×20',90,88,[2,4,2,4,2]],['VO2max 5×3',75,96,[2,5,2,5,2,5,2,5,2,5,2]]];
+  var days=['ma','di','wo','do','vr','za','zo'],dates=['29 sep','30 sep','1 okt','2 okt','3 okt','4 okt','5 okt'];
+  var ai=[0,5,2,6,1,3,2]; var cur=ai.slice();
+  var week=document.getElementById('rv-week'),tot=document.getElementById('rv-tot'),wps=document.getElementById('rv-wps');
+  function tssOf(k,minAdj){return LIB[k][2]}
+  function render(){
+    week.innerHTML=cur.map(function(k,i){var L=LIB[k],A=LIB[ai[i]],ch=k!==ai[i];
+      return '<div class="day'+(k===0?' rest':'')+(ch?' changed':'')+'"><div class="d">'+days[i]+'<small>'+dates[i]+'</small></div><div><select class="field" data-i="'+i+'">'+LIB.map(function(l,j){return '<option value="'+j+'"'+(j===k?' selected':'')+'>'+l[0]+'</option>'}).join('')+'</select>'+(ch?'<span class="was">'+A[0]+'</span>':'')+'<div class="prof">'+L[3].map(function(z){return '<i style="height:'+(z*18)+'%;background:var(--zone-'+z+')"></i>'}).join('')+'</div></div><div><input class="field num" value="'+(L[1]?Math.floor(L[1]/60)+':'+('0'+L[1]%60).slice(-2):'—')+'">'+(ch?'<span class="was">'+(A[1]?Math.floor(A[1]/60)+':'+('0'+A[1]%60).slice(-2):'—')+'</span>':'')+'</div><div class="num">'+(L[2]?'TSS <b>'+L[2]+'</b>':'<span style="color:var(--text-muted)">—</span>')+(ch?'<span class="was">'+A[2]+'</span>':'')+'</div><div>'+(ch?'<span class="chip chip-coach">Bijgestuurd</span>':'<span class="chip chip-ai">AI</span>')+'</div><div class="acts"><button class="ib" data-up="'+i+'" title="Naar vorige dag">↑</button><button class="ib" data-dn="'+i+'" title="Naar volgende dag">↓</button><button class="ib" data-rm="'+i+'" title="Verwijderen">✕</button></div></div>'}).join('');
+    var t=cur.reduce(function(a,k){return a+LIB[k][2]},0),m=cur.reduce(function(a,k){return a+LIB[k][1]},0),ta=ai.reduce(function(a,k){return a+LIB[k][2]},0);
+    tot.innerHTML='<span>Gepland <b>'+t+' TSS</b>'+(t!==ta?' <span class="was" style="display:inline">'+ta+'</span>':'')+'</span><span><b>'+(m/60).toFixed(1).replace('.',',')+' u</b></span><span>Verwachte conditie-delta <b>'+((t/7-58)/6>=0?'+':'−')+Math.abs((t/7-58)/6).toFixed(1).replace('.',',')+'</b></span>';
+    wps.innerHTML=cur.map(function(k,i){var ch=k!==ai[i];return '<circle cx="'+(14+i*112)+'" cy="22" r="6" fill="'+(ch?'var(--coach)':'var(--surface)')+'" stroke="'+(ch?'var(--coach)':'var(--ai)')+'" stroke-width="2"/>'}).join('');
+    week.querySelectorAll('select').forEach(function(s){s.onchange=function(){cur[+s.dataset.i]=+s.value;render()}});
+    week.querySelectorAll('[data-rm]').forEach(function(b){b.onclick=function(){cur[+b.dataset.rm]=0;render()}});
+    week.querySelectorAll('[data-up]').forEach(function(b){b.onclick=function(){var i=+b.dataset.up;if(i>0){var x=cur[i];cur[i]=cur[i-1];cur[i-1]=x;render()}}});
+    week.querySelectorAll('[data-dn]').forEach(function(b){b.onclick=function(){var i=+b.dataset.dn;if(i<6){var x=cur[i];cur[i]=cur[i+1];cur[i+1]=x;render()}}});
+    mini();
+  }
+  // mini vormgrafiek: 28 dagen historie + projectie AI vs coach (EWMA 42/7)
+  var s=3;function r(){s=(s*9301+49297)%233280;return s/233280}
+  var hist=[],ctl=54,atl=60;for(var i=0;i<28;i++){var t=[0,86,66,38,94,150,66][i%7]*(.85+r()*.3)*(i<7?.6:1)*(i>=21?1.1:1);ctl+=(t-ctl)/42;atl+=(t-atl)/7;hist.push([ctl,atl])}
+  var ctl0=ctl,atl0=atl;
+  function proj(plan){var c=ctl0,a=atl0,out=[];for(var q=0;q<21;q++){var t=LIB[plan[q%7]][2];c+=(t-c)/42;a+=(t-a)/7;out.push(c-a)}return out}
+  function smooth(P){var d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);for(var k=0;k<P.length-1;k++){var p0=P[k-1]||P[k],p1=P[k],p2=P[k+1],p3=P[k+2]||p2;d+=' C'+(p1[0]+(p2[0]-p0[0])/6).toFixed(1)+' '+(p1[1]+(p2[1]-p0[1])/6).toFixed(1)+' '+(p2[0]-(p3[0]-p1[0])/6).toFixed(1)+' '+(p2[1]-(p3[1]-p1[1])/6).toFixed(1)+' '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)}return d}
+  var svg=document.getElementById('rv-mini'),first=true;
+  function mini(){var W=272,H=150,x=function(i){return 8+i/48*256},y=function(v){return 12+(30-v)/70*126};
+    var zones=[[30,20,'var(--text-muted)',.05],[20,5,'var(--delta-pos)',.09],[5,-10,'var(--text-muted)',.04],[-10,-30,'var(--accent)',.09],[-30,-40,'var(--delta-neg)',.11]];
+    var pa=proj(ai),pc=proj(cur),h=hist.map(function(p,i){return [x(i),y(p[0]-p[1])]});
+    var lastT=hist[27][0]-hist[27][1];
+    var A=[[x(27),y(lastT)]].concat(pa.map(function(v,i){return [x(28+i),y(v)]})),C=[[x(27),y(lastT)]].concat(pc.map(function(v,i){return [x(28+i),y(v)]}));
+    var same=cur.every(function(k,i){return k===ai[i]});
+    svg.innerHTML=zones.map(function(z){return '<rect x="8" y="'+y(z[0])+'" width="256" height="'+(y(z[1])-y(z[0]))+'" fill="'+z[2]+'" opacity="'+z[3]+'"/>'}).join('')
+      +'<line x1="'+x(27)+'" x2="'+x(27)+'" y1="8" y2="142" stroke="var(--text-muted)" opacity=".6"/>'
+      +'<path d="'+smooth(h)+'" fill="none" stroke="var(--text)" stroke-width="2" stroke-linecap="round"/>'
+      +'<path d="'+smooth(A)+'" fill="none" stroke="var(--ai)" stroke-width="1.5" stroke-dasharray="2 5" stroke-linecap="round"/>'
+      +'<path id="rv-pc" d="'+smooth(C)+'" fill="none" stroke="var(--coach)" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round" opacity="'+(same?0:1)+'" style="transition:d .5s, opacity .3s"/>'
+      +'<circle cx="'+x(27)+'" cy="'+y(lastT)+'" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>'
+      +'<text x="'+x(48)+'" y="'+(y(pc[20])-6)+'" text-anchor="end" style="font:10.5px var(--font-mono);fill:var(--coach)">'+(same?'':(pc[20]>0?'+':'−')+Math.abs(Math.round(pc[20])))+'</text>'
+      +'<text x="'+x(48)+'" y="'+(y(pa[20])+12)+'" text-anchor="end" style="font:10.5px var(--font-mono);fill:var(--ai)">'+(pa[20]>0?'+':'−')+Math.abs(Math.round(pa[20]))+'</text>';
+    var g=pc[17];document.getElementById('rv-goal').textContent=(g>0?'+':'−')+Math.abs(Math.round(g))+' · '+(g>20?'Overgang':g>5?'Fris':g>-10?'Grijze zone':g>-30?'Optimaal':'Hoog risico');
+  }
+  document.getElementById('rv-prev').innerHTML=[['ma',0,0],['di',88,84],['wo',68,71],['do',96,0],['vr',38,40],['za',150,162],['zo',66,60]].map(function(d){return '<div class="r"><span>'+d[0]+'</span><div class="b"><i class="p" style="width:'+(d[1]/170*100)+'%"></i><i style="width:'+(d[2]/170*100)+'%;background:'+(d[2]===0&&d[1]?'var(--delta-neg)':'var(--zone-3)')+'"></i></div><span style="text-align:right">'+(d[1]?d[2]+'/'+d[1]:'—')+'</span></div>'}).join('');
+  render();
+  document.getElementById('rv-go').onclick=function(){var rc=document.getElementById('rv-rco');rc.style.transition=reduce?'none':'stroke-dashoffset 1.1s ease-in-out';rc.style.strokeDashoffset='0';setTimeout(function(){root.classList.add('done');var st=document.getElementById('rv-st');st.className='chip chip-coach-solid';st.textContent='Bevestigd';wps.querySelectorAll('circle').forEach(function(c){c.setAttribute('fill','var(--coach)');c.setAttribute('stroke','var(--coach)')});document.getElementById('rv-go').disabled=true;document.getElementById('rv-go').textContent='Bevestigd · naar Intervals.icu'},reduce?0:1000)};
+})();
+</script>
+</div>

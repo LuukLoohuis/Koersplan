@@ -1,0 +1,29 @@
+<!-- @dsCard group="Motief" height=230 subtitle="Route met 7 waypoints: gestippeld ijsblauw (uitgezet) → doorgetrokken koper (bevestigd). Klik op Bevestigen." -->
+<div style="padding:20px;display:grid;gap:14px">
+  <svg class="koerslijn" viewBox="0 0 640 110" width="100%" style="max-width:640px;display:block">
+    <path id="rt-ai" class="route-ai" d="M30 78 C 90 70, 110 40, 170 46 S 260 88, 320 62 S 420 20, 480 40 S 570 70, 610 44"/>
+    <path id="rt-coach" class="route-coach" d="M30 78 C 90 70, 110 40, 170 46 S 260 88, 320 62 S 420 20, 480 40 S 570 70, 610 44" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+    <g id="wps"></g>
+    <g id="coach-wp" opacity="0"><circle cx="480" cy="40" r="11" fill="var(--coach)"/><text x="480" y="44" text-anchor="middle" style="font:600 10px var(--font-sans);fill:var(--on-coach)">RV</text></g>
+    <text id="cap" x="30" y="104" style="font:11px var(--font-mono);fill:var(--ai-text)">Koers uitgezet voor week 40</text>
+  </svg>
+  <div style="display:flex;gap:10px;align-items:center"><button id="go" class="btn btn-coach">Bevestigen</button><button id="reset" class="btn btn-ghost btn-sm">Opnieuw</button></div>
+</div>
+<script>
+(function(){
+  var days=['ma','di','wo','do','vr','za','zo'], pts=[[30,78],[110,52],[170,46],[250,78],[320,62],[400,32],[480,40],[610,44]];
+  var g=document.getElementById('wps'); var html='';
+  for(var i=0;i<7;i++){var p=pts[i]; html+='<circle class="wp" data-i="'+i+'" cx="'+p[0]+'" cy="'+p[1]+'" r="5"/><text class="wp-label" x="'+p[0]+'" y="'+(p[1]-12)+'">'+days[i]+'</text>';}
+  g.innerHTML=html;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rc=document.getElementById('rt-coach'), cw=document.getElementById('coach-wp'), cap=document.getElementById('cap');
+  function confirm(){
+    rc.style.transition=reduce?'none':'stroke-dashoffset 1.1s ease-in-out'; rc.style.strokeDashoffset='0';
+    setTimeout(function(){ cw.style.transition=reduce?'none':'opacity .3s'; cw.style.opacity='1';
+      g.querySelectorAll('.wp').forEach(function(c){c.classList.add('wp-done')});
+      cap.textContent='Bevestigd door Ruud · za 27 sep'; cap.style.fill='var(--coach-text)'; }, reduce?0:900);
+  }
+  function reset(){ rc.style.transition='none'; rc.style.strokeDashoffset='1'; cw.style.opacity='0'; g.querySelectorAll('.wp').forEach(function(c){c.classList.remove('wp-done')}); cap.textContent='Koers uitgezet voor week 40'; cap.style.fill='var(--ai-text)'; }
+  document.getElementById('go').addEventListener('click',confirm); document.getElementById('reset').addEventListener('click',reset);
+})();
+</script>

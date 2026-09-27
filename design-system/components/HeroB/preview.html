@@ -1,0 +1,137 @@
+<!-- @dsCard group="Pagina's" height=620 width=1440 subtitle="Hero-variant B: typografisch, de week als 7 waypoint-kaarten die van uitgezet (AI) naar bevestigd (coach) gaan" -->
+<div class="home" data-theme="dark"><style>/* homepage-stijlen (alleen in deze preview) */
+.home{font-family:var(--font-sans);color:var(--text);background:var(--bg)}
+.home a{color:inherit;text-decoration:none}
+.wrapx{max-width:1200px;margin:0 auto;padding:0 32px}
+.nav{display:flex;align-items:center;gap:28px;height:64px;font-size:13px;font-weight:500}
+.nav .brand{font:700 20px var(--font-display);letter-spacing:-.02em;margin-right:12px}
+.nav .sp{flex:1}
+.nav a{color:var(--text-muted)}
+.nav a.btn{color:var(--on-accent)}
+/* hero A */
+.hero{background:var(--bg);color:var(--text);padding:72px 0 80px}
+.hero-in{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero-h{font:800 68px/.95 var(--font-display);letter-spacing:-.03em;margin:0 0 22px}
+.hero-h-b{font-size:88px;margin:18px auto 22px}
+.hb-coach{color:var(--coach)}
+.hero-p{font-size:17px;line-height:1.5;color:var(--text-muted);max-width:520px;margin:0 0 28px}
+.hero-cta{display:flex;gap:12px;margin-bottom:22px}
+.hero-meta{font-size:11.5px;color:var(--text-muted)}
+.hero-demo{padding:14px 16px 10px;background:var(--surface)}
+.hd-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hd-svg{display:block;width:100%}
+.hd-svg .grid line{stroke:var(--line)}
+.hd-svg .today-l{stroke:var(--text-muted);stroke-dasharray:3 3}
+.hd-svg .today-t{font:10px var(--font-mono);fill:var(--text-muted)}
+.hd-svg .glow{filter:drop-shadow(0 0 4px var(--accent))}
+.hd-svg .glow-c{filter:drop-shadow(0 0 5px var(--coach))}
+.hd-svg .wp{fill:var(--surface);stroke:var(--ai);stroke-width:2}
+.hd-svg .wp-co{fill:var(--coach);stroke:var(--coach)}
+.hd-svg .wl{font:10px var(--font-mono);fill:var(--text-muted);text-anchor:middle}
+.hd-svg .wk-d{font:11px var(--font-mono);fill:var(--text-muted)}
+.hd-svg .wk-n{font:500 11.5px var(--font-sans);fill:var(--text)}
+.hd-svg .wk-ai{font:11px var(--font-mono);fill:var(--ai)}
+.hd-svg .wk-was{font:300 11px var(--font-mono);fill:var(--ai);text-decoration:line-through}
+.hd-svg .wk-wordt{font:600 11px var(--font-mono);fill:var(--coach)}
+/* hero B */
+.hero-b{text-align:center;padding:64px 0 48px}
+.hero-b-in{max-width:1200px;margin:0 auto;padding:0 32px}
+.hb-week{position:relative;margin-top:44px}
+.hb-line{position:absolute;left:0;right:0;top:50%;height:40px;width:100%;transform:translateY(-50%);z-index:0}
+.hb-days{position:relative;z-index:1;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.hb-day{background:var(--surface);border:1px dashed var(--ai);border-radius:var(--radius-card);padding:14px 12px 12px;text-align:left;transition:border-color .4s,background .4s;min-height:96px}
+.hb-day .d{font:11px var(--font-mono);color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.hb-day .n{font:500 13.5px var(--font-sans);margin:6px 0 3px}
+.hb-day .m{font:11.5px var(--font-mono);color:var(--ai)}
+.hb-day.co{border-style:solid;border-color:var(--coach)}
+.hb-day.co .m{color:var(--coach)}
+.hb-day .was{font-weight:300;text-decoration:line-through;color:var(--ai);margin-right:6px}
+.hb-day.rest{opacity:.55}
+.hb-cap{margin-top:18px;display:flex;justify-content:center;gap:10px;align-items:center;min-height:24px}
+.hb-av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:999px;background:var(--coach);color:var(--on-coach);font:600 10px var(--font-sans)}
+/* secties */
+.sec{padding:88px 0}
+.sec-h{font:700 40px/1 var(--font-display);letter-spacing:-.02em;margin:0 0 12px}
+.sec-p{color:var(--text-muted);font-size:16px;max-width:560px;margin:0 0 40px}
+.light{background:var(--bg);color:var(--text)}
+/* hoe het werkt */
+.how{position:relative;padding-left:64px}
+.how::before{content:"";position:absolute;left:19px;top:0;bottom:0;border-left:2px dashed var(--ai)}
+.how-step{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding:36px 0;border-bottom:1px solid var(--line);position:relative}
+.how-step::before{content:"";position:absolute;left:-51px;top:50%;width:10px;height:10px;margin-top:-7px;border-radius:999px;background:var(--surface);border:2px solid var(--ai)}
+.how-step:last-child{border-bottom:0}
+.how-step:last-child::before{background:var(--coach);border-color:var(--coach);width:14px;height:14px;left:-53px;margin-top:-9px}
+.how-step:last-child::after{content:"";position:absolute;left:-45px;top:50%;bottom:0;border-left:2.5px solid var(--coach)}
+.how-k{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.how-t{font:700 26px/1.15 var(--font-display);letter-spacing:-.015em;margin:0 0 10px}
+.how-p{color:var(--text-muted);font-size:15px;line-height:1.5;margin:0}
+.how-vis{border-radius:var(--radius-card);border:1px solid var(--line);background:var(--surface);padding:16px;min-height:120px}
+/* coaches */
+.coaches{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.coach{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:22px;border-radius:var(--radius-card-lg)}
+.coach-b{min-width:0}
+.coach-ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--ph);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display)}
+.coach-n{font:700 20px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.coach-loc{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-muted);margin-bottom:10px}
+.coach-loc svg{width:13px;height:13px}
+.coach-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.coach-q{font:italic 16px/1.35 var(--font-serif);color:var(--coach-text);margin-bottom:14px}
+.coach-f{display:flex;justify-content:space-between;align-items:center;gap:8px}
+/* prijzen */
+.pricing{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:880px}
+.price{padding:32px;border-radius:var(--radius-card-lg);position:relative;display:flex;flex-direction:column}
+.price-coach{background:var(--surface);color:var(--text);border-color:var(--coach)}
+.price-pill{position:absolute;top:-11px;right:24px}
+.price-n{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}
+.price-n .num{font:800 48px/1 var(--font-display);letter-spacing:-.03em}
+.price-u{color:var(--text-muted);font-family:var(--font-mono);font-size:13px}
+.price-p{color:var(--text-muted);font-size:14px;margin:0 0 20px}
+.price-l{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:10px;font-size:14px;flex:1}
+.price-l li{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start}
+.price-l li::before{content:"";width:16px;height:16px;border-radius:999px;background:var(--accent);margin-top:2px;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat}
+.price-coach .price-l li::before{background:var(--coach)}
+/* faq */
+.faq{max-width:720px;display:grid;gap:8px}
+.faq details{border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);padding:0 18px}
+.faq summary{cursor:pointer;padding:16px 0;font-weight:500;font-size:15px;list-style:none;display:flex;justify-content:space-between}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--text-muted);font-family:var(--font-mono)}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 16px;color:var(--text-muted);font-size:14px;line-height:1.5}
+/* footer */
+.foot{border-top:1px solid var(--line);padding:40px 0;font-size:13px;color:var(--text-muted)}
+.foot-in{max-width:1200px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px}
+.foot .brand{font:700 18px var(--font-display);color:var(--text);margin-bottom:8px}
+.foot h4{margin:0 0 10px;font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){.hb-day{transition:none}}
+
+.brand{font:600 16px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}
+</style>
+<div data-theme="dark" style="background:var(--bg);color:var(--text)"><nav class="nav wrapx"><span class="brand">VELORI<b>Q</b></span><a href="#">Hoe het werkt</a><a href="#">Coaches</a><a href="#prijzen">Prijzen</a><span class="sp"></span><a href="#">Inloggen</a><a class="btn btn-primary btn-sm" href="#">Start je koers</a></nav></div>
+<section class="hero hero-b contour" data-theme="dark">
+  <div class="hero-b-in">
+    <div class="eyebrow" style="color:var(--accent-text)">VELORIQ · trainingsplatform voor wielrenners</div>
+    <h1 class="hero-h hero-h-b">AI rekent. <span class="hb-coach">Je coach beslist.</span></h1>
+    <p class="hero-p" style="max-width:560px;margin:0 auto">Elke week een uitgezette koers uit je eigen Intervals.icu-data. Elke koers gecheckt en bevestigd door een echte coach.</p>
+    <div class="hero-cta" style="justify-content:center"><a class="btn btn-primary btn-lg" href="#">Start je koers</a><a class="btn btn-lg" href="#prijzen">Bekijk prijzen</a></div>
+    <div class="hb-week" id="hb">
+      <svg class="hb-line" viewBox="0 0 1200 40" preserveAspectRatio="none"><path id="hb-rai" d="M0 20 H1200" stroke="var(--ai)" stroke-width="2" stroke-dasharray="2 6" fill="none"/><path id="hb-rco" d="M0 20 H1200" stroke="var(--coach)" stroke-width="2.5" fill="none" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
+      <div class="hb-days" id="hb-days"></div>
+      <div class="hb-cap" id="hb-cap"><span class="chip chip-ai">Koers uitgezet voor week 40</span></div>
+    </div>
+  </div>
+</section>
+
+</div>
+<script>(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var days=['ma','di','wo','do','vr','za','zo'],plan=[['Rustdag','',1],['Drempel 2×20','1:30 · TSS 88'],['Duur Z2','2:00 · TSS 68'],['VO2max 5×3','1:15 · TSS 96'],['Herstelrit','1:00 · TSS 38'],['Lange duurrit','4:00 · TSS 150'],['Duur Z2','2:00 · TSS 66']];
+  var wrap=document.getElementById('hb-days'),cap=document.getElementById('hb-cap'),rco=document.getElementById('hb-rco');
+  function build(){wrap.innerHTML=plan.map(function(p,i){return '<div class="hb-day'+(p[2]?' rest':'')+'" data-i="'+i+'"><div class="d">'+days[i]+'</div><div class="n">'+p[0]+'</div><div class="m">'+p[1]+'</div></div>'}).join('')}
+  function p0(){build();cap.innerHTML='<span class="chip chip-ai">Koers uitgezet voor week 40</span>';rco.style.transition='none';rco.style.strokeDashoffset='1';if(reduce)return p1();setTimeout(p1,2200)}
+  function p1(){var d3=wrap.querySelector('[data-i="3"]');d3.classList.add('co');d3.querySelector('.n').innerHTML='<span class="was">VO2max 5×3</span>Duur Z2';d3.querySelector('.m').innerHTML='<span class="was">96</span>2:00 · TSS 70';cap.innerHTML='<span class="hb-av">RV</span><span class="chip chip-coach">Ruud stuurde bij · donderdag rustiger</span>';if(reduce)return p2();setTimeout(p2,1800)}
+  function p2(){rco.style.transition=reduce?'none':'stroke-dashoffset 1.2s ease-in-out';rco.style.strokeDashoffset='0';setTimeout(function(){wrap.querySelectorAll('.hb-day').forEach(function(d){d.classList.add('co')});cap.innerHTML='<span class="hb-av">RV</span><span class="chip chip-coach-solid">Bevestigd door Ruud · za 27 sep</span>';if(!reduce)setTimeout(p0,4200)},reduce?0:1100)}
+  p0();
+})();
+</script>

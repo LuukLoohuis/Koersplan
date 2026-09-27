@@ -1,0 +1,98 @@
+<!-- @dsCard group="Auth & onboarding" height=640 width=1440 page subtitle="Onboarding atleet: waypoints op een koerslijn als voortgang. Stap 3 (Koppel Intervals.icu, met fallback), stap 4 (Doelen) en stap 6 (laadstate) — wissel bovenin." -->
+<div class="app" data-theme="light" id="ob">
+<style>.app{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:13px}
+.app .top{display:flex;align-items:center;gap:20px;height:56px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.app .top .brand{font:700 18px var(--font-display);letter-spacing:-.02em;margin-right:8px}
+.app .top a{color:var(--text-muted);font-weight:500}
+.app .top a[aria-current]{color:var(--text)}
+.app .top .sp{flex:1}
+.app .av{width:26px;height:26px;border-radius:999px;background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:600 10px var(--font-sans)}
+.app .body{padding:20px 24px;display:grid;gap:16px}
+.app h1{font:700 26px var(--font-display);letter-spacing:-.015em;margin:0}
+.app h2{font:700 20px var(--font-display);letter-spacing:-.015em;margin:0}
+.app .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:16px}
+.app .card h3{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:0 0 12px}
+.app .f{display:grid;gap:6px}
+.app .f label{font-size:12px;font-weight:500}
+.app .f .hint{font-size:11.5px;color:var(--text-muted)}
+.app .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.app .tags{display:flex;gap:6px;flex-wrap:wrap}
+.app .tag{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 12px var(--font-sans);color:var(--text-muted);cursor:pointer}
+.app .tag[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-text);color:var(--accent-text)}
+.app .sw{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+.app .sw i{width:36px;height:20px;border-radius:999px;background:var(--accent);position:relative;display:inline-block}
+.app .sw i::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:999px;background:var(--on-accent)}
+.app .sw.off i{background:var(--line)}.app .sw.off i::after{right:auto;left:2px;background:var(--surface)}
+.app .cnt{font:11px var(--font-mono);color:var(--text-muted);text-align:right}
+.app .ph{width:96px;height:120px;border-radius:var(--radius-card);background:var(--coach);color:var(--on-coach);display:grid;place-items:center;font:700 26px var(--font-display);position:relative;overflow:hidden}
+.app .ph b{position:absolute;inset:0;border:2px dashed var(--on-coach);opacity:.5;border-radius:var(--radius-card);margin:10px}
+/* koerslijn voortgang */
+.app .prog{position:relative;padding:8px 0 22px}
+.app .prog svg{display:block;width:100%;height:56px}
+.app .prog .wl{font:500 10.5px var(--font-mono);fill:var(--text-muted);text-anchor:middle;letter-spacing:.04em}
+.app .prog .wl.on{fill:var(--text)}
+/* auth */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:720px}
+.auth .left{position:relative;padding:40px 48px;display:flex;flex-direction:column}
+.auth .left .brand{font:700 20px var(--font-display);letter-spacing:-.02em}
+.auth .left .quote{margin-top:auto;font:italic 22px/1.3 var(--font-serif);color:var(--coach);max-width:420px}
+.auth .left .who{font:12px var(--font-mono);color:var(--text-muted);margin-top:10px}
+.auth .mini{margin:40px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);padding:12px;max-width:440px}
+.auth .mini svg{display:block;width:100%}
+.auth .right{display:grid;place-items:center;padding:40px}
+.auth .form{width:360px;display:grid;gap:14px}
+.auth .form h1{font:700 30px var(--font-display);letter-spacing:-.02em;margin:0}
+.auth .or{display:flex;align-items:center;gap:10px;color:var(--text-muted);font:11px var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.auth .or::before,.auth .or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.auth .states{display:flex;gap:6px;flex-wrap:wrap}
+.auth .btn{justify-content:center}
+.auth .spin{width:14px;height:14px;border-radius:999px;border:2px solid var(--on-accent);border-top-color:transparent;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth .spin{animation:none}}
+/* admin */
+.app .bar{height:6px;border-radius:3px;background:var(--surface-raised);position:relative;width:120px;display:inline-block;vertical-align:middle;margin-right:8px}
+.app .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--zone-4)}
+/* empty states */
+.es{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:20px}
+.es .e{min-height:200px;display:grid;place-items:center;text-align:center;padding:24px;border-radius:var(--radius-card)}
+.es .e .ic{width:40px;height:40px;border-radius:999px;background:var(--surface-raised);display:grid;place-items:center;margin:0 auto 12px}
+.es .e .ic svg{width:20px;height:20px;stroke-width:1.5}
+.es .e h4{font:700 17px var(--font-display);letter-spacing:-.01em;margin:0 0 4px}
+.es .e p{margin:0 0 12px;color:var(--text-muted);font-size:12.5px;line-height:1.45;max-width:240px}
+ .ob-step{max-width:720px;margin:0 auto}.ob .steps{display:flex;gap:6px}.brand{font:600 15px var(--font-sans)!important;letter-spacing:.2em;text-transform:uppercase}.brand b{color:var(--accent);font-weight:600}.brand img{height:18px;display:block}</style>
+<div class="top"><span class="brand"><img src="/_blob/6707f0f4c1df89cbb27b8be3d0ab9ef2" alt="VELORIQ"></span><span class="sp"></span><span style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px">Stap <b id="ob-n" style="color:var(--text)">3</b> van 6</span><span class="steps" style="display:flex;gap:6px"><button class="tag" data-st="3" aria-pressed="true">3</button><button class="tag" data-st="4">4</button><button class="tag" data-st="6">6</button></span></div>
+<div class="body">
+  <div class="prog ob-step" style="max-width:920px"><svg viewBox="0 0 920 56" id="ob-prog"></svg></div>
+  <div class="ob-step" id="ob-3">
+    <h1>Koppel Intervals.icu</h1><p style="color:var(--text-muted);margin:6px 0 18px">Daarmee komen je ritten, belasting, vorm en FTP automatisch binnen — ook van Garmin, Wahoo en Zwift. Strava werkt niet als bron.</p>
+    <div class="card" style="display:grid;gap:12px"><button class="btn btn-primary btn-lg" style="justify-content:center">Koppel met Intervals.icu</button><div style="text-align:center;font-size:12px;color:var(--text-muted)">Je logt in bij Intervals.icu en geeft toestemming voor ritten, wellness en kalender (schrijven).</div></div>
+    <details class="card" style="margin-top:12px"><summary style="cursor:pointer;font-weight:500">Lukt de knop niet? Koppel met een API-sleutel</summary>
+      <div class="grid2" style="margin-top:14px"><div class="f"><label>API-sleutel</label><input class="field" placeholder="••••••••••••••••"><div class="hint">Intervals.icu → Settings → Developer Settings</div></div><div class="f"><label>Atleet-ID</label><input class="field" placeholder="i123456"><div class="hint">Staat in de URL van je profiel</div></div></div>
+      <ol style="margin:14px 0 0;padding-left:18px;color:var(--text-muted);font-size:12.5px;line-height:1.6"><li>Open intervals.icu en ga naar Settings.</li><li>Scroll naar Developer Settings en maak een API-key aan.</li><li>Plak de sleutel en je atleet-ID hierboven en kies Koppelen.</li></ol>
+      <button class="btn" style="margin-top:12px">Koppelen</button></details>
+  </div>
+  <div class="ob-step" id="ob-4" style="display:none">
+    <h1>Je doelen</h1><p style="color:var(--text-muted);margin:6px 0 18px">Waar zet je koers op? De AI plant naar je A-koers toe.</p>
+    <div class="card" style="display:grid;gap:14px">
+      <div class="grid2"><div class="f"><label>A-koers</label><input class="field" value="Amstel Gold Race Toerversie"></div><div class="f"><label>Datum</label><input class="field" value="15 okt 2026"></div></div>
+      <div class="grid2"><div class="f"><label>Uren per week</label><div style="display:flex;gap:8px;align-items:center"><input class="field" value="10" style="width:80px"><input type="range" min="3" max="20" value="10" style="flex:1;accent-color:var(--accent-text)"></div></div><div class="f"><label>Ervaring</label><select class="field"><option>Beginnend (< 2 jaar)</option><option selected>Gevorderd (2–5 jaar)</option><option>Ervaren (> 5 jaar)</option></select></div></div>
+      <div class="f"><label>Beschikbare dagen</label><div class="tags"><button class="tag">ma</button><button class="tag" aria-pressed="true">di</button><button class="tag" aria-pressed="true">wo</button><button class="tag" aria-pressed="true">do</button><button class="tag">vr</button><button class="tag" aria-pressed="true">za</button><button class="tag" aria-pressed="true">zo</button></div></div>
+      <div style="display:flex;justify-content:space-between"><button class="btn btn-ghost">Terug</button><button class="btn btn-primary">Verder</button></div>
+    </div>
+  </div>
+  <div class="ob-step" id="ob-6" style="display:none">
+    <div class="card contour" style="text-align:center;padding:40px 24px"><div class="chip chip-ai" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><path d="M4 12h2M9 12h2M14 12h2M19 12h1"/></svg>AI rekent</div><h1>Je eerste koers wordt uitgezet</h1><p style="color:var(--text-muted);margin:6px auto 22px;max-width:420px">We halen je ritten binnen en berekenen conditie, vermoeidheid en vorm. Dit duurt meestal een minuut.</p>
+      <div style="display:grid;gap:8px;max-width:360px;margin:0 auto;text-align:left;font-family:var(--font-mono);font-size:12px"><div><span style="color:var(--delta-pos)">✓</span> 1.284 ritten binnen</div><div><span style="color:var(--delta-pos)">✓</span> FTP 292 W · 68 kg</div><div><span style="color:var(--delta-pos)">✓</span> Conditie 58 · vermoeidheid 71 · vorm −13</div><div style="color:var(--ai-text)"><span class="spin" style="display:inline-block;width:10px;height:10px;border:2px solid var(--ai-text);border-top-color:transparent;border-radius:999px;animation:sp 1s linear infinite;vertical-align:-1px"></span> Koers voor week 40 uitzetten…</div><div style="color:var(--text-muted)">○ Naar Ruud voor bevestiging</div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var names=['Abonnement','Account','Intervals.icu','Doelen','Coach','Eerste koers'];
+  function prog(cur){var h='',x=function(i){return 60+i*160};h+='<path d="M'+x(0)+' 24 H'+x(5)+'" stroke="var(--ai)" stroke-width="2" stroke-dasharray="2 6" fill="none"/><path d="M'+x(0)+' 24 H'+x(Math.max(0,cur-1))+'" stroke="var(--coach)" stroke-width="2.5" fill="none"/>';
+    names.forEach(function(n,i){var done=i<cur-1,on=i===cur-1;h+='<circle cx="'+x(i)+'" cy="24" r="'+(on?8:6)+'" fill="'+(done?'var(--coach)':on?'var(--accent)':'var(--surface)')+'" stroke="'+(done?'var(--coach)':on?'var(--accent-text)':'var(--ai)')+'" stroke-width="2"/><text class="wl'+(on||done?' on':'')+'" x="'+x(i)+'" y="52">'+n+'</text>'});document.getElementById('ob-prog').innerHTML=h}
+  function set(n){prog(n);document.getElementById('ob-n').textContent=n;[3,4,6].forEach(function(k){document.getElementById('ob-'+k).style.display=k===n?'':'none'});document.querySelectorAll('[data-st]').forEach(function(b){b.setAttribute('aria-pressed',String(+b.dataset.st===n))})}
+  document.querySelectorAll('[data-st]').forEach(function(b){b.onclick=function(){set(+b.dataset.st)}});set(3);
+})();
+</script>
+</div>
