@@ -6,9 +6,20 @@ import { addDays, fmtDate, fmtDuration, mondayOf, today, DAY_LONG, weekday } fro
 import { api } from '../api'
 import { WorkoutProfile } from '../components/charts'
 import { Toast } from '../components/ui'
+import { ThemeContext } from '../lib/theme'
 
-/** Portaal van de atleet: schema, uitleg van de coach en feedback per training. */
+/** Portaal van de atleet: schema, uitleg van de coach en feedback per training. Altijd in het donkere thema. */
 export function PortalPage() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <div data-theme="dark" className="min-h-screen bg-bg text-ink">
+        <Portal />
+      </div>
+    </ThemeContext.Provider>
+  )
+}
+
+function Portal() {
   const { id = '' } = useParams()
   const [ov, setOv] = useState<AthleteOverview | null>(null)
   const [plan, setPlan] = useState<TrainingPlan | null>(null)
@@ -46,7 +57,7 @@ export function PortalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div>
       <div className="max-w-[680px] mx-auto px-4 py-6 grid gap-5">
         <header className="flex items-center gap-3">
           <div className="min-w-0">
@@ -59,14 +70,14 @@ export function PortalPage() {
         </header>
 
         {!plan ? (
-          <div className="panel p-6 text-center text-ink-2">Je coach heeft nog geen schema gepubliceerd.</div>
+          <div className="panel p-6 text-center text-muted">Je coach heeft nog geen schema gepubliceerd.</div>
         ) : (
           <>
             <div className="panel p-4 grid gap-1">
               <div className="eyebrow">{plan.title}</div>
               {nextW ? (
                 <>
-                  <div className="text-[13px] text-ink-2">
+                  <div className="text-[13px] text-muted">
                     {nextW.date === today() ? 'Vandaag' : `Volgende: ${DAY_LONG[weekday(nextW.date)]} ${fmtDate(nextW.date)}`}
                   </div>
                   <div className="text-[18px] font-semibold">{nextW.name}</div>
@@ -75,7 +86,7 @@ export function PortalPage() {
                   </div>
                 </>
               ) : (
-                <div className="text-ink-2">Dit blok is afgerond.</div>
+                <div className="text-muted">Dit blok is afgerond.</div>
               )}
               <p className="text-[12px] text-muted m-0 mt-2">Workouts staan in je intervals.icu-kalender en synchroniseren naar je Garmin, Wahoo of Zwift.</p>
             </div>
@@ -128,9 +139,9 @@ function PortalWorkout({ w, ftp, open, onToggle, onFeedback }: { w: Workout; ftp
   return (
     <section className={`panel ${isToday ? 'border-ink' : ''}`}>
       <button className="w-full text-left flex items-center gap-3 px-4 py-3 bg-transparent border-0 cursor-pointer text-ink" onClick={onToggle} aria-expanded={open}>
-        <span className="w-20 text-[12.5px] text-ink-2">
+        <span className="w-20 text-[12.5px] text-muted">
           {DAY_LONG[weekday(w.date)]}
-          {isToday && <span className="block text-[10.5px] text-accent font-medium">vandaag</span>}
+          {isToday && <span className="block text-[10.5px] text-accent-text font-medium">vandaag</span>}
         </span>
         <span className="flex-1 min-w-0">
           <span className="block font-medium truncate">{w.name}</span>
@@ -168,7 +179,7 @@ function StepList({ w, ftp }: { w: Workout; ftp: number }) {
             {s.repeat > 1 && <span className="text-muted font-normal"> · {s.repeat}×</span>}
           </div>
           {s.steps.map((x) => (
-            <div key={x.id} className="flex gap-3 text-ink-2 num text-[12.5px] pl-3">
+            <div key={x.id} className="flex gap-3 text-muted num text-[12.5px] pl-3">
               <span className="w-14">{fmtDuration(x.durationSec)}</span>
               <span>
                 {x.kind === 'freeride'
@@ -205,7 +216,7 @@ function FeedbackForm({ initial, onSubmit }: { initial?: FeedbackEntry; onSubmit
     >
       <div className="eyebrow">Hoe ging het?</div>
       <label className="grid gap-1.5">
-        <span className="flex text-[12.5px] text-ink-2">
+        <span className="flex text-[12.5px] text-muted">
           Zwaarte (RPE) <b className="num ml-auto text-ink">{rpe}/10</b>
         </span>
         <input id="fb-rpe" type="range" min={1} max={10} value={rpe} onChange={(e) => setRpe(Number(e.target.value))} />

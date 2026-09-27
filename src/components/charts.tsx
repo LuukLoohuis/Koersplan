@@ -74,9 +74,9 @@ export function PmcChart({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-3 text-[12px] text-ink-2">
-        <LegendKey color={c.ctl} label="Fitness (CTL)" />
-        <LegendKey color={c.atl} label="Vermoeidheid (ATL)" />
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-3 text-[12px] text-muted">
+        <LegendKey color={c['chart-ctl']} label="Fitness (CTL)" />
+        <LegendKey color={c['chart-atl']} label="Vermoeidheid (ATL)" />
         {projection?.length ? <LegendKey color={c.text} label="Projectie met plan" dashed /> : null}
         <div className="ml-auto flex gap-1" role="group" aria-label="Periode">
           {[42, 90, 120, 180].map((r) => (
@@ -95,17 +95,17 @@ export function PmcChart({
         <ResponsiveContainer>
           <ComposedChart data={data} syncId="pmc" margin={{ top: 6, right: 44, left: 0, bottom: 0 }}>
             <CartesianGrid stroke={c.line} strokeDasharray="0" vertical={false} />
-            <XAxis dataKey="date" tickFormatter={tickFmt} stroke={c.muted} tickLine={false} axisLine={{ stroke: c.line }} minTickGap={48} hide={!compact && false} />
-            <YAxis stroke={c.muted} tickLine={false} axisLine={false} width={34} />
+            <XAxis dataKey="date" tickFormatter={tickFmt} stroke={c['text-muted']} tickLine={false} axisLine={{ stroke: c.line }} minTickGap={48} hide={!compact && false} />
+            <YAxis stroke={c['text-muted']} tickLine={false} axisLine={false} width={34} />
             {planRange && (
-              <ReferenceArea x1={planRange.from} x2={planRange.to} fill={c.plan} fillOpacity={0.08} ifOverflow="extendDomain" />
+              <ReferenceArea x1={planRange.from} x2={planRange.to} fill={c['chart-plan']} fillOpacity={0.08} ifOverflow="extendDomain" />
             )}
-            <ReferenceLine x={today()} stroke={c.muted} strokeDasharray="2 3" label={{ value: 'vandaag', position: 'insideTopRight', fill: c.muted, fontSize: 11 }} />
-            <Area type="monotone" dataKey="ctl" stroke={c.ctl} strokeWidth={2} fill={c.ctl} fillOpacity={0.1} dot={false} isAnimationActive={false} />
-            <Line type="monotone" dataKey="atl" stroke={c.atl} strokeWidth={1.5} dot={false} isAnimationActive={false} />
-            <Line type="monotone" dataKey="ctlP" stroke={c.ctl} strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
-            <Line type="monotone" dataKey="atlP" stroke={c.atl} strokeWidth={1.5} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
-            <Tooltip content={<PmcTooltip />} cursor={{ stroke: c.muted, strokeWidth: 1 }} />
+            <ReferenceLine x={today()} stroke={c['text-muted']} strokeDasharray="2 3" label={{ value: 'vandaag', position: 'insideTopRight', fill: c['text-muted'], fontSize: 11 }} />
+            <Area type="monotone" dataKey="ctl" stroke={c['chart-ctl']} strokeWidth={2} fill={c['chart-ctl']} fillOpacity={0.1} dot={false} isAnimationActive={false} />
+            <Line type="monotone" dataKey="atl" stroke={c['chart-atl']} strokeWidth={1.5} dot={false} isAnimationActive={false} />
+            <Line type="monotone" dataKey="ctlP" stroke={c['chart-ctl']} strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
+            <Line type="monotone" dataKey="atlP" stroke={c['chart-atl']} strokeWidth={1.5} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
+            <Tooltip content={<PmcTooltip />} cursor={{ stroke: c['text-muted'], strokeWidth: 1 }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -126,23 +126,23 @@ export function PmcChart({
       <div style={{ height: compact ? 90 : 110 }}>
         <ResponsiveContainer>
           <ComposedChart data={data} syncId="pmc" margin={{ top: 4, right: 44, left: 0, bottom: 0 }}>
-            <ReferenceArea y1={-80} y2={-30} fill={c.crit} fillOpacity={0.06} ifOverflow="hidden" />
-            <ReferenceArea y1={-30} y2={-10} fill={c.good} fillOpacity={0.06} ifOverflow="hidden" />
+            <ReferenceArea y1={-80} y2={-30} fill={c['delta-neg']} fillOpacity={0.06} ifOverflow="hidden" />
+            <ReferenceArea y1={-30} y2={-10} fill={c['delta-pos']} fillOpacity={0.06} ifOverflow="hidden" />
             <XAxis dataKey="date" hide />
-            <YAxis stroke={c.muted} tickLine={false} axisLine={false} width={34} ticks={[-30, -10, 0, 20]} interval={0} domain={[(min: number) => Math.min(-35, Math.floor(min / 10) * 10), (max: number) => Math.max(25, Math.ceil(max / 10) * 10)]} />
+            <YAxis stroke={c['text-muted']} tickLine={false} axisLine={false} width={34} ticks={[-30, -10, 0, 20]} interval={0} domain={[(min: number) => Math.min(-35, Math.floor(min / 10) * 10), (max: number) => Math.max(25, Math.ceil(max / 10) * 10)]} />
             <ReferenceLine y={0} stroke={c.line} />
-            <ReferenceLine x={today()} stroke={c.muted} strokeDasharray="2 3" />
+            <ReferenceLine x={today()} stroke={c['text-muted']} strokeDasharray="2 3" />
             <Bar dataKey="tsb" isAnimationActive={false} radius={[2, 2, 0, 0]}>
               {data.map((d) => (
-                <Cell key={d.date} fill={(d.tsb ?? 0) >= 0 ? c['tsb-pos'] : c['tsb-neg']} />
+                <Cell key={d.date} fill={(d.tsb ?? 0) >= 0 ? c['chart-tsb-pos'] : c['chart-tsb-neg']} />
               ))}
             </Bar>
             <Bar dataKey="tsbP" isAnimationActive={false} radius={[2, 2, 0, 0]}>
               {data.map((d) => (
-                <Cell key={d.date} fill={(d.tsbP ?? 0) >= 0 ? c['tsb-pos'] : c['tsb-neg']} fillOpacity={0.45} />
+                <Cell key={d.date} fill={(d.tsbP ?? 0) >= 0 ? c['chart-tsb-pos'] : c['chart-tsb-neg']} fillOpacity={0.45} />
               ))}
             </Bar>
-            <Tooltip content={() => null} cursor={{ stroke: c.muted, strokeWidth: 1 }} />
+            <Tooltip content={() => null} cursor={{ stroke: c['text-muted'], strokeWidth: 1 }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
@@ -164,8 +164,8 @@ function PmcTooltip({ active, payload }: { active?: boolean; payload?: { payload
         <b>{fmtDate(r.date, true)}</b>
         {proj && <span className="text-muted">projectie</span>}
       </div>
-      <TtRow color="var(--ctl)" label="Fitness" value={ctl} />
-      <TtRow color="var(--atl)" label="Vermoeidheid" value={atl} />
+      <TtRow color="var(--chart-ctl)" label="Fitness" value={ctl} />
+      <TtRow color="var(--chart-atl)" label="Vermoeidheid" value={atl} />
       <TtRow label="Vorm" value={tsb} extra={st?.label} />
       {proj && r.load != null && <TtRow label="Geplande TSS" value={r.load} />}
     </div>
@@ -176,7 +176,7 @@ function TtRow({ color, label, value, extra }: { color?: string; label: string; 
   return (
     <div className="flex items-center gap-2 py-0.5">
       {color ? <span className="w-2 h-2 rounded-full" style={{ background: color }} /> : <span className="w-2" />}
-      <span className="text-ink-2">{label}</span>
+      <span className="text-muted">{label}</span>
       <span className="num ml-auto text-ink">{value ?? '–'}</span>
       {extra && <span className="text-muted text-[11px]">{extra}</span>}
     </div>
@@ -219,9 +219,9 @@ export function PdChart({ curve, model, weightKg }: { curve: PowerPoint[]; model
   if (!curve.length) return <p className="text-muted text-sm py-8 text-center">Nog geen vermogensdata.</p>
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-3 text-[12px] text-ink-2">
-        <LegendKey color={c.ctl} label="Beste vermogen (90 d)" />
-        {model && <LegendKey color={c.wbal} label="CP-model" dashed />}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-3 text-[12px] text-muted">
+        <LegendKey color={c['chart-ctl']} label="Beste vermogen (90 d)" />
+        {model && <LegendKey color={c['chart-wbal']} label="CP-model" dashed />}
         {weightKg ? (
           <div className="ml-auto flex gap-1" role="group" aria-label="Eenheid">
             <button className={`btn btn-sm ${!wkg ? 'btn-primary' : 'btn-ghost'}`} onClick={() => setWkg(false)} aria-pressed={!wkg}>
@@ -237,25 +237,25 @@ export function PdChart({ curve, model, weightKg }: { curve: PowerPoint[]; model
         <ResponsiveContainer>
           <LineChart data={data} margin={{ top: 6, right: 16, left: 0, bottom: 0 }}>
             <CartesianGrid stroke={c.line} vertical={false} />
-            <XAxis dataKey="secs" type="number" scale="log" domain={[1, 'dataMax']} ticks={PD_TICKS} tickFormatter={fmtSecs} stroke={c.muted} tickLine={false} axisLine={{ stroke: c.line }} allowDataOverflow />
-            <YAxis stroke={c.muted} tickLine={false} axisLine={false} width={40} />
+            <XAxis dataKey="secs" type="number" scale="log" domain={[1, 'dataMax']} ticks={PD_TICKS} tickFormatter={fmtSecs} stroke={c['text-muted']} tickLine={false} axisLine={{ stroke: c.line }} allowDataOverflow />
+            <YAxis stroke={c['text-muted']} tickLine={false} axisLine={false} width={40} />
             {model && (
               <ReferenceLine
                 y={round(model.cp / div, wkg ? 2 : 0)}
-                stroke={c.wbal}
+                stroke={c['chart-wbal']}
                 strokeDasharray="2 3"
-                label={{ value: `CP ${round(model.cp / div, wkg ? 2 : 0)}`, position: 'insideTopRight', fill: c['text-2'], fontSize: 11 }}
+                label={{ value: `CP ${round(model.cp / div, wkg ? 2 : 0)}`, position: 'insideTopRight', fill: c['text-muted'], fontSize: 11 }}
               />
             )}
-            <Line type="monotone" dataKey="mmp" stroke={c.ctl} strokeWidth={2} dot={{ r: 2.5, fill: c.ctl, strokeWidth: 0 }} isAnimationActive={false} />
-            <Line type="monotone" dataKey="model" stroke={c.wbal} strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls isAnimationActive={false} />
+            <Line type="monotone" dataKey="mmp" stroke={c['chart-ctl']} strokeWidth={2} dot={{ r: 2.5, fill: c['chart-ctl'], strokeWidth: 0 }} isAnimationActive={false} />
+            <Line type="monotone" dataKey="model" stroke={c['chart-wbal']} strokeWidth={2} strokeDasharray="5 4" dot={false} connectNulls isAnimationActive={false} />
             <Tooltip
               content={({ active, payload }) =>
                 active && payload?.length ? (
                   <div className="tt">
                     <b>{fmtSecs(payload[0].payload.secs)}</b>
-                    <TtRow color="var(--ctl)" label="Beste" value={payload[0].payload.mmp} />
-                    {payload[0].payload.model != null && <TtRow color="var(--wbal)" label="Model" value={payload[0].payload.model} />}
+                    <TtRow color="var(--chart-ctl)" label="Beste" value={payload[0].payload.mmp} />
+                    {payload[0].payload.model != null && <TtRow color="var(--chart-wbal)" label="Model" value={payload[0].payload.model} />}
                   </div>
                 ) : null
               }
@@ -312,7 +312,7 @@ export function WorkoutProfile({
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ width: '100%', height, display: 'block' }} role="img" aria-label="Workoutprofiel">
         {!mini && [0.5, 1].map((f) => <line key={f} x1={0} x2={W} y1={y(f)} y2={y(f)} stroke={c.line} strokeWidth={1} vectorEffect="non-scaling-stroke" strokeDasharray={f === 1 ? '4 3' : undefined} />)}
         {model?.cp && !mini ? (
-          <line x1={0} x2={W} y1={y(model.cp / ftp)} y2={y(model.cp / ftp)} stroke={c.wbal} strokeWidth={1} vectorEffect="non-scaling-stroke" strokeDasharray="2 3" />
+          <line x1={0} x2={W} y1={y(model.cp / ftp)} y2={y(model.cp / ftp)} stroke={c['chart-wbal']} strokeWidth={1} vectorEffect="non-scaling-stroke" strokeDasharray="2 3" />
         ) : null}
         {segs.map((s, i) => {
           const x0 = x(s.start)
@@ -323,7 +323,7 @@ export function WorkoutProfile({
             <polygon
               key={i}
               points={`${x0 + gap / 2},${H} ${x0 + gap / 2},${y(s.from)} ${x1 - gap / 2},${y(s.to)} ${x1 - gap / 2},${H}`}
-              fill={s.kind === 'freeride' ? c.plan : zoneColor(c, zoneIndex(mid))}
+              fill={s.kind === 'freeride' ? c['chart-plan'] : zoneColor(c, zoneIndex(mid))}
               opacity={hover == null || hover === i ? 1 : 0.55}
               onMouseEnter={() => !mini && setHover(i)}
               onMouseLeave={() => setHover(null)}
@@ -341,7 +341,7 @@ export function WorkoutProfile({
       {hs && (
         <div className="tt absolute pointer-events-none" style={{ left: `min(calc(${(x(hs.start + hs.dur / 2) / W) * 100}% - 70px), calc(100% - 170px))`, top: -8, transform: 'translateY(-100%)' }}>
           <b>{hs.sectionName}</b>
-          <div className="text-ink-2 num">
+          <div className="text-muted num">
             {fmtDuration(hs.dur)} ·{' '}
             {hs.kind === 'freeride'
               ? 'vrij'
@@ -365,7 +365,7 @@ export function WorkoutProfile({
             <line x1={0} x2={W} y1={39} y2={39} stroke={c.line} vectorEffect="non-scaling-stroke" />
             <polyline
               fill="none"
-              stroke={c.wbal}
+              stroke={c['chart-wbal']}
               strokeWidth={2}
               vectorEffect="non-scaling-stroke"
               points={wbal.pts.map(([t, v]) => `${x(t)},${38 - (v / model.wPrime) * 36}`).join(' ')}
@@ -385,13 +385,13 @@ export function ZoneBars({ timeInZone }: { timeInZone: number[] }) {
       {ZONES.map((z, i) =>
         timeInZone[i] > 0 ? (
           <div key={z.key} className="grid grid-cols-[88px_1fr_52px] items-center gap-2 text-[11.5px]">
-            <span className="text-ink-2">
+            <span className="text-muted">
               {z.key} {z.name}
             </span>
             <div className="h-2 rounded-full bg-raised overflow-hidden">
               <div className="h-full rounded-full" style={{ width: `${(timeInZone[i] / total) * 100}%`, background: zoneColor(c, i) }} />
             </div>
-            <span className="num text-right text-ink-2">{fmtDuration(timeInZone[i])}</span>
+            <span className="num text-right text-muted">{fmtDuration(timeInZone[i])}</span>
           </div>
         ) : null,
       )}
