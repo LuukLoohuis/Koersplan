@@ -1,4 +1,4 @@
-import type { Activity, AthleteOverview, PowerPoint, WellnessDay } from '../shared/types'
+import type { Activity, AthleteOverview, Goal, PowerPoint, WellnessDay } from '../shared/types'
 import type { IntervalsEventPayload } from '../shared/intervalsText'
 import { fitCpModel } from '../shared/metrics'
 import { summarize } from '../shared/summary'
@@ -148,6 +148,14 @@ export async function fetchOverview(conn: Connection): Promise<AthleteOverview> 
       name: String(e.name ?? 'Workout'),
     }))
 
+  const goals: Goal[] = eventsRaw
+    .filter((e) => /^RACE_[ABC]$/.test(String(e.category)))
+    .map((e) => ({
+      date: String(e.start_date_local).slice(0, 10),
+      label: String(e.category).slice(-1) as Goal['label'],
+      name: String(e.name ?? 'Koers'),
+    }))
+
   return {
     athlete: summarize({
       id: conn.id,
@@ -164,5 +172,6 @@ export async function fetchOverview(conn: Connection): Promise<AthleteOverview> 
     powerCurve,
     model,
     plannedLoad,
+    goals,
   }
 }
