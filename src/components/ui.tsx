@@ -40,7 +40,7 @@ export function FlagChips({ flags }: { flags: string[] }) {
   return (
     <span className="flex flex-wrap gap-1">
       {flags.map((f) => (
-        <span key={f} className={`chip ${/vermoeid|HRV|Koppeling|te hoog/.test(f) ? 'chip-crit' : /Fris/.test(f) ? 'chip-accent' : 'chip-warn'}`}>
+        <span key={f} className={`chip ${/vermoeid|HRV|Koppeling|te hoog/.test(f) ? 'chip-crit' : /Fris/.test(f) ? 'chip-good' : 'chip-warn'}`}>
           {f}
         </span>
       ))}

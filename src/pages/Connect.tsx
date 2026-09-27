@@ -36,14 +36,14 @@ export function ConnectPage() {
       <header>
         <div className="eyebrow">intervals.icu</div>
         <h1 className="text-[26px] font-semibold tracking-tight m-0 mt-1">Atleet koppelen</h1>
-        <p className="text-ink-2 max-w-[70ch]">
+        <p className="text-muted max-w-[70ch]">
           Koersplan leest activiteiten, wellness en fitness uit intervals.icu en zet goedgekeurde workouts in de kalender van de atleet. Garmin, Wahoo en Zwift synchroniseren vanaf daar.
         </p>
       </header>
 
       <div className="grid gap-5 md:grid-cols-2">
         <Panel title="Via OAuth (aanbevolen)">
-          <p className="text-[13px] text-ink-2 mt-0">De atleet logt in bij intervals.icu en geeft toestemming voor: activiteiten lezen, wellness lezen, kalender schrijven.</p>
+          <p className="text-[13px] text-muted mt-0">De atleet logt in bij intervals.icu en geeft toestemming voor: activiteiten lezen, wellness lezen, kalender schrijven.</p>
           {config?.oauthEnabled ? (
             <div className="grid gap-3">
               <a className="btn btn-primary no-underline justify-self-start" href="/auth/intervals/start?role=athlete">
@@ -55,7 +55,7 @@ export function ConnectPage() {
               </div>
             </div>
           ) : (
-            <ol className="text-[13px] text-ink-2 pl-4 m-0 grid gap-1.5">
+            <ol className="text-[13px] text-muted pl-4 m-0 grid gap-1.5">
               <li>
                 Vraag een OAuth-app aan op <a href="https://intervals.icu/oauth/apply" target="_blank" rel="noreferrer">intervals.icu/oauth/apply</a>.
               </li>
@@ -71,10 +71,10 @@ export function ConnectPage() {
 
         <Panel title="Via API-key (snel testen)">
           {demo ? (
-            <p className="text-[13px] text-ink-2 mt-0">In deze demo kun je geen echte atleten koppelen. Draai de app lokaal met je eigen intervals.icu API-key.</p>
+            <p className="text-[13px] text-muted mt-0">In deze demo kun je geen echte atleten koppelen. Draai de app lokaal met je eigen intervals.icu API-key.</p>
           ) : (
             <form onSubmit={add} className="grid gap-3">
-              <p className="text-[13px] text-ink-2 m-0">
+              <p className="text-[13px] text-muted m-0">
                 Gebruik je eigen key (intervals.icu → Settings → Developer). Als coach kun je zo ook atleten openen die jou als coach hebben toegevoegd. Athlete id <code className="num">0</code> = jezelf.
               </p>
               <label className="grid gap-1.5">
@@ -99,7 +99,7 @@ export function ConnectPage() {
       </div>
 
       <Panel title="Waarom geen Strava?">
-        <p className="text-[13px] text-ink-2 m-0 max-w-[80ch]">
+        <p className="text-[13px] text-muted m-0 max-w-[80ch]">
           De Strava API-voorwaarden verbieden het gebruik van Strava-data in AI-toepassingen en het tonen van iemands data aan een ander (zoals een coach). Laat atleten Garmin of Wahoo daarom
           rechtstreeks aan intervals.icu koppelen. Ritten die alleen via Strava binnenkomen zijn vaak niet via de API beschikbaar.
         </p>

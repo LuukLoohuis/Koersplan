@@ -160,7 +160,7 @@ export function WorkoutEditor({
               <div key={s.id} className="panel">
                 <div className="flex items-center gap-2 px-3 py-2 border-b border-line">
                   <input className="field field-sm flex-1 min-w-0 font-medium" aria-label="Naam sectie" value={s.name} onChange={(e) => setSection(si, { ...s, name: e.target.value })} />
-                  <label className="flex items-center gap-1 text-[12px] text-ink-2">
+                  <label className="flex items-center gap-1 text-[12px] text-muted">
                     <input
                       className="field field-sm w-14 num text-right"
                       type="number"
@@ -225,7 +225,7 @@ export function WorkoutEditor({
 
           <details className="panel p-4">
             <summary className="cursor-pointer text-[13px] font-medium">Zo komt het in intervals.icu</summary>
-            <pre className="num text-[11.5px] whitespace-pre-wrap mt-3 mb-0 text-ink-2">{workoutDescription(w)}</pre>
+            <pre className="num text-[11.5px] whitespace-pre-wrap mt-3 mb-0 text-muted">{workoutDescription(w)}</pre>
           </details>
         </div>
       </div>

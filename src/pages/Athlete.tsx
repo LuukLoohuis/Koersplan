@@ -43,7 +43,7 @@ export function AthletePage() {
     return (
       <div className="panel p-6">
         <h2 className="mt-0">Kan atleet niet laden</h2>
-        <p className="text-ink-2">{err}</p>
+        <p className="text-muted">{err}</p>
         <button className="btn" onClick={() => load(true)}>
           Opnieuw proberen
         </button>
@@ -148,7 +148,7 @@ function Analyse({ ov }: { ov: AthleteOverview }) {
                 const bad = w.higherIsBetter ? diff < -7 : diff > 7
                 return (
                   <div key={w.label} className="flex items-baseline gap-2">
-                    <span className="text-ink-2 text-[13px]">{w.label}</span>
+                    <span className="text-muted text-[13px]">{w.label}</span>
                     <span className="num ml-auto">
                       {w.now} <span className="text-muted text-[11px]">{w.unit}</span>
                     </span>
@@ -188,7 +188,7 @@ function Analyse({ ov }: { ov: AthleteOverview }) {
               <tbody>
                 {ov.activities.slice(0, 40).map((x) => (
                   <tr key={x.id}>
-                    <td className="text-ink-2">{fmtDate(x.date, true)}</td>
+                    <td className="text-muted">{fmtDate(x.date, true)}</td>
                     <td className="max-w-[200px] truncate">{x.name}</td>
                     <td className="num text-right">{fmtDuration(x.movingTimeSec)}</td>
                     <td className="num text-right">{round(x.load)}</td>
@@ -224,13 +224,13 @@ function FeedbackList({ plans }: { plans: TrainingPlan[] }) {
         <tbody>
           {items.map(({ w }) => (
             <tr key={w.id}>
-              <td className="text-ink-2">{fmtDate(w.date, true)}</td>
+              <td className="text-muted">{fmtDate(w.date, true)}</td>
               <td>{w.name}</td>
               <td className={`num text-right ${w.feedback!.rpe >= 9 ? 'text-crit' : ''}`}>{w.feedback!.rpe}</td>
               <td>
                 <span className={`chip ${w.feedback!.feel === 'kapot' ? 'chip-crit' : w.feedback!.feel === 'zwaar' ? 'chip-warn' : 'chip-good'}`}>{w.feedback!.feel}</span>
               </td>
-              <td className="whitespace-normal text-ink-2 max-w-[420px]">{w.feedback!.comment}</td>
+              <td className="whitespace-normal text-muted max-w-[420px]">{w.feedback!.comment}</td>
             </tr>
           ))}
         </tbody>
