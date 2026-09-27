@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { AthleteOverview, GenerateRequest, PublishResult, TrainingPlan, Workout } from '@shared/types'
 import { projectPmc, workoutMetrics } from '@shared/metrics'
 import { TEMPLATES } from '@shared/library'
+import { historyFromOverview, plannedDays } from '@shared/formSeries'
 import { addDays, DAY_LONG, DAY_SHORT, fmtDate, fmtDuration, mondayOf, round, today, uid } from '@shared/util'
 import { api } from '../api'
 import { useApp } from '../App'
-import { PmcChart, WorkoutProfile } from '../components/charts'
+import { WorkoutProfile } from '../components/charts'
+import { FormChart } from '../components/FormChart'
 import { Empty, Panel, Toast } from '../components/ui'
 import { WorkoutEditor } from '../components/WorkoutEditor'
 
@@ -272,6 +274,8 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
     return projectPmc({ date: last.date, ctl: last.ctl, atl: last.atl }, loads, days)
   }, [ov, plan.workouts, metrics, planEnd])
 
+  const history = useMemo(() => historyFromOverview(ov, today()), [ov])
+  const planned = useMemo(() => plannedDays(plan.workouts, ftp, ov.plannedLoad), [plan.workouts, ftp, ov.plannedLoad])
   const endPoint = projection.find((p) => p.date === planEnd) ?? projection.at(-1)
   const totals = plan.workouts.reduce((a, w) => ({ tss: a.tss + (metrics.get(w.id)?.tss ?? 0), sec: a.sec + (metrics.get(w.id)?.durationSec ?? 0) }), { tss: 0, sec: 0 })
   const editingWorkout = plan.workouts.find((w) => w.id === editing) ?? null
@@ -401,7 +405,15 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
           )
         }
       >
-        <PmcChart wellness={ov.wellness} projection={projection} planRange={{ from: weekStart0, to: planEnd }} defaultRange={42} compact />
+        <FormChart
+          compact
+          history={history}
+          planAi={plan.status === 'concept' ? planned : []}
+          planCoach={plan.status === 'concept' ? [] : planned}
+          goals={ov.goals}
+          ftp={ftp}
+          weightKg={ov.athlete.weightKg}
+        />
       </Panel>
 
       {/* Weekrooster */}

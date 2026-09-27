@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import type { AthleteOverview, FeedbackEntry, TrainingPlan, Workout } from '@shared/types'
 import { flatten, workoutMetrics } from '@shared/metrics'
 import { addDays, fmtDate, fmtDuration, mondayOf, today, DAY_LONG, weekday } from '@shared/util'
 import { api } from '../api'
+import { historyFromOverview, plansForForm } from '@shared/formSeries'
 import { WorkoutProfile } from '../components/charts'
-import { Toast } from '../components/ui'
+import { FormChart } from '../components/FormChart'
+import { TabBar, Toast, tabPanelProps } from '../components/ui'
 import { ThemeContext } from '../lib/theme'
 
 /** Portaal van de atleet: schema, uitleg van de coach en feedback per training. Altijd in het donkere thema. */
@@ -22,7 +24,11 @@ export function PortalPage() {
 function Portal() {
   const { id = '' } = useParams()
   const [ov, setOv] = useState<AthleteOverview | null>(null)
+  const [plans, setPlans] = useState<TrainingPlan[]>([])
   const [plan, setPlan] = useState<TrainingPlan | null>(null)
+  const [search, setSearch] = useSearchParams()
+  const tab = search.get('tab') === 'vorm' ? 'vorm' : 'schema'
+  const setTab = (t: 'schema' | 'vorm') => setSearch(t === 'schema' ? {} : { tab: t }, { replace: true })
   const [err, setErr] = useState<string | null>(null)
   const [open, setOpen] = useState<string | null>(null)
   const [week, setWeek] = useState(0)
@@ -32,6 +38,7 @@ function Portal() {
     Promise.all([api.overview(id), api.plans(id)])
       .then(([o, ps]) => {
         setOv(o)
+        setPlans(ps)
         const pub = ps.find((p) => p.status !== 'concept') ?? null
         setPlan(pub)
         const t = pub?.workouts.find((w) => w.date >= today())
@@ -42,6 +49,7 @@ function Portal() {
 
   const weekStart = addDays(mondayOf(today()), week * 7)
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart])
+  const form = useMemo(() => (ov ? { history: historyFromOverview(ov, today()), ...plansForForm(ov, plans) } : null), [ov, plans])
 
   if (err) return <div className="p-6 text-crit">{err}</div>
   if (!ov) return <div className="p-6 text-muted">Laden…</div>
@@ -69,63 +77,83 @@ function Portal() {
           </Link>
         </header>
 
-        {!plan ? (
-          <div className="panel p-6 text-center text-muted">Je coach heeft nog geen schema gepubliceerd.</div>
-        ) : (
-          <>
-            <div className="panel p-4 grid gap-1">
-              <div className="eyebrow">{plan.title}</div>
-              {nextW ? (
-                <>
-                  <div className="text-[13px] text-muted">
-                    {nextW.date === today() ? 'Vandaag' : `Volgende: ${DAY_LONG[weekday(nextW.date)]} ${fmtDate(nextW.date)}`}
-                  </div>
-                  <div className="text-[18px] font-semibold">{nextW.name}</div>
-                  <div className="text-[12.5px] text-muted num">
-                    {fmtDuration(workoutMetrics(nextW.sections, ftp).durationSec)} · {workoutMetrics(nextW.sections, ftp).tss} TSS
-                  </div>
-                </>
-              ) : (
-                <div className="text-muted">Dit blok is afgerond.</div>
-              )}
-              <p className="text-[12px] text-muted m-0 mt-2">Workouts staan in je intervals.icu-kalender en synchroniseren naar je Garmin, Wahoo of Zwift.</p>
-            </div>
+        <TabBar
+          id="portaal"
+          tabs={[
+            ['schema', 'Schema'],
+            ['vorm', 'Vorm'],
+          ]}
+          value={tab}
+          onChange={setTab}
+        />
 
-            {thanks && (
-              <Toast tone="good" onClose={() => setThanks(false)}>
-                Bedankt, je coach ziet je feedback.
-              </Toast>
-            )}
+        {tab === 'vorm' && form && (
+          <div {...tabPanelProps('portaal', 'vorm')} className="-mx-4 sm:mx-0">
+            <FormChart {...form} goals={ov.goals} annotations={ov.annotations} eftp={ov.eftp} ftp={ftp} weightKg={a.weightKg} />
+          </div>
+        )}
 
-            <div className="flex items-center gap-2">
-              <button className="btn btn-sm" onClick={() => setWeek((w) => w - 1)} aria-label="Vorige week">
-                ←
-              </button>
-              <div className="text-[13px] font-medium">
-                {week === 0 ? 'Deze week' : week === 1 ? 'Volgende week' : week === -1 ? 'Vorige week' : `Week van ${fmtDate(weekStart)}`}
-              </div>
-              <button className="btn btn-sm" onClick={() => setWeek((w) => w + 1)} aria-label="Volgende week">
-                →
-              </button>
-              <span className="ml-auto text-[12px] text-muted">
-                {fmtDate(days[0])} – {fmtDate(days[6])}
-              </span>
-            </div>
-
-            <div className="grid gap-2">
-              {days.map((d) => {
-                const w = plan.workouts.find((x) => x.date === d)
-                if (!w)
-                  return (
-                    <div key={d} className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-dashed border-line text-[12.5px] text-muted">
-                      <span className="w-20">{DAY_LONG[weekday(d)]}</span>
-                      <span>Rust</span>
+        {tab === 'schema' && (
+          <div {...tabPanelProps('portaal', 'schema')} className="grid gap-5">
+          {!plan ? (
+            <div className="panel p-6 text-center text-muted">Je coach heeft nog geen schema gepubliceerd.</div>
+          ) : (
+            <>
+              <div className="panel p-4 grid gap-1">
+                <div className="eyebrow">{plan.title}</div>
+                {nextW ? (
+                  <>
+                    <div className="text-[13px] text-muted">
+                      {nextW.date === today() ? 'Vandaag' : `Volgende: ${DAY_LONG[weekday(nextW.date)]} ${fmtDate(nextW.date)}`}
                     </div>
-                  )
-                return <PortalWorkout key={d} w={w} ftp={ftp} open={open === w.id} onToggle={() => setOpen(open === w.id ? null : w.id)} onFeedback={(fb) => sendFeedback(w, fb)} />
-              })}
-            </div>
-          </>
+                    <div className="text-[18px] font-semibold">{nextW.name}</div>
+                    <div className="text-[12.5px] text-muted num">
+                      {fmtDuration(workoutMetrics(nextW.sections, ftp).durationSec)} · {workoutMetrics(nextW.sections, ftp).tss} TSS
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-muted">Dit blok is afgerond.</div>
+                )}
+                <p className="text-[12px] text-muted m-0 mt-2">Workouts staan in je intervals.icu-kalender en synchroniseren naar je Garmin, Wahoo of Zwift.</p>
+              </div>
+
+              {thanks && (
+                <Toast tone="good" onClose={() => setThanks(false)}>
+                  Bedankt, je coach ziet je feedback.
+                </Toast>
+              )}
+
+              <div className="flex items-center gap-2">
+                <button className="btn btn-sm" onClick={() => setWeek((w) => w - 1)} aria-label="Vorige week">
+                  ←
+                </button>
+                <div className="text-[13px] font-medium">
+                  {week === 0 ? 'Deze week' : week === 1 ? 'Volgende week' : week === -1 ? 'Vorige week' : `Week van ${fmtDate(weekStart)}`}
+                </div>
+                <button className="btn btn-sm" onClick={() => setWeek((w) => w + 1)} aria-label="Volgende week">
+                  →
+                </button>
+                <span className="ml-auto text-[12px] text-muted">
+                  {fmtDate(days[0])} – {fmtDate(days[6])}
+                </span>
+              </div>
+
+              <div className="grid gap-2">
+                {days.map((d) => {
+                  const w = plan.workouts.find((x) => x.date === d)
+                  if (!w)
+                    return (
+                      <div key={d} className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-dashed border-line text-[12.5px] text-muted">
+                        <span className="w-20">{DAY_LONG[weekday(d)]}</span>
+                        <span>Rust</span>
+                      </div>
+                    )
+                  return <PortalWorkout key={d} w={w} ftp={ftp} open={open === w.id} onToggle={() => setOpen(open === w.id ? null : w.id)} onFeedback={(fb) => sendFeedback(w, fb)} />
+                })}
+              </div>
+            </>
+          )}
+          </div>
         )}
       </div>
     </div>

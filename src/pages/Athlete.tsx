@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { AthleteOverview, TrainingPlan } from '@shared/types'
-import { fmtDate, fmtDuration, round } from '@shared/util'
+import { historyFromOverview, plansForForm } from '@shared/formSeries'
+import { fmtDate, fmtDuration, round, today } from '@shared/util'
 import { api } from '../api'
-import { PdChart, PmcChart } from '../components/charts'
-import { Empty, FlagChips, KpiStrip, Panel } from '../components/ui'
+import { PdChart } from '../components/charts'
+import { FormChart } from '../components/FormChart'
+import { Empty, FlagChips, KpiStrip, Panel, TabBar, tabPanelProps } from '../components/ui'
 import { PlanTab } from './PlanTab'
 
 type Tab = 'analyse' | 'plan' | 'feedback'
@@ -77,34 +79,34 @@ export function AthletePage() {
         </div>
       )}
 
-      <div role="tablist" className="border-b border-line flex">
-        {(
-          [
-            ['analyse', 'Analyse'],
-            ['plan', `Plannen${plans.length ? ` (${plans.length})` : ''}`],
-            ['feedback', 'Feedback'],
-          ] as const
-        ).map(([k, label]) => (
-          <button key={k} role="tab" aria-selected={tab === k} className="tab" onClick={() => setTab(k)}>
-            {label}
-          </button>
-        ))}
-      </div>
+      <TabBar
+        id="atleet"
+        tabs={[
+          ['analyse', 'Analyse'],
+          ['plan', `Plannen${plans.length ? ` (${plans.length})` : ''}`],
+          ['feedback', 'Feedback'],
+        ]}
+        value={tab}
+        onChange={setTab}
+      />
 
-      {tab === 'analyse' && <Analyse ov={ov} />}
-      {tab === 'plan' && <PlanTab ov={ov} plans={plans} setPlans={setPlans} />}
-      {tab === 'feedback' && <FeedbackList plans={plans} />}
+      <div {...tabPanelProps('atleet', tab)}>
+        {tab === 'analyse' && <Analyse ov={ov} plans={plans} />}
+        {tab === 'plan' && <PlanTab ov={ov} plans={plans} setPlans={setPlans} />}
+        {tab === 'feedback' && <FeedbackList plans={plans} />}
+      </div>
     </div>
   )
 }
 
-function Analyse({ ov }: { ov: AthleteOverview }) {
+function Analyse({ ov, plans }: { ov: AthleteOverview; plans: TrainingPlan[] }) {
   const last7 = ov.wellness.slice(-7)
   const prev28 = ov.wellness.slice(-35, -7)
   const avg = (xs: (number | undefined)[]) => {
     const v = xs.filter((x): x is number => x != null)
     return v.length ? round(v.reduce((a, b) => a + b, 0) / v.length, 1) : null
   }
+  const form = useMemo(() => ({ history: historyFromOverview(ov, today()), ...plansForForm(ov, plans) }), [ov, plans])
   const week = useMemo(() => {
     const from = ov.wellness.at(-7)?.date ?? ''
     const acts = ov.activities.filter((x) => x.date >= from)
@@ -119,50 +121,46 @@ function Analyse({ ov }: { ov: AthleteOverview }) {
 
   return (
     <div className="grid gap-5">
-      <div className="grid gap-5 lg:grid-cols-[1fr_300px]">
-        <Panel title="Belasting: fitness, vermoeidheid en vorm">
-          <PmcChart wellness={ov.wellness} />
+      <FormChart {...form} goals={ov.goals} annotations={ov.annotations} eftp={ov.eftp} ftp={ov.athlete.ftp} weightKg={ov.athlete.weightKg} />
+      <div className="grid gap-5 md:grid-cols-2">
+        <Panel title="Laatste 7 dagen">
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <div className="eyebrow">TSS</div>
+              <div className="num text-lg">{week.tss}</div>
+            </div>
+            <div>
+              <div className="eyebrow">Tijd</div>
+              <div className="num text-lg">{fmtDuration(week.sec)}</div>
+            </div>
+            <div>
+              <div className="eyebrow">Ritten</div>
+              <div className="num text-lg">{week.n}</div>
+            </div>
+          </div>
         </Panel>
-        <div className="grid gap-5 content-start">
-          <Panel title="Laatste 7 dagen">
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <div className="eyebrow">TSS</div>
-                <div className="num text-lg">{week.tss}</div>
-              </div>
-              <div>
-                <div className="eyebrow">Tijd</div>
-                <div className="num text-lg">{fmtDuration(week.sec)}</div>
-              </div>
-              <div>
-                <div className="eyebrow">Ritten</div>
-                <div className="num text-lg">{week.n}</div>
-              </div>
-            </div>
-          </Panel>
-          <Panel title="Herstel (7 d vs. 4 wk ervoor)">
-            <div className="grid gap-2.5">
-              {well.map((w) => {
-                if (w.now == null) return null
-                const diff = w.base ? round(((w.now - w.base) / w.base) * 100) : 0
-                const bad = w.higherIsBetter ? diff < -7 : diff > 7
-                return (
-                  <div key={w.label} className="flex items-baseline gap-2">
-                    <span className="text-muted text-[13px]">{w.label}</span>
-                    <span className="num ml-auto">
-                      {w.now} <span className="text-muted text-[11px]">{w.unit}</span>
-                    </span>
-                    <span className={`num text-[11.5px] w-12 text-right ${bad ? 'text-crit' : 'text-muted'}`}>
-                      {diff > 0 ? '+' : ''}
-                      {diff}%
-                    </span>
-                  </div>
-                )
-              })}
-              {well.every((w) => w.now == null) && <span className="text-muted text-xs">Geen wellness-data in intervals.icu.</span>}
-            </div>
-          </Panel>
-        </div>
+        <Panel title="Herstel (7 d vs. 4 wk ervoor)">
+          <div className="grid gap-2.5">
+            {well.map((w) => {
+              if (w.now == null) return null
+              const diff = w.base ? round(((w.now - w.base) / w.base) * 100) : 0
+              const bad = w.higherIsBetter ? diff < -7 : diff > 7
+              return (
+                <div key={w.label} className="flex items-baseline gap-2">
+                  <span className="text-muted text-[13px]">{w.label}</span>
+                  <span className="num ml-auto">
+                    {w.now} <span className="text-muted text-[11px]">{w.unit}</span>
+                  </span>
+                  <span className={`num text-[11.5px] w-12 text-right ${bad ? 'text-crit' : 'text-muted'}`}>
+                    {diff > 0 ? '+' : ''}
+                    {diff}%
+                  </span>
+                </div>
+              )
+            })}
+            {well.every((w) => w.now == null) && <span className="text-muted text-xs">Geen wellness-data in intervals.icu.</span>}
+          </div>
+        </Panel>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
