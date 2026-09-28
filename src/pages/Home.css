@@ -1,0 +1,666 @@
+/* Homepage (design-system/components/Homepage), licht thema: ivoor (bg), wit (surface), diep teal (text), goud (accent).
+   Gebouwd op 1440; onder 960 stapelen hero en stappen, onder 720 ook prijzen en footer. */
+
+.home {
+  --hm-gutter: 32px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+.home a {
+  color: inherit;
+  text-decoration: none;
+}
+.home a.btn-primary {
+  color: var(--on-accent);
+}
+.home a.btn-coach {
+  color: var(--on-coach);
+}
+.home section[id] {
+  scroll-margin-top: 72px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.home) {
+    scroll-behavior: smooth;
+  }
+}
+.hm-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--hm-gutter);
+}
+.hm-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.hm-wrap-row {
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.hm-small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.hm-mt {
+  margin-top: 10px;
+}
+
+
+/* Navigatie */
+.hm-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.hm-nav-in {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 64px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.hm-links {
+  display: flex;
+  gap: 28px;
+  margin-left: 12px;
+}
+.hm-links a,
+.hm-login {
+  color: var(--text-muted);
+}
+.home .hm-links a:hover,
+.home .hm-login:hover {
+  color: var(--text);
+}
+.hm-sp {
+  flex: 1;
+}
+
+/* Hero */
+.hm-hero {
+  padding: 72px 0 80px;
+}
+.hm-hero-in {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.hm-hero-eyebrow {
+  color: var(--accent-text);
+  margin-bottom: 18px;
+}
+.hm-hero-h {
+  font: 800 68px/0.95 var(--font-display);
+  letter-spacing: -0.03em;
+  margin: 0 0 22px;
+}
+.hm-hero-p {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 520px;
+  margin: 0 0 28px;
+}
+.hm-cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.hm-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* Hero-demo: donker paneel (grafieken altijd op donker) */
+.hm-demo {
+  padding: 14px 16px 10px;
+  box-shadow: 0 24px 60px -24px #14282666;
+}
+.hm-demo-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.hm-demo-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.hm-grid line {
+  stroke: var(--line);
+}
+.hm-today-l {
+  stroke: var(--text-muted);
+  stroke-dasharray: 3 3;
+}
+.hm-today-t,
+.hm-wl,
+.hm-wk-d {
+  font: 10px var(--font-mono);
+  fill: var(--text-muted);
+}
+.hm-wl {
+  text-anchor: middle;
+}
+.hm-wk-d {
+  font-size: 11px;
+}
+.hm-wk-n {
+  font: 500 11.5px var(--font-sans);
+  fill: var(--text);
+}
+.hm-wk-ai {
+  font: 11px var(--font-mono);
+  fill: var(--ai);
+  font-variant-numeric: tabular-nums;
+}
+/* was → wordt: AI dun doorgestreept, coach vet in brons */
+.hm-was {
+  font: 300 11px var(--font-mono);
+  fill: var(--ai-text);
+  text-decoration: line-through;
+}
+.hm-wordt {
+  font: 600 11px var(--font-mono);
+  fill: var(--coach-text);
+}
+.hm-cap {
+  font: 11px var(--font-mono);
+  fill: var(--ai-text);
+}
+.hm-cap.is-coach {
+  fill: var(--coach-text);
+}
+.hm-av-t {
+  font: 600 10px var(--font-sans);
+  fill: var(--on-coach);
+}
+.hm-glow {
+  filter: drop-shadow(0 0 4px var(--accent));
+}
+.hm-glow-c {
+  filter: drop-shadow(0 0 5px var(--coach));
+}
+.hm-wp {
+  fill: var(--surface);
+  stroke: var(--ai);
+  stroke-width: 2;
+  transition: fill 0.3s, stroke 0.3s, transform 0.5s;
+}
+.hm-wp.is-coach {
+  fill: var(--coach);
+  stroke: var(--coach);
+}
+.hm-wp.is-moved {
+  transform: translateY(14px);
+}
+.hm-fade {
+  transition: opacity 0.5s;
+}
+.hm-coach-route {
+  stroke-dashoffset: 1;
+}
+.hm-coach-route.is-on {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.1s ease-in-out;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hm-draw {
+    stroke-dasharray: 1;
+    animation: hm-draw 1.4s ease-out both;
+  }
+  .hm-area {
+    animation: hm-fade-in 0.6s 0.9s both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hm-wp,
+  .hm-fade,
+  .hm-coach-route.is-on {
+    transition: none;
+  }
+}
+@keyframes hm-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes hm-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Banner: volle breedte, op mobiel het linkerdeel met het logo */
+.hm-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Secties */
+.hm-sec {
+  padding: 88px 0;
+}
+.hm-alt {
+  background: var(--surface-raised);
+}
+.hm-sec-h {
+  font: 700 40px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.hm-sec-p {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 560px;
+  margin: 0 0 40px;
+}
+
+/* Hoe het werkt: gestippelde AI-koerslijn met drie waypoints, het vierde en het laatste stuk in brons */
+.hm-how {
+  --how-pad: 64px;
+  --how-line: 19px;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--how-pad);
+}
+.hm-how::before {
+  content: '';
+  position: absolute;
+  left: var(--how-line);
+  top: 0;
+  bottom: 0;
+  border-left: 2px dashed var(--ai);
+}
+.hm-step {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.hm-step::before {
+  content: '';
+  position: absolute;
+  /* border-box (Tailwind-preflight): midden op de lijn = how-line + 1px */
+  left: calc(var(--how-line) + 1px - 6px - var(--how-pad));
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 2px solid var(--ai);
+}
+.hm-step:last-child {
+  border-bottom: 0;
+}
+.hm-step:last-child::before {
+  background: var(--coach);
+  border-color: var(--coach);
+  width: 16px;
+  height: 16px;
+  left: calc(var(--how-line) + 1px - 8px - var(--how-pad));
+  margin-top: -8px;
+}
+.hm-step:last-child::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--how-line) - var(--how-pad));
+  top: 50%;
+  bottom: 0;
+  border-left: 2.5px solid var(--coach);
+}
+.hm-step-k {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.hm-step-t {
+  font: 700 26px/1.15 var(--font-display);
+  letter-spacing: -0.015em;
+  margin: 0 0 10px;
+}
+.hm-step-p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+.hm-step-vis {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 16px;
+}
+.hm-route {
+  display: block;
+  width: 100%;
+}
+.hm-route path {
+  fill: none;
+  stroke: var(--ai);
+  stroke-width: 2;
+  stroke-dasharray: 2 6;
+  stroke-linecap: round;
+}
+.hm-route circle {
+  fill: var(--surface);
+  stroke: var(--ai);
+  stroke-width: 2;
+}
+
+/* Coaches */
+.hm-coaches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.hm-coach {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 18px;
+  padding: 22px;
+  border-radius: var(--radius-card-lg);
+}
+.hm-coach-ph {
+  width: 96px;
+  height: 120px;
+  border-radius: var(--radius-card);
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  display: grid;
+  place-items: center;
+  font: 700 26px var(--font-display);
+}
+.hm-coach-n {
+  font: 700 20px var(--font-display);
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+.hm-coach-loc {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.hm-coach-loc svg {
+  width: 13px;
+  height: 13px;
+}
+.hm-coach-q {
+  font: italic 16px/1.35 var(--font-serif);
+  color: var(--coach-text);
+  margin: 0 0 14px;
+}
+.hm-coach-f {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Prijzen */
+.hm-pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 880px;
+}
+.hm-price {
+  padding: 32px;
+  border-radius: var(--radius-card-lg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hm-price-coach {
+  border: 1.5px solid var(--coach);
+  box-shadow: 0 18px 48px -28px var(--coach);
+}
+.hm-price-pill {
+  position: absolute;
+  top: -11px;
+  right: 24px;
+}
+.hm-coach-eyebrow {
+  color: var(--coach-text);
+}
+.hm-price-n {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+.hm-price-n .num {
+  font: 800 48px/1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+.hm-price-u {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.hm-price-p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 20px;
+}
+.hm-price-l {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+  flex: 1;
+}
+.hm-price-l li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.hm-price-l li::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/contain no-repeat;
+}
+.hm-price-coach .hm-price-l li::before {
+  background: var(--coach);
+}
+
+/* Veelgestelde vragen */
+.hm-faq-sec {
+  padding-top: 0;
+}
+.hm-faq {
+  max-width: 720px;
+  display: grid;
+  gap: 8px;
+  margin-top: 28px;
+}
+.hm-faq details {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: 0 18px;
+}
+.hm-faq summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-weight: 500;
+  font-size: 15px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.hm-faq summary::-webkit-details-marker {
+  display: none;
+}
+.hm-faq summary::after {
+  content: '+';
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.hm-faq details[open] summary::after {
+  content: '−';
+}
+.hm-faq p {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Footer: crème (surface-raised) */
+.hm-foot {
+  background: var(--surface-raised);
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.hm-foot-in {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+.hm-foot p {
+  margin: 12px 0 4px;
+}
+.hm-foot h4 {
+  margin: 0 0 10px;
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.hm-foot ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.home .hm-foot a:hover {
+  color: var(--text);
+}
+
+/* Tablet */
+@media (max-width: 960px) {
+  .hm-hero {
+    padding: 48px 0 56px;
+  }
+  .hm-hero-in {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .hm-hero-h {
+    font-size: 52px;
+  }
+  .hm-step {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Mobiel */
+@media (max-width: 720px) {
+  .home {
+    --hm-gutter: 16px;
+  }
+  .hm-links {
+    display: none;
+  }
+  .hm-nav-in {
+    gap: 16px;
+    height: 56px;
+  }
+  .hm-hero-h {
+    font-size: 42px;
+  }
+  .hm-hero-p {
+    font-size: 16px;
+  }
+  .hm-banner img {
+    height: 220px;
+    object-fit: cover;
+    object-position: left;
+  }
+  .hm-sec {
+    padding: 56px 0;
+  }
+  .hm-sec-h {
+    font-size: 32px;
+  }
+  .hm-sec-p {
+    margin-bottom: 28px;
+  }
+  .hm-how {
+    --how-pad: 36px;
+    --how-line: 9px;
+  }
+  .hm-step {
+    padding: 24px 0;
+  }
+  .hm-step-t {
+    font-size: 22px;
+  }
+  .hm-coaches {
+    grid-template-columns: 1fr;
+  }
+  .hm-coach {
+    grid-template-columns: 72px 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+  .hm-coach-ph {
+    width: 72px;
+    height: 90px;
+    font-size: 20px;
+  }
+  .hm-coach-f {
+    flex-wrap: wrap;
+  }
+  .hm-pricing {
+    grid-template-columns: 1fr;
+  }
+  .hm-price {
+    padding: 24px;
+  }
+  .hm-foot-in {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hm-foot-in > :first-child {
+    grid-column: 1 / -1;
+  }
+}

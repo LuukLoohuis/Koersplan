@@ -6,6 +6,7 @@ import { RosterPage } from './pages/Roster'
 import { AthletePage } from './pages/Athlete'
 import { PortalPage } from './pages/Portal'
 import { ConnectPage } from './pages/Connect'
+import { HomePage } from './pages/Home'
 import { formState } from './lib/theme'
 import { Wordmark } from './components/ui'
 
@@ -26,12 +27,12 @@ export default function App() {
     reloadAthletes()
   }, [])
 
-  // De app onder /app. Op Vercel vangt vercel.json /app/* op (SPA-fallback).
+  // Homepagina op /, de app onder /app. Op Vercel vangt vercel.json /app/* op (SPA-fallback).
   return (
     <AppCtx.Provider value={{ config, athletes, reloadAthletes }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/app" replace />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/app/portaal/:id" element={<PortalPage />} />
           <Route
             path="/app/*"
