@@ -1,5 +1,6 @@
 import type { KeyboardEvent, ReactNode } from 'react'
-import type { AthleteSummary } from '@shared/types'
+import { Check, CircleCheck, Clock, CloudOff, PencilLine, Route, Smartphone, Sun, TriangleAlert, X, type LucideIcon } from 'lucide-react'
+import type { AthleteSummary, TrainingStatus } from '@shared/types'
 import { round } from '@shared/util'
 import { formState } from '../lib/theme'
 
@@ -80,15 +81,124 @@ export function FormChip({ tsb }: { tsb: number }) {
   return <span className={`chip ${st.tone ? `chip-${st.tone}` : ''}`}>{st.label}</span>
 }
 
-export function FlagChips({ flags }: { flags: string[] }) {
-  if (!flags.length) return <span className="text-muted text-xs">–</span>
+// ── statussen en signalen: altijd icoon + kleur + woord ──────────────────────
+
+const STATUS: Record<TrainingStatus, { label: string; cls: string; Icon: LucideIcon }> = {
+  uitgezet: { label: 'Uitgezet', cls: 'chip-ai', Icon: Route },
+  'bij-coach': { label: 'Bij coach', cls: '', Icon: Clock },
+  bijgestuurd: { label: 'Bijgestuurd', cls: 'chip-coach', Icon: PencilLine },
+  bevestigd: { label: 'Bevestigd', cls: 'chip-coach-solid', Icon: Check },
+  'op-fietscomputer': { label: 'Op je fietscomputer', cls: '', Icon: Smartphone },
+  gereden: { label: 'Gereden', cls: 'chip-good', Icon: CircleCheck },
+  gemist: { label: 'Gemist', cls: 'chip-crit', Icon: X },
+}
+
+/**
+ * Status van een training of koers. "Uitgezet" krijgt alleen de AI-stem als de AI
+ * uitzette; een voorstel van de regelgenerator is neutraal.
+ */
+export function StatusChip({ status, by = 'ai', label, suffix }: { status: TrainingStatus; by?: 'ai' | 'regels'; label?: string; suffix?: ReactNode }) {
+  const m = STATUS[status]
+  const regels = status === 'uitgezet' && by === 'regels'
+  return (
+    <span className={`chip ${regels ? '' : m.cls}`}>
+      <m.Icon size={12} aria-hidden />
+      {label ?? (regels ? 'Uitgezet (regels)' : m.label)}
+      {suffix}
+    </span>
+  )
+}
+
+export interface Signal {
+  text: string
+  tone: 'warn' | 'crit' | 'good'
+  sync?: boolean
+}
+
+/** Signalen van een atleet uit de vlaggen en de koers (gemiste trainingen). */
+export function signalsOf(a: Pick<AthleteSummary, 'flags' | 'missed7d'> & { rampRate?: number }, withFris = false): Signal[] {
+  const out: Signal[] = []
+  for (const f of a.flags) {
+    if (/Koppeling faalt/.test(f)) out.push({ text: 'Sync-fout', tone: 'crit', sync: true })
+    else if (/Snelle opbouw/.test(f)) out.push({ text: a.rampRate != null ? `Helling +${String(a.rampRate).replace('.', ',')}` : f, tone: 'warn' })
+    else if (/Fris/.test(f)) {
+      if (withFris) out.push({ text: f, tone: 'good' })
+    }
+    else out.push({ text: f, tone: /vermoeid|HRV|te hoog/.test(f) ? 'crit' : 'warn' })
+  }
+  if (a.missed7d) out.push({ text: `${a.missed7d} gemist`, tone: 'warn' })
+  return out
+}
+
+export function SignalChip({ s }: { s: Signal }) {
+  const Icon = s.sync ? CloudOff : s.tone === 'good' ? Sun : TriangleAlert
+  return (
+    <span className={`chip chip-${s.tone}`}>
+      <Icon size={12} aria-hidden />
+      {s.text}
+    </span>
+  )
+}
+
+export function FlagChips({ flags, rampRate }: { flags: string[]; rampRate?: number }) {
+  const signals = signalsOf({ flags, rampRate }, true)
+  if (!signals.length) return <span className="text-muted text-xs">–</span>
   return (
     <span className="flex flex-wrap gap-1">
-      {flags.map((f) => (
-        <span key={f} className={`chip ${/vermoeid|HRV|Koppeling|te hoog/.test(f) ? 'chip-crit' : /Fris/.test(f) ? 'chip-good' : 'chip-warn'}`}>
-          {f}
-        </span>
+      {signals.map((s) => (
+        <SignalChip key={s.text} s={s} />
       ))}
+    </span>
+  )
+}
+
+/**
+ * "was → wordt": de uitgezette waarde dun doorgestreept, de nieuwe waarde van de coach.
+ * De oude waarde krijgt alleen de AI-stem als de AI hem uitzette; van de regelgenerator is hij neutraal.
+ */
+export function Correction({ was, wordt, by = 'ai' }: { was?: ReactNode; wordt?: ReactNode; by?: 'ai' | 'regels' }) {
+  return (
+    <span className="correction">
+      {was != null && (
+        <span className={`was ${by === 'regels' ? '!text-muted' : ''}`}>
+          <span className="sr-only">was </span>
+          {was}
+        </span>
+      )}
+      {was != null && wordt != null && (
+        <span className="arrow" aria-hidden>
+          →
+        </span>
+      )}
+      {wordt != null && (
+        <span className="wordt">
+          <span className="sr-only">wordt </span>
+          {wordt}
+        </span>
+      )}
+    </span>
+  )
+}
+
+/** Initialen van een naam: "Sanne de Vries" → "SV", "Ruud" → "R". */
+export const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter((w) => /^\p{Lu}/u.test(w))
+    .map((w) => [...w][0])
+    .slice(0, 2)
+    .join('') || [...name][0]?.toUpperCase() || ''
+
+/** Initialen tot er echte foto's zijn. Neutraal: brons en ijs-teal zijn voor de twee stemmen. */
+export function Avatar({ name, size = 30 }: { name: string; size?: number }) {
+  const ini = initialsOf(name)
+  return (
+    <span
+      aria-hidden
+      className="grid place-items-center rounded-full bg-raised text-ink border border-line font-semibold shrink-0"
+      style={{ width: size, height: size, fontSize: size * 0.36 }}
+    >
+      {ini}
     </span>
   )
 }
