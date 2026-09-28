@@ -3,7 +3,7 @@
   "outputDirectory": "dist-demo",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/app", "destination": "/index.html" },
-    { "source": "/app/:path*", "destination": "/index.html" }
+    { "source": "/app", "destination": "/" },
+    { "source": "/app/:path*", "destination": "/" }
   ]
 }
