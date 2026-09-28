@@ -199,7 +199,7 @@ const SERVER_OWNED = [
 ] as const
 
 /**
- * De atleet is eigenaar van zijn feedback: een opslag van de coach (met een oude kopie) wist die niet.
+ * De feedback is van de atleet: een opslag van de coach (met een oude kopie) wist die niet.
  * Alleen op dezelfde rit (zelfde id en dag), zodat feedback niet met een verplaatste training meereist.
  */
 function feedbackOnto(from: Workout[], ws: Workout[]): Workout[] {
@@ -346,7 +346,7 @@ export function rosterExtras(activities: Activity[], plans: TrainingPlan[], toda
 export const FEEL_SCALE: Record<FeedbackEntry['feel'], number> = { kapot: 1, zwaar: 2, normaal: 3, goed: 4, sterk: 5 }
 
 /**
- * Feedback van de atleet op de rit die hij had staan (bij een gewijzigde koers de bevestigde versie).
+ * Feedback van de atleet op de rit die de atleet had staan (bij een gewijzigde koers de bevestigde versie).
  * Komt in het logboek van de koers en op de kopieën van dezelfde rit (zelfde id en dag).
  * null als de atleet die rit niet had staan.
  */
