@@ -60,8 +60,7 @@ function Shell({ children }: { children: ReactNode }) {
       <aside className="border-b md:border-b-0 md:border-r border-line bg-surface md:sticky md:top-0 md:h-screen flex flex-col">
         <div className="flex items-center justify-between px-4 h-14 md:h-16">
           <NavLink to="/" className="flex items-center gap-2.5 no-underline text-ink">
-            <Mark />
-            <span className="font-semibold tracking-tight text-[15px]">Koersplan</span>
+            <Wordmark />
             <span className="chip !h-5 !text-[10.5px]">coach</span>
           </NavLink>
           <button className="btn btn-sm btn-ghost md:hidden" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
@@ -110,14 +109,13 @@ function Shell({ children }: { children: ReactNode }) {
 }
 
 const navCls = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center gap-2 h-9 px-3 rounded-lg text-[13px] no-underline ${isActive ? 'bg-raised text-ink font-medium' : 'text-ink-2 hover:bg-raised'}`
+  `flex items-center gap-2 h-9 px-3 rounded-lg text-[13px] no-underline ${isActive ? 'bg-raised text-ink font-medium' : 'text-muted hover:bg-raised'}`
 
-function Mark() {
-  // Beeldmerk: een oplopende vermogenslijn in een vierkant
+function Wordmark() {
+  // Woordmerk in tekst tot er een SVG-logo is: kapitalen, tracking .18em, de Q in goud
   return (
-    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden>
-      <rect x="0.5" y="0.5" width="21" height="21" rx="5" fill="var(--primary-bg)" />
-      <path d="M4 15 L8 11 L11 13 L17.5 6" stroke="var(--primary-fg)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <span className="font-display font-bold text-[15px] tracking-[0.18em]">
+      VELORI<span className="text-accent-text">Q</span>
+    </span>
   )
 }

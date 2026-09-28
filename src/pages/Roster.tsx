@@ -64,7 +64,7 @@ export function RosterPage() {
                   <td className={`num text-right ${a.rampRate > 8 ? 'text-warn' : ''}`}>{a.rampRate > 0 ? '+' : ''}{a.rampRate}</td>
                   <td className="num text-right">{a.cp ?? '–'}</td>
                   <td className="num text-right">{a.wPrime ? `${round(a.wPrime / 1000, 1)}k` : '–'}</td>
-                  <td className="text-ink-2">{a.lastActivity ? (daysBetween(a.lastActivity, today()) === 0 ? 'vandaag' : fmtDate(a.lastActivity)) : '–'}</td>
+                  <td className="text-muted">{a.lastActivity ? (daysBetween(a.lastActivity, today()) === 0 ? 'vandaag' : fmtDate(a.lastActivity)) : '–'}</td>
                   <td>
                     <FlagChips flags={a.flags} />
                   </td>

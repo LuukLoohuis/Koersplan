@@ -208,7 +208,7 @@ function GeneratorForm({ ov, onCreated }: { ov: AthleteOverview; onCreated: (p: 
         </div>
       </Panel>
       <Panel title="Wat de generator meeneemt">
-        <ul className="m-0 pl-4 grid gap-2 text-[13px] text-ink-2">
+        <ul className="m-0 pl-4 grid gap-2 text-[13px] text-muted">
           <li>
             Fitness <b className="num text-ink">{round(ov.athlete.ctl)}</b>, vorm <b className="num text-ink">{round(ov.athlete.tsb)}</b>, ramp{' '}
             <b className="num text-ink">{ov.athlete.rampRate}</b>/week
@@ -316,7 +316,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
               <span className={`chip ${plan.status === 'gepubliceerd' ? 'chip-good' : plan.status === 'gewijzigd' ? 'chip-warn' : ''}`}>
                 {plan.status === 'gepubliceerd' ? 'Gepubliceerd' : plan.status === 'gewijzigd' ? 'Gewijzigd na publiceren' : 'Concept'}
               </span>
-              <span className="chip chip-accent">{plan.source === 'ai' ? 'AI-concept' : 'Regelgebaseerd'}</span>
+              <span className="chip chip-ai">{plan.source === 'ai' ? 'AI-concept' : 'Regelgebaseerd'}</span>
               <span className="text-[11.5px] text-muted">{saving === 'saving' ? 'Opslaan…' : saving === 'saved' ? 'Opgeslagen' : ''}</span>
             </div>
             <input
@@ -326,7 +326,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
               value={plan.title}
               onChange={(e) => change({ ...plan, title: e.target.value })}
             />
-            <div className="text-[12.5px] text-ink-2 mt-1">
+            <div className="text-[12.5px] text-muted mt-1">
               {fmtDate(weekStart0)} – {fmtDate(planEnd)} · {plan.workouts.length} trainingen · <span className="num">{fmtDuration(totals.sec)}</span> ·{' '}
               <span className="num">{round(totals.tss)}</span> TSS
             </div>
@@ -342,7 +342,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
         </div>
 
         {confirm === 'publish' && (
-          <div className="rounded-lg border border-line-strong p-3.5 grid gap-2 bg-raised">
+          <div className="rounded-lg border border-line p-3.5 grid gap-2 bg-raised">
             <div className="text-[13px]">
               <b>{plan.workouts.filter((w) => w.stimulus !== 'Rust').length} workouts</b> naar de intervals.icu-kalender van {ov.athlete.name}. Bestaande Koersplan-workouts van dit blok worden bijgewerkt;
               verwijderde worden uit de kalender gehaald. Van daaruit synct intervals.icu naar Garmin, Wahoo en Zwift.
@@ -359,7 +359,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
           </div>
         )}
         {confirm === 'delete' && (
-          <div className="rounded-lg border border-line-strong p-3.5 flex flex-wrap items-center gap-3 bg-raised">
+          <div className="rounded-lg border border-line p-3.5 flex flex-wrap items-center gap-3 bg-raised">
             <span className="text-[13px]">Blok verwijderen uit Koersplan? Workouts die al in intervals.icu staan blijven daar staan.</span>
             <button className="btn" onClick={onDelete}>
               Verwijder blok
@@ -372,7 +372,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
         {result && (
           <Toast tone="good" onClose={() => setResult(null)}>
             <div>{result.message}</div>
-            <details className="mt-1.5 text-ink-2">
+            <details className="mt-1.5 text-muted">
               <summary className="cursor-pointer text-[12px]">Bekijk wat naar intervals.icu gaat</summary>
               <pre className="num text-[11px] bg-surface text-ink rounded-md p-2.5 mt-2 overflow-auto max-h-72 whitespace-pre-wrap">{JSON.stringify(result.payloadPreview.slice(0, 2), null, 2)}</pre>
             </details>
@@ -381,8 +381,8 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
 
         {plan.rationale && (
           <details open className="text-[13px]">
-            <summary className="cursor-pointer eyebrow !text-ink-2">Waarom dit blok</summary>
-            <p className="text-ink-2 leading-relaxed mt-2 mb-0 max-w-[80ch]">{plan.rationale}</p>
+            <summary className="cursor-pointer eyebrow !text-muted">Waarom dit blok</summary>
+            <p className="text-muted leading-relaxed mt-2 mb-0 max-w-[80ch]">{plan.rationale}</p>
           </details>
         )}
       </section>
@@ -392,7 +392,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
         title="Projectie: waar staat de atleet na dit blok?"
         action={
           endPoint && (
-            <span className="text-[12px] text-ink-2 num">
+            <span className="text-[12px] text-muted num">
               eind: CTL {endPoint.ctl} ({endPoint.ctl - ov.athlete.ctl >= 0 ? '+' : ''}
               {round(endPoint.ctl - ov.athlete.ctl, 1)}) · vorm {endPoint.tsb > 0 ? '+' : ''}
               {endPoint.tsb} · gem. {minRamp > 0 ? '+' : ''}
@@ -415,7 +415,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
             <section key={wi} className="panel">
               <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-4 pt-3 pb-2 border-b border-line">
                 <h3 className="m-0 text-[13px] font-semibold">Week {wi + 1}</h3>
-                <span className="text-[12.5px] text-ink-2">{wk.focus}</span>
+                <span className="text-[12.5px] text-muted">{wk.focus}</span>
                 <span className="ml-auto text-[12px] text-muted num">
                   {fmtDate(from)} · {fmtDuration(sec)} · {round(tss)} TSS
                 </span>
@@ -442,7 +442,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
                           <span className="text-[10.5px] text-muted uppercase tracking-wide">{w.stimulus}</span>
                           <span className="text-[12.5px] font-medium leading-snug text-ink line-clamp-2">{w.name}</span>
                           <WorkoutProfile sections={w.sections} ftp={ftp} height={28} mini />
-                          <span className="text-[11px] text-ink-2 num">
+                          <span className="text-[11px] text-muted num">
                             {fmtDuration(m.durationSec)} · {m.tss} TSS
                             {m.wbalEmptied && <span className="text-crit"> · W′ leeg</span>}
                           </span>
