@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
 import type { AthleteSummary } from '@shared/types'
 import { round } from '@shared/util'
 import { formState } from '../lib/theme'
@@ -17,16 +17,61 @@ export function Panel({ title, action, children, className = '', pad = true }: {
   )
 }
 
-export function Stat({ label, value, unit, sub, tone }: { label: string; value: ReactNode; unit?: string; sub?: ReactNode; tone?: string }) {
+/** KPI-cijfer: label (mono), cijfer als tekst (kpi), optioneel delta/chip ernaast en sparkline of subregel eronder. */
+export function Stat({
+  label,
+  value,
+  unit,
+  sub,
+  tone,
+  aside,
+  spark,
+}: {
+  label: string
+  value: ReactNode
+  unit?: string
+  sub?: ReactNode
+  tone?: string
+  aside?: ReactNode
+  spark?: ReactNode
+}) {
   return (
     <div className="min-w-0">
-      <div className="eyebrow mb-1">{label}</div>
-      <div className="flex items-baseline gap-1">
-        <span className={`num text-[22px] font-medium leading-none ${tone ?? ''}`}>{value}</span>
-        {unit && <span className="text-muted text-[12px]">{unit}</span>}
+      <div className="eyebrow mb-1.5">{label}</div>
+      <div className="flex items-baseline gap-2">
+        <span className={`kpi tabular-nums ${tone ?? ''}`}>{value}</span>
+        {unit && <span className="num text-muted text-[12px]">{unit}</span>}
+        {aside}
       </div>
-      {sub && <div className="text-[11.5px] text-muted mt-1 truncate">{sub}</div>}
+      {spark && <div className="mt-1.5">{spark}</div>}
+      {sub && <div className="text-[11.5px] text-muted mt-1.5 truncate">{sub}</div>}
     </div>
+  )
+}
+
+/** Delta t.o.v. een eerdere waarde: teken én kleur (▲ delta-pos, ▼ delta-neg). Het getal staat in `text` voor contrast op licht. */
+export function Delta({ value, digits = 1 }: { value: number; digits?: number }) {
+  const up = value >= 0
+  return (
+    <span className="num text-[12px] text-ink">
+      <span aria-hidden className={up ? 'text-good' : 'text-crit'}>
+        {up ? '▲' : '▼'}
+      </span>
+      <span className="sr-only">{up ? 'plus' : 'min'}</span> {Math.abs(value).toFixed(digits).replace('.', ',')}
+    </span>
+  )
+}
+
+/** Mini-lijn 72×20 in de kleur van de serie. */
+export function Sparkline({ values, color, width = 72, height = 20, label }: { values: number[]; color: string; width?: number; height?: number; label?: string }) {
+  if (values.length < 2) return null
+  const mn = Math.min(...values)
+  const r = Math.max(...values) - mn || 1
+  const d = values.map((v, i) => `${i ? 'L' : 'M'}${((i / (values.length - 1)) * width).toFixed(1)} ${(height - 2 - ((v - mn) / r) * (height - 4)).toFixed(1)}`).join(' ')
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true}>
+      <path d={d} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
+    </svg>
   )
 }
 
@@ -61,6 +106,40 @@ export function KpiStrip({ a }: { a: AthleteSummary }) {
     </div>
   )
 }
+
+/** Tabbalk (role=tablist) met pijltjesnavigatie; het paneel krijgt id `${id}-${value}` via tabPanelProps. */
+export function TabBar<K extends string>({ id, tabs, value, onChange }: { id: string; tabs: readonly (readonly [K, ReactNode])[]; value: K; onChange: (k: K) => void }) {
+  const move = (e: KeyboardEvent<HTMLDivElement>) => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0
+    if (!d) return
+    e.preventDefault()
+    const i = tabs.findIndex(([k]) => k === value)
+    const next = tabs[(i + d + tabs.length) % tabs.length][0]
+    onChange(next)
+    document.getElementById(`${id}-tab-${next}`)?.focus()
+  }
+  return (
+    <div role="tablist" className="tabs" onKeyDown={move}>
+      {tabs.map(([k, label]) => (
+        <button
+          key={k}
+          id={`${id}-tab-${k}`}
+          role="tab"
+          type="button"
+          aria-selected={value === k}
+          aria-controls={`${id}-${k}`}
+          tabIndex={value === k ? 0 : -1}
+          className="tab"
+          onClick={() => onChange(k)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+export const tabPanelProps = (id: string, value: string) => ({ role: 'tabpanel', id: `${id}-${value}`, 'aria-labelledby': `${id}-tab-${value}` }) as const
 
 export function Empty({ children }: { children: ReactNode }) {
   return <div className="text-center text-muted text-sm py-10">{children}</div>

@@ -133,6 +133,27 @@ export interface AthleteSummary {
   goal?: string
 }
 
+/** Een koers als doel (intervals.icu RACE_A/B/C). */
+export interface Goal {
+  date: string
+  label: 'A' | 'B' | 'C'
+  name: string
+}
+
+/** Uitleg bij een dag in de vormgrafiek: van de AI of van de coach. */
+export interface Annotation {
+  date: string
+  kind: 'ai' | 'coach'
+  text: string
+  /** Bij de coach: wie en wat, bv. "Ruud stuurde bij" */
+  who?: string
+}
+
+export interface EftpPoint {
+  date: string
+  w: number
+}
+
 export interface AthleteOverview {
   athlete: AthleteSummary
   wellness: WellnessDay[]
@@ -141,6 +162,9 @@ export interface AthleteOverview {
   model: CpModel | null
   /** Geplande workouts die al in intervals.icu staan (niet uit Koersplan). */
   plannedLoad: { date: string; load: number; name: string }[]
+  goals?: Goal[]
+  annotations?: Annotation[]
+  eftp?: EftpPoint[]
 }
 
 export interface GenerateRequest {

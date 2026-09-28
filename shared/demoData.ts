@@ -1,4 +1,4 @@
-import type { Activity, AthleteOverview, PowerPoint, WellnessDay } from './types'
+import type { Activity, Annotation, AthleteOverview, EftpPoint, Goal, PowerPoint, WellnessDay } from './types'
 import { fitCpModel, pmcFromLoads } from './metrics'
 import { addDays, round, today, weekday } from './util'
 import { summarize } from './summary'
@@ -32,6 +32,10 @@ interface Persona {
   tail?: { days: number; factor: number }
   goal: string
   restDays: number[]
+  /** Doelkoersen, in dagen vanaf vandaag */
+  goals?: { in: number; label: Goal['label']; name: string }[]
+  /** Een bijsturing van de coach, in dagen vanaf vandaag */
+  coachNote?: { in: number; text: string; who: string }
 }
 
 const PERSONAS: Persona[] = [
@@ -48,6 +52,11 @@ const PERSONAS: Persona[] = [
     loadTo: 68,
     goal: 'Gran Fondo Limburg (160 km), eind oktober',
     restDays: [0, 4],
+    goals: [
+      { in: 33, label: 'A', name: 'Gran Fondo Limburg' },
+      { in: -23, label: 'B', name: 'Ronde van Utrecht' },
+    ],
+    coachNote: { in: 4, text: 'VO2 naar zaterdag geschoven; slaap was matig. Donderdag rustig duur.', who: 'Ruud stuurde bij' },
   },
   {
     id: 'demo-joris',
@@ -63,6 +72,7 @@ const PERSONAS: Persona[] = [
     tail: { days: 10, factor: 1.55 },
     goal: 'Clubkampioenschap tijdrit',
     restDays: [0],
+    goals: [{ in: 12, label: 'A', name: 'Clubkampioenschap tijdrit' }],
   },
   {
     id: 'demo-mila',
@@ -156,6 +166,13 @@ export function demoOverview(id: string): AthleteOverview | null {
   })
 
   const curve = powerCurve(p, r)
+  const goals: Goal[] = (p.goals ?? []).map((g) => ({ date: addDays(end, g.in), label: g.label, name: g.name }))
+  const annotations = demoAnnotations(wellness, loads, start)
+  if (p.coachNote) annotations.push({ date: addDays(end, p.coachNote.in), kind: 'coach', text: p.coachNote.text, who: p.coachNote.who })
+  // eFTP groeit mee met de conditie (±6%), wekelijks één punt
+  const eftp: EftpPoint[] = wellness
+    .filter((_, i) => i % 7 === (DAYS - 1) % 7)
+    .map((w) => ({ date: w.date, w: round(p.ftp * (0.94 + 0.06 * Math.min(1, w.ctl / (p.loadTo * 0.95))) + Math.sin(w.ctl) * 2) }))
   const model = fitCpModel(curve)
   const recent = activities.filter((a) => a.date >= addDays(end, -89)).reverse()
 
@@ -176,7 +193,35 @@ export function demoOverview(id: string): AthleteOverview | null {
     powerCurve: curve,
     model,
     plannedLoad: [],
+    goals,
+    annotations,
+    eftp,
   }
+}
+
+/** AI-uitleg bij opvallende momenten: de steilste opbouwweek, de diepste vorm, een gat zonder training. */
+function demoAnnotations(wellness: WellnessDay[], loads: number[], start: string): Annotation[] {
+  const out: Annotation[] = []
+  const recent = wellness.slice(-120)
+  const peak = recent.reduce((m, w) => ((w.rampRate ?? 0) > (m.rampRate ?? 0) ? w : m), recent[0])
+  const ramp = peak.rampRate ?? 0
+  if (ramp >= 3) {
+    const r = String(ramp).replace('.', ',')
+    out.push({ date: peak.date, kind: 'ai', text: `Opbouw +${r} in een week — ${ramp > 7 ? 'fors, boven' : 'binnen'} de veilige 3–7.` })
+  }
+  const low = recent.reduce((m, w) => (w.ctl - w.atl < m.ctl - m.atl ? w : m), recent[0])
+  if (low.ctl - low.atl < -25) {
+    const text = `Vorm −${Math.round(low.atl - low.ctl)}: hoog risico. Rustdag of herstelrit voorstellen.`
+    const same = out.find((a) => a.date === low.date)
+    if (same) same.text += ` ${text}`
+    else out.push({ date: low.date, kind: 'ai', text })
+  }
+  let gap = 0
+  loads.forEach((l, i) => {
+    gap = l > 0 ? 0 : gap + 1
+    if (gap === 5) out.push({ date: addDays(start, i - 4), kind: 'ai', text: '5 dagen zonder training; conditie zakt, vorm loopt op.' })
+  })
+  return out.sort((a, b) => a.date.localeCompare(b.date))
 }
 
 export const DEMO_IDS = PERSONAS.map((p) => p.id)
