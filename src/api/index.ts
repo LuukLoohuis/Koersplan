@@ -15,7 +15,8 @@ export interface Api {
   overview(id: string, fresh?: boolean): Promise<AthleteOverview>
   addAthlete(input: { remoteId: string; apiKey?: string; name?: string }): Promise<{ id: string }>
   plans(athleteId: string): Promise<TrainingPlan[]>
-  generate(athleteId: string, req: GenerateRequest): Promise<{ plan: TrainingPlan; warning?: string }>
+  /** Met `replaces`: vervang dat voorstel, alleen als het nog een concept is (anders 409) */
+  generate(athleteId: string, req: GenerateRequest & { replaces?: string }): Promise<{ plan: TrainingPlan; warning?: string; replaced?: string }>
   savePlan(plan: TrainingPlan): Promise<TrainingPlan>
   deletePlan(id: string): Promise<void>
   publish(planId: string): Promise<{ result: PublishResult; plan: TrainingPlan }>

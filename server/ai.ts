@@ -1,7 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk'
 import type { AthleteOverview, GenerateRequest, TrainingPlan } from '../shared/types'
 import { normalizeAiPlan, type AiPlan } from '../shared/normalize'
-import { addDays, DAY_LONG, mondayOf, round } from '../shared/util'
+import { addDays, DAY_LONG, DAY_SHORT, fmtDuration, mondayOf, round, weekday } from '../shared/util'
+import { workoutMetrics } from '../shared/metrics'
 
 export const aiEnabled = () => Boolean(process.env.ANTHROPIC_API_KEY)
 export const aiModel = () => process.env.ANTHROPIC_MODEL || 'claude-sonnet-5'
@@ -92,7 +93,18 @@ const TOOL: Anthropic.Tool = {
   },
 }
 
-function context(ov: AthleteOverview, req: GenerateRequest): string {
+/** Het afgewezen voorstel beknopt: per training dag, naam, duur en TSS. */
+function rejectedSummary(plan: TrainingPlan, ftp: number): string {
+  return plan.workouts
+    .filter((w) => w.stimulus !== 'Rust')
+    .map((w) => {
+      const m = workoutMetrics(w.sections, ftp)
+      return `${DAY_SHORT[weekday(w.date)]} ${w.date} ${w.name} (${fmtDuration(m.durationSec)}, ${m.tss} TSS)`
+    })
+    .join('; ')
+}
+
+function context(ov: AthleteOverview, req: GenerateRequest, rejected?: TrainingPlan): string {
   const a = ov.athlete
   const end = ov.wellness.at(-1)?.date
   // Weekbelasting laatste 8 weken
@@ -140,10 +152,14 @@ Focus: ${req.focus}
 Blok: ${req.weeks} weken, van ${req.startDate} t/m ${blockEnd}
 Beschikbare dagen: ${req.availableDays.map((d) => DAY_LONG[d]).join(', ')}; lange rit op ${DAY_LONG[req.longRideDay]}
 Maximaal ${req.hoursPerWeek} uur per week
-Opmerkingen van de coach: ${req.notes || 'geen'}`
+Opmerkingen van de coach: ${req.notes || 'geen'}${
+    req.instructions || rejected
+      ? `\n\nOPNIEUW UITZETTEN\n${rejected ? `Het vorige voorstel was: ${rejectedSummary(rejected, a.ftp)}\n` : ''}${req.instructions ? `De coach wees het af met deze instructie: ${String(req.instructions).slice(0, 1000)}` : 'De coach wil een ander voorstel.'}`
+      : ''
+  }`
 }
 
-export async function generateWithClaude(ov: AthleteOverview, req: GenerateRequest): Promise<TrainingPlan> {
+export async function generateWithClaude(ov: AthleteOverview, req: GenerateRequest, rejected?: TrainingPlan): Promise<TrainingPlan> {
   const client = new Anthropic()
   const stream = client.messages.stream({
     model: aiModel(),
@@ -151,7 +167,7 @@ export async function generateWithClaude(ov: AthleteOverview, req: GenerateReque
     system: SYSTEM,
     tools: [TOOL],
     tool_choice: { type: 'tool', name: TOOL.name },
-    messages: [{ role: 'user', content: context(ov, req) }],
+    messages: [{ role: 'user', content: context(ov, req, rejected) }],
   })
   const msg = await stream.finalMessage()
   const block = msg.content.find((c) => c.type === 'tool_use')
