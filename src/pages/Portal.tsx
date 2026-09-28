@@ -49,7 +49,7 @@ function Portal() {
 
   const weekStart = addDays(mondayOf(today()), week * 7)
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart])
-  const form = useMemo(() => (ov ? { history: historyFromOverview(ov, today()), ...plansForForm(ov, plans) } : null), [ov, plans])
+  const form = useMemo(() => (ov ? { history: historyFromOverview(ov, today()), ...plansForForm(ov, plans, 'atleet') } : null), [ov, plans])
 
   if (err) return <div className="p-6 text-crit">{err}</div>
   if (!ov) return <div className="p-6 text-muted">Laden…</div>

@@ -140,10 +140,13 @@ export interface Goal {
   name: string
 }
 
-/** Uitleg bij een dag in de vormgrafiek: van de AI of van de coach. */
+/**
+ * Uitleg bij een dag in de vormgrafiek: van de AI, van de coach, of een signaal
+ * dat een vaste regel uit de data haalt (geen AI).
+ */
 export interface Annotation {
   date: string
-  kind: 'ai' | 'coach'
+  kind: 'ai' | 'coach' | 'signaal'
   text: string
   /** Bij de coach: wie en wat, bv. "Ruud stuurde bij" */
   who?: string

@@ -16,7 +16,10 @@ import './FormChart.css'
 
 export interface FormChartProps {
   history: HistoryDay[]
+  /** Voorstel dat nog niet bevestigd is */
   planAi?: PlannedDay[]
+  /** Wie het voorstel maakte: de AI (ijs-teal, "AI-koers") of de regelgenerator (neutraal, "Voorstel (regels)") */
+  planAiSource?: 'ai' | 'regels'
   planCoach?: PlannedDay[]
   goals?: Goal[]
   annotations?: Annotation[]
@@ -92,6 +95,7 @@ function Swatch({ color, dashed, on }: { color: string; dashed?: boolean; on: bo
 export function FormChart({
   history,
   planAi = [],
+  planAiSource = 'ai',
   planCoach = [],
   goals = [],
   annotations = [],
@@ -138,7 +142,11 @@ export function FormChart({
   const aiOn = hasAi && showProj.ai
   const coachOn = hasCoach && showProj.coach
   const sel: 'ai' | 'coach' = coachOn ? 'coach' : aiOn ? 'ai' : hasCoach ? 'coach' : 'ai'
-  const selLabel = sel === 'ai' ? 'AI-koers' : `na ${coachName}`
+  // het voorstel krijgt alleen de AI-stem als de AI het maakte
+  const byAi = planAiSource === 'ai'
+  const propLabel = byAi ? 'AI-koers' : 'Voorstel (regels)'
+  const propColor = byAi ? 'var(--ai)' : 'var(--chart-plan)'
+  const selLabel = sel === 'ai' ? propLabel : `na ${coachName}`
   const vals = (d: FormDay): Vals | undefined => {
     if (!d.planned) return { ctl: d.ctl!, atl: d.atl!, tsb: d.tsb!, tss: d.tss ?? 0, workoutName: d.workoutName }
     return d[sel]
@@ -185,7 +193,7 @@ export function FormChart({
   const atlPts = pts(hist, (d) => d.atl, yM)
   const tsbPts = pts(hist, (d) => d.tsb, yF)
   const projOn: ('ai' | 'coach')[] = [...(aiOn ? (['ai'] as const) : []), ...(coachOn ? (['coach'] as const) : [])]
-  const projColor = (w: 'ai' | 'coach') => (w === 'ai' ? 'var(--chart-projection-ai)' : 'var(--chart-projection-coach)')
+  const projColor = (w: 'ai' | 'coach') => (w === 'coach' ? 'var(--chart-projection-coach)' : byAi ? 'var(--chart-projection-ai)' : 'var(--chart-plan)')
   const drawCls = intro ? 'fc-draw' : undefined
   const drawLen = intro ? 1 : undefined
   const zNow = zoneOf(T.tsb!)
@@ -348,8 +356,8 @@ export function FormChart({
             ))}
           {hasAi && (
             <button type="button" className={CHIP} aria-pressed={showProj.ai} onClick={() => setShowProj((s) => ({ ...s, ai: !s.ai }))}>
-              <Swatch color="var(--ai)" dashed on={showProj.ai} />
-              AI-koers
+              <Swatch color={propColor} dashed on={showProj.ai} />
+              {propLabel}
             </button>
           )}
           {hasCoach && (
@@ -517,7 +525,7 @@ export function FormChart({
                 const v = vals(d)
                 if (!v?.tss || (d.planned && !aiOn && !coachOn)) return null
                 const h = Math.max(2, (v.tss / maxT) * (lay.bars - 4))
-                const col = d.planned ? (sel === 'ai' ? 'var(--ai)' : 'var(--coach)') : d.zone ? `var(--zone-${d.zone})` : 'var(--text-muted)'
+                const col = d.planned ? (sel === 'ai' ? propColor : 'var(--coach)') : d.zone ? `var(--zone-${d.zone})` : 'var(--text-muted)'
                 return (
                   <BarRounded
                     key={d.date}
@@ -593,9 +601,9 @@ export function FormChart({
                   const ay = noteY(n)
                   return (
                     <g key={k} data-tip={`note:${k}`} className="cursor-pointer">
-                      <title>{`${k + 1}. ${n.text}`}</title>
-                      <circle cx={x(i)} cy={ay} r={8} fill={n.kind === 'ai' ? 'var(--ai)' : 'var(--coach)'} />
-                      <text x={x(i)} y={ay + 3.5} textAnchor="middle" className="font-mono text-[10px] font-semibold" fill="var(--on-accent)">
+                      <title>{`${k + 1}. ${NOTE[n.kind].label}: ${n.text}`}</title>
+                      <circle cx={x(i)} cy={ay} r={8} fill={NOTE[n.kind].fill} stroke={NOTE[n.kind].stroke} />
+                      <text x={x(i)} y={ay + 3.5} textAnchor="middle" className="font-mono text-[10px] font-semibold" fill={NOTE[n.kind].ink}>
                         {k + 1}
                       </text>
                     </g>
@@ -689,30 +697,66 @@ function GoalTip({ g, v }: { g: Goal; v?: Vals }) {
   )
 }
 
+/** Drie stemmen: AI (ijs-teal, mono, gestippeld), coach (brons, serif) en een signaal uit de data (vaste regel, neutraal). */
+const NOTE = {
+  ai: {
+    label: 'AI',
+    card: 'border-dashed border-ai bg-ai-soft font-mono text-ai-text',
+    pin: 'bg-ai text-on-accent',
+    text: '',
+    date: 'text-ai-text',
+    tip: 'num text-[12px] text-ai-text',
+    fill: 'var(--ai)',
+    stroke: undefined,
+    ink: 'var(--on-accent)',
+  },
+  coach: {
+    label: 'Coach',
+    card: 'border-coach bg-coach-soft',
+    pin: 'bg-coach text-on-coach',
+    text: 'coach-note !text-[14px] !leading-[1.4]',
+    date: 'text-coach-text',
+    tip: 'coach-note text-coach-text',
+    fill: 'var(--coach)',
+    stroke: undefined,
+    ink: 'var(--on-coach)',
+  },
+  signaal: {
+    label: 'Signaal uit de data',
+    card: 'border-line bg-surface text-ink',
+    pin: 'bg-raised text-ink border border-muted',
+    text: '',
+    date: 'text-muted',
+    tip: 'text-[12px] text-ink',
+    fill: 'var(--surface-raised)',
+    stroke: 'var(--text-muted)',
+    ink: 'var(--text)',
+  },
+} as const
+
 function NoteTip({ n, k }: { n: Annotation; k: number }) {
   return (
     <>
       <div className="num text-[11px] text-muted mb-1">
         {k + 1} · {fmtDate(n.date, true)}
+        {n.kind === 'signaal' && ' · signaal uit de data'}
       </div>
-      <div className={n.kind === 'coach' ? 'coach-note text-coach-text' : 'num text-[12px] text-ai-text'}>{n.text}</div>
+      <div className={NOTE[n.kind].tip}>{n.text}</div>
     </>
   )
 }
 
 function Note({ n, k }: { n: Annotation; k: number }) {
-  const ai = n.kind === 'ai'
+  const st = NOTE[n.kind]
   return (
-    <div
-      className={`grid grid-cols-[20px_1fr] gap-2 px-3 py-2.5 rounded-[var(--radius-card)] border text-[12px] leading-[1.45] ${
-        ai ? 'border-dashed border-ai bg-ai-soft font-mono text-ai-text' : 'border-coach bg-coach-soft'
-      }`}
-    >
-      <span className={`w-[18px] h-[18px] rounded-full grid place-items-center font-mono text-[10px] font-semibold ${ai ? 'bg-ai text-on-accent' : 'bg-coach text-on-coach'}`}>{k + 1}</span>
+    <div className={`grid grid-cols-[20px_1fr] gap-2 px-3 py-2.5 rounded-[var(--radius-card)] border text-[12px] leading-[1.45] ${st.card}`}>
+      <span className={`w-[18px] h-[18px] rounded-full grid place-items-center font-mono text-[10px] font-semibold ${st.pin}`}>{k + 1}</span>
       <div>
-        {n.who && <div className="text-[11px] text-coach-text font-medium mb-0.5 font-sans">{n.who}</div>}
-        <div className={ai ? '' : 'coach-note !text-[14px] !leading-[1.4]'}>{n.text}</div>
-        <div className={`font-mono text-[10.5px] mt-1 ${ai ? 'text-ai-text' : 'text-coach-text'}`}>{fmtDate(n.date, true)}</div>
+        {n.kind === 'coach' && n.who && <div className="text-[11px] text-coach-text font-medium mb-0.5 font-sans">{n.who}</div>}
+        {n.kind === 'signaal' && <div className="text-[11px] text-muted font-medium mb-0.5">Signaal uit de data</div>}
+        {n.kind === 'ai' && <span className="sr-only">AI: </span>}
+        <div className={st.text}>{n.text}</div>
+        <div className={`font-mono text-[10.5px] mt-1 ${st.date}`}>{fmtDate(n.date, true)}</div>
       </div>
     </div>
   )

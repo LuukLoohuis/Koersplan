@@ -73,6 +73,6 @@ export function formState(tsb: number): { label: string; tone: 'good' | 'accent'
   if (tsb > 20) return { label: 'Overgang', tone: '' }
   if (tsb > 5) return { label: 'Fris', tone: 'good' }
   if (tsb > -10) return { label: 'Grijze zone', tone: '' }
-  if (tsb > -30) return { label: 'Optimaal', tone: 'accent' }
+  if (tsb >= -30) return { label: 'Optimaal', tone: 'accent' } // −30…−10; Hoog risico is < −30
   return { label: 'Hoog risico', tone: 'crit' }
 }

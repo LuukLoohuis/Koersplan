@@ -202,7 +202,11 @@ export function demoOverview(id: string): AthleteOverview | null {
   }
 }
 
-/** AI-uitleg bij opvallende momenten: de steilste opbouwweek, de diepste vorm, een gat zonder training. */
+/**
+ * Signalen uit de data (vaste regels, geen AI) bij opvallende momenten: de steilste
+ * opbouwweek, de diepste vorm, een gat zonder training. Drempels gelijk aan de app:
+ * veilige helling 3–7, "fors" boven 8 (vlag Snelle opbouw), hoog risico onder −30.
+ */
 function demoAnnotations(wellness: WellnessDay[], loads: number[], start: string): Annotation[] {
   const out: Annotation[] = []
   const recent = wellness.slice(-120)
@@ -210,19 +214,19 @@ function demoAnnotations(wellness: WellnessDay[], loads: number[], start: string
   const ramp = peak.rampRate ?? 0
   if (ramp >= 3) {
     const r = String(ramp).replace('.', ',')
-    out.push({ date: peak.date, kind: 'ai', text: `Opbouw +${r} in een week — ${ramp > 7 ? 'fors, boven' : 'binnen'} de veilige 3–7.` })
+    out.push({ date: peak.date, kind: 'signaal', text: `Opbouw +${r} in een week — ${ramp > 7 ? 'boven' : 'binnen'} de veilige 3–7${ramp > 8 ? ', fors' : ''}.` })
   }
   const low = recent.reduce((m, w) => (w.ctl - w.atl < m.ctl - m.atl ? w : m), recent[0])
-  if (low.ctl - low.atl < -25) {
-    const text = `Vorm −${Math.round(low.atl - low.ctl)}: hoog risico. Rustdag of herstelrit voorstellen.`
+  if (low.ctl - low.atl < -30) {
+    const text = `Vorm −${Math.round(low.atl - low.ctl)}: zone hoog risico.`
     const same = out.find((a) => a.date === low.date)
     if (same) same.text += ` ${text}`
-    else out.push({ date: low.date, kind: 'ai', text })
+    else out.push({ date: low.date, kind: 'signaal', text })
   }
   let gap = 0
   loads.forEach((l, i) => {
     gap = l > 0 ? 0 : gap + 1
-    if (gap === 5) out.push({ date: addDays(start, i - 4), kind: 'ai', text: '5 dagen zonder training; conditie zakt, vorm loopt op.' })
+    if (gap === 5) out.push({ date: addDays(start, i - 4), kind: 'signaal', text: '5 dagen zonder training; conditie zakt, vorm loopt op.' })
   })
   return out.sort((a, b) => a.date.localeCompare(b.date))
 }
