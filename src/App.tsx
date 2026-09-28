@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import type { AppConfig, AthleteSummary } from '@shared/types'
 import { api } from './api'
 import { RosterPage } from './pages/Roster'
@@ -21,7 +21,17 @@ export const useApp = () => useContext(AppCtx)
 export default function App() {
   const [config, setConfig] = useState<AppConfig | null>(null)
   const [athletes, setAthletes] = useState<AthleteSummary[] | null>(null)
-  const reloadAthletes = () => api.athletes().then(setAthletes).catch(() => setAthletes([]))
+  // één verzoek tegelijk; een mislukte herlaadpoging laat de bestaande lijst staan
+  const inflight = useRef<Promise<void> | null>(null)
+  const reloadAthletes = () => {
+    inflight.current ??= api
+      .athletes()
+      .then(setAthletes)
+      .catch(() => setAthletes((prev) => prev ?? []))
+      .finally(() => {
+        inflight.current = null
+      })
+  }
   useEffect(() => {
     api.config().then(setConfig).catch(() => setConfig(null))
     reloadAthletes()
@@ -40,7 +50,7 @@ export default function App() {
               <Shell>
                 <Routes>
                   <Route index element={<RosterPage />} />
-                  <Route path="atleet/:id" element={<AthletePage />} />
+                  <Route path="atleet/:id" element={<AthleteRoute />} />
                   <Route path="koppelen" element={<ConnectPage />} />
                 </Routes>
               </Shell>
@@ -51,6 +61,12 @@ export default function App() {
       </BrowserRouter>
     </AppCtx.Provider>
   )
+}
+
+/** Per atleet een nieuwe pagina: late antwoorden van de vorige atleet komen zo nooit bij de volgende terecht. */
+function AthleteRoute() {
+  const { id } = useParams()
+  return <AthletePage key={id} />
 }
 
 function Shell({ children }: { children: ReactNode }) {
@@ -73,7 +89,7 @@ function Shell({ children }: { children: ReactNode }) {
         </div>
         <nav className={`${open ? 'block' : 'hidden'} md:flex flex-col flex-1 min-h-0 px-2 pb-3`}>
           <NavLink to="/app" end className={navCls}>
-            Overzicht
+            Mijn atleten
           </NavLink>
           <div className="eyebrow px-3 mt-4 mb-1.5">Atleten</div>
           <div className="flex-1 overflow-auto">
