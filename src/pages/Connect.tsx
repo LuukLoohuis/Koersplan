@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import { useApp } from '../App'
 import { Panel } from '../components/ui'
+import { fmtDate } from '@shared/util'
 
 export function ConnectPage() {
   const { config, reloadAthletes } = useApp()
@@ -29,7 +30,28 @@ export function ConnectPage() {
     }
   }
 
-  const inviteUrl = `${location.origin}/auth/intervals/start?role=athlete`
+  // Via de API: dan weet de server welke coach de atleet koppelt
+  const [oauthBusy, setOauthBusy] = useState(false)
+  const [oauthErr, setOauthErr] = useState<string | null>(null)
+  const [invite, setInvite] = useState<{ url: string; expiresAt?: string } | null>(null)
+  const connect = async () => {
+    setOauthBusy(true)
+    setOauthErr(null)
+    try {
+      location.href = (await api.intervalsConnect()).url
+    } catch (e2) {
+      setOauthErr((e2 as Error).message)
+      setOauthBusy(false)
+    }
+  }
+  const makeInvite = async () => {
+    setOauthErr(null)
+    try {
+      setInvite(await api.intervalsInvite())
+    } catch (e2) {
+      setOauthErr((e2 as Error).message)
+    }
+  }
 
   return (
     <div className="grid gap-6 max-w-[900px]">
@@ -46,13 +68,23 @@ export function ConnectPage() {
           <p className="text-[13px] text-muted mt-0">De atleet logt in bij intervals.icu en geeft toestemming voor: activiteiten lezen, wellness lezen, kalender schrijven.</p>
           {config?.oauthEnabled ? (
             <div className="grid gap-3">
-              <a className="btn btn-primary no-underline justify-self-start" href="/auth/intervals/start?role=athlete">
-                Koppel een atleet
-              </a>
+              <button className="btn btn-primary justify-self-start" onClick={() => void connect()} disabled={oauthBusy}>
+                {oauthBusy ? 'Naar intervals.icu…' : 'Koppel een atleet'}
+              </button>
               <div>
                 <div className="eyebrow mb-1">Uitnodigingslink voor atleten</div>
-                <code className="num text-[11.5px] break-all bg-raised rounded px-2 py-1 block select-all">{inviteUrl}</code>
+                {invite ? (
+                  <>
+                    <code className="num text-[11.5px] break-all bg-raised rounded px-2 py-1 block select-all">{invite.url}</code>
+                    {invite.expiresAt && <p className="text-[12px] text-muted m-0 mt-1">Geldig tot {fmtDate(invite.expiresAt.slice(0, 10), true)}. Wie hem gebruikt, wordt jouw atleet.</p>}
+                  </>
+                ) : (
+                  <button className="btn btn-sm" onClick={() => void makeInvite()}>
+                    Maak uitnodigingslink
+                  </button>
+                )}
               </div>
+              {oauthErr && <p className="text-crit text-[13px] m-0">{oauthErr}</p>}
             </div>
           ) : (
             <ol className="text-[13px] text-muted pl-4 m-0 grid gap-1.5">
