@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import type { AthleteOverview, FeedbackEntry, TrainingPlan, Workout } from '@shared/types'
 import { flatten, workoutMetrics } from '@shared/metrics'
-import { addDays, fmtDate, fmtDuration, mondayOf, today, DAY_LONG, weekday } from '@shared/util'
+import { addDays, fmtDate, fmtDuration, isoDate, mondayOf, today, DAY_LONG, weekday } from '@shared/util'
 import { api } from '../api'
 import { historyFromOverview, plansForForm } from '@shared/formSeries'
+import { confirmedDays, feedbackFor, planForDate } from '@shared/review'
 import { WorkoutProfile } from '../components/charts'
 import { FormChart } from '../components/FormChart'
-import { TabBar, Toast, tabPanelProps } from '../components/ui'
+import { initialsOf, TabBar, Toast, tabPanelProps } from '../components/ui'
 import { ThemeContext } from '../lib/theme'
 
 /** Portaal van de atleet: schema, uitleg van de coach en feedback per training. Altijd in het donkere thema. */
@@ -25,7 +26,6 @@ function Portal() {
   const { id = '' } = useParams()
   const [ov, setOv] = useState<AthleteOverview | null>(null)
   const [plans, setPlans] = useState<TrainingPlan[]>([])
-  const [plan, setPlan] = useState<TrainingPlan | null>(null)
   const [search, setSearch] = useSearchParams()
   const tab = search.get('tab') === 'vorm' ? 'vorm' : 'schema'
   const setTab = (t: 'schema' | 'vorm') => setSearch(t === 'schema' ? {} : { tab: t }, { replace: true })
@@ -39,10 +39,7 @@ function Portal() {
       .then(([o, ps]) => {
         setOv(o)
         setPlans(ps)
-        const pub = ps.find((p) => p.status !== 'concept') ?? null
-        setPlan(pub)
-        const t = pub?.workouts.find((w) => w.date >= today())
-        setOpen(t?.id ?? null)
+        setOpen(confirmedDays(ps).find((d) => d.workout.date >= today())?.workout.id ?? null)
       })
       .catch((e) => setErr((e as Error).message))
   }, [id])
@@ -55,12 +52,16 @@ function Portal() {
   if (!ov) return <div className="p-6 text-muted">Laden…</div>
   const a = ov.athlete
   const ftp = a.ftp
-  const nextW = plan?.workouts.find((w) => w.date >= today())
+  // per dag de koers die die dag dekt (wekelijkse koersen volgen elkaar op), in de bevestigde versie
+  const rides = confirmedDays(plans)
+  const next = rides.find((d) => d.workout.date >= today())
+  const nextW = next?.workout
+  // de koers van de eerstvolgende rit (met zijn notitie), anders die van vandaag
+  const plan = next?.plan ?? planForDate(plans, today()) ?? plans.find((p) => p.status !== 'concept') ?? null
 
-  const sendFeedback = async (w: Workout, fb: Omit<FeedbackEntry, 'at'>) => {
-    if (!plan) return
-    const p = await api.feedback(plan.id, w.id, fb)
-    setPlan(p)
+  const sendFeedback = async (planId: string, w: Workout, fb: Omit<FeedbackEntry, 'at'>) => {
+    const p = await api.feedback(planId, w.id, fb)
+    setPlans((all) => all.map((x) => (x.id === p.id ? p : x)))
     setThanks(true)
   }
 
@@ -117,6 +118,21 @@ function Portal() {
                 <p className="text-[12px] text-muted m-0 mt-2">Workouts staan in je intervals.icu-kalender en synchroniseren naar je Garmin, Wahoo of Zwift.</p>
               </div>
 
+              {plan.note && (
+                <div className="voice-coach">
+                  <span className="avatar" aria-hidden>
+                    {plan.confirmedBy ? initialsOf(plan.confirmedBy) : '✓'}
+                  </span>
+                  <div>
+                    <div className="who">
+                      {plan.confirmedBy ? `${plan.confirmedBy}, je coach` : 'Je coach'}
+                      {plan.confirmedAt && ` · ${fmtDate(isoDate(new Date(plan.confirmedAt)), true)}`}
+                    </div>
+                    <p className="note m-0">{plan.note}</p>
+                  </div>
+                </div>
+              )}
+
               {thanks && (
                 <Toast tone="good" onClose={() => setThanks(false)}>
                   Bedankt, je coach ziet je feedback.
@@ -140,15 +156,26 @@ function Portal() {
 
               <div className="grid gap-2">
                 {days.map((d) => {
-                  const w = plan.workouts.find((x) => x.date === d)
-                  if (!w)
+                  const r = rides.find((x) => x.workout.date === d)
+                  const w = r?.workout
+                  if (!r || !w)
                     return (
                       <div key={d} className="flex items-center gap-3 px-4 py-2.5 rounded-lg border border-dashed border-line text-[12.5px] text-muted">
                         <span className="w-20">{DAY_LONG[weekday(d)]}</span>
                         <span>Rust</span>
                       </div>
                     )
-                  return <PortalWorkout key={d} w={w} ftp={ftp} open={open === w.id} onToggle={() => setOpen(open === w.id ? null : w.id)} onFeedback={(fb) => sendFeedback(w, fb)} />
+                  return (
+                    <PortalWorkout
+                      key={d}
+                      w={w}
+                      feedback={feedbackFor(r.plan, w)}
+                      ftp={ftp}
+                      open={open === w.id}
+                      onToggle={() => setOpen(open === w.id ? null : w.id)}
+                      onFeedback={(fb) => sendFeedback(r.plan.id, w, fb)}
+                    />
+                  )
                 })}
               </div>
             </>
@@ -160,7 +187,21 @@ function Portal() {
   )
 }
 
-function PortalWorkout({ w, ftp, open, onToggle, onFeedback }: { w: Workout; ftp: number; open: boolean; onToggle: () => void; onFeedback: (fb: Omit<FeedbackEntry, 'at'>) => void }) {
+function PortalWorkout({
+  w,
+  feedback,
+  ftp,
+  open,
+  onToggle,
+  onFeedback,
+}: {
+  w: Workout
+  feedback?: FeedbackEntry
+  ftp: number
+  open: boolean
+  onToggle: () => void
+  onFeedback: (fb: Omit<FeedbackEntry, 'at'>) => void
+}) {
   const m = workoutMetrics(w.sections, ftp)
   const isToday = w.date === today()
   const canFeedback = w.date <= today()
@@ -177,7 +218,7 @@ function PortalWorkout({ w, ftp, open, onToggle, onFeedback }: { w: Workout; ftp
             {w.stimulus} · {fmtDuration(m.durationSec)} · {m.tss} TSS
           </span>
         </span>
-        {w.feedback && <span className="chip chip-good">RPE {w.feedback.rpe}</span>}
+        {feedback && <span className="chip chip-good">RPE {feedback.rpe}</span>}
         <span className="text-muted">{open ? '−' : '+'}</span>
       </button>
       {open && (
@@ -190,7 +231,7 @@ function PortalWorkout({ w, ftp, open, onToggle, onFeedback }: { w: Workout; ftp
           )}
           <WorkoutProfile sections={w.sections} ftp={ftp} height={90} showWbal={false} />
           <StepList w={w} ftp={ftp} />
-          {canFeedback && <FeedbackForm initial={w.feedback} onSubmit={onFeedback} />}
+          {canFeedback && <FeedbackForm initial={feedback} onSubmit={onFeedback} />}
         </div>
       )}
     </section>

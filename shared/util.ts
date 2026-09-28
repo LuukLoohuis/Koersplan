@@ -48,8 +48,10 @@ export function fmtDate(s: string, withDay = false): string {
 }
 
 export function fmtDuration(sec: number): string {
-  const h = Math.floor(sec / 3600)
-  const m = Math.round((sec % 3600) / 60)
+  // eerst afronden op hele minuten, dan pas uren: nooit "1:60 u"
+  const t = Math.round(sec / 60)
+  const h = Math.floor(t / 60)
+  const m = t % 60
   if (h === 0) return `${m} min`
   return `${h}:${String(m).padStart(2, '0')} u`
 }

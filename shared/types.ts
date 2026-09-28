@@ -44,6 +44,15 @@ export interface FeedbackEntry {
   at: string
 }
 
+/** Feedback van de atleet op een rit, los van de versies van de koers: blijft bij bijsturen en opnieuw bevestigen. */
+export interface FeedbackRecord {
+  workoutId: string
+  /** dag en naam van de rit zoals de atleet hem had staan */
+  date: string
+  name: string
+  feedback: FeedbackEntry
+}
+
 export interface Workout {
   id: string
   date: string // YYYY-MM-DD
@@ -58,6 +67,12 @@ export interface Workout {
 }
 
 export type PlanStatus = 'concept' | 'gepubliceerd' | 'gewijzigd'
+
+/**
+ * Status van één training, in de volgorde van het product:
+ * Uitgezet → Bij coach → Bijgestuurd → Bevestigd → Op je fietscomputer → Gereden / Gemist.
+ */
+export type TrainingStatus = 'uitgezet' | 'bij-coach' | 'bijgestuurd' | 'bevestigd' | 'op-fietscomputer' | 'gereden' | 'gemist'
 
 export interface PlanWeek {
   index: number
@@ -78,6 +93,21 @@ export interface TrainingPlan {
   source: 'ai' | 'regels'
   createdAt: string
   publishedAt?: string
+  /** Het oorspronkelijk uitgezette voorstel; basis voor "was → wordt". Alleen de server zet dit. */
+  aiWorkouts?: Workout[]
+  /** Het verzoek waarmee het voorstel is uitgezet (voor "Opnieuw laten uitzetten"). */
+  request?: GenerateRequest
+  /** Notitie van de coach aan de atleet bij deze koers. */
+  note?: string
+  /** Wanneer en door wie de coach de koers bevestigde. */
+  confirmedAt?: string
+  confirmedBy?: string
+  /** Echt naar intervals.icu gezet (niet gesimuleerd): dan staat de koers op de fietscomputer. */
+  syncedAt?: string
+  /** De trainingen zoals de coach ze bevestigde; basis voor "opnieuw bevestigen". Alleen de server zet dit. */
+  confirmedWorkouts?: Workout[]
+  /** Feedback van de atleet per rit. Alleen de server zet dit. */
+  feedbackLog?: FeedbackRecord[]
 }
 
 export interface WellnessDay {
@@ -131,6 +161,18 @@ export interface AthleteSummary {
   lastActivity?: string
   flags: string[]
   goal?: string
+  /** Abonnement: AI + persoonlijke coach, of alleen AI */
+  subscription?: 'coach' | 'ai'
+  /** Vorm (TSB) van de laatste 28 dagen, oudste eerst */
+  formSeries28?: number[]
+  /** Op koers in de laatste 7 dagen: gereden t.o.v. geplande belasting, 0–100 */
+  onCourse7d?: number
+  /** Geplande trainingen in de laatste 7 dagen zonder rit */
+  missed7d?: number
+  /** Eerste dag zonder bevestigde koers (vanaf vandaag) */
+  nextPlanDue?: string
+  /** Uitgezette koersen die op de coach wachten */
+  openProposals?: number
 }
 
 /** Een koers als doel (intervals.icu RACE_A/B/C). */
@@ -180,6 +222,8 @@ export interface GenerateRequest {
   longRideDay: number
   focus: 'basis' | 'drempel' | 'vo2max' | 'duurvermogen' | 'sprint' | 'piek'
   notes: string
+  /** Instructie van de coach bij "Opnieuw laten uitzetten" */
+  instructions?: string
 }
 
 export interface PublishResult {
@@ -196,4 +240,6 @@ export interface AppConfig {
   apiKeyEnabled: boolean
   aiEnabled: boolean
   aiModel?: string
+  /** Naam van de coach ("Bevestigd door Ruud") */
+  coachName?: string
 }

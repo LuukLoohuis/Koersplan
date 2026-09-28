@@ -110,7 +110,8 @@ export function FormChart({
   const [rootRef, rootW] = useWidth<HTMLDivElement>()
   const [panelRef, W] = useWidth<HTMLDivElement>()
   const svgRef = useRef<SVGSVGElement>(null)
-  const mobile = rootW > 0 && rootW < 640
+  // de compacte versie (reviewscherm) blijft een afgerond paneel, ook in een smalle kolom
+  const mobile = !compact && rootW > 0 && rootW < 640
 
   const [range, setRange] = useState(defaultRange)
   const [show, setShow] = useState({ ctl: true, atl: true, tsb: true })

@@ -11,6 +11,7 @@ interface Input {
   activities: Activity[] // nieuwste eerst
   model: CpModel | null
   goal?: string
+  subscription?: AthleteSummary['subscription']
 }
 
 /** Samenvatting + aandachtspunten per atleet (de "wat vraagt aandacht"-kolom). */
@@ -55,6 +56,8 @@ export function summarize(i: Input): AthleteSummary {
     lastActivity,
     flags,
     goal: i.goal,
+    subscription: i.subscription ?? 'coach',
+    formSeries28: i.wellness.slice(-28).map((w) => round((w.ctl ?? 0) - (w.atl ?? 0), 1)),
   }
 }
 

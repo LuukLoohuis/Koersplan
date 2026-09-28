@@ -10,7 +10,9 @@ import { toIntervalsEvents } from '../shared/intervalsText'
 import { aiEnabled, aiModel, generateWithClaude } from './ai'
 import { fetchOverview, IntervalsClient } from './intervals'
 import { store, type PlanRecord } from './store'
-import { seedDemoPlan } from '../shared/seed'
+import { seedDemoConcept, seedDemoPlan } from '../shared/seed'
+import { confirmPlan, keepFeedback, mergePlanUpdate, overlapMessage, overlapping, recordFeedback, rosterExtras } from '../shared/review'
+import { today } from '../shared/util'
 
 const app = express()
 app.use(express.json({ limit: '2mb' }))
@@ -18,6 +20,11 @@ app.use(express.json({ limit: '2mb' }))
 const PORT = Number(process.env.PORT || 8787)
 const APP_URL = process.env.APP_URL || `http://localhost:5173`
 const showDemo = () => process.env.DEMO_ATHLETES !== 'false'
+// Naam van de coach voor "Bevestigd door …". Alleen de demo-atleten hebben een vaste demo-coach.
+const coachName = () => process.env.COACH_NAME || undefined
+// alleen-AI-abonnees hebben geen persoonlijke coach: dan geen naam
+const coachFor = (athleteId: string, subscription?: 'coach' | 'ai') =>
+  subscription === 'ai' ? undefined : (coachName() ?? (DEMO_IDS.includes(athleteId) ? 'Ruud' : undefined))
 const oauthEnabled = () => Boolean(process.env.INTERVALS_CLIENT_ID && process.env.INTERVALS_CLIENT_SECRET)
 
 // ── Overzichten (met korte cache om de API te sparen) ───────────────────────
@@ -51,6 +58,7 @@ app.get('/api/config', (_req, res) => {
     apiKeyEnabled: Boolean(process.env.INTERVALS_API_KEY),
     aiEnabled: aiEnabled(),
     aiModel: aiEnabled() ? aiModel() : undefined,
+    coachName: coachName(),
   }
   res.json(cfg)
 })
@@ -63,7 +71,8 @@ app.get(
     const results = await Promise.all(
       ids.map(async (id) => {
         try {
-          return (await overview(id)).athlete
+          const ov = await overview(id)
+          return { ...ov.athlete, ...rosterExtras(ov.activities, store.plans(id), today(), ov.athlete.ftp) }
         } catch (e) {
           const c = store.connection(id)
           return {
@@ -173,18 +182,28 @@ app.get(
 )
 
 // ── Plannen ─────────────────────────────────────────────────────────────────
+// Koersen die nu gepubliceerd worden: die mag opnieuw uitzetten niet vervangen
+const publishing = new Set<string>()
 app.get('/api/athletes/:id/plans', (req, res) => res.json(store.plans(req.params.id)))
 
 app.post(
   '/api/athletes/:id/generate',
   wrap(async (req, res) => {
     const ov = await overview(req.params.id)
-    const body = req.body as GenerateRequest
+    const { replaces, ...body } = req.body as GenerateRequest & { replaces?: string }
+    // Opnieuw uitzetten vervangt alleen een voorstel dat nog op de coach wacht
+    const replaceable = () => {
+      const old = replaces ? store.plan(replaces) : undefined
+      if (replaces && (!old || old.athleteId !== req.params.id)) throw httpError(409, 'Dit voorstel is al vervangen of verwijderd; er is geen nieuw voorstel gemaakt.')
+      if (old && (old.status !== 'concept' || publishing.has(old.id))) throw httpError(409, 'Deze koers is intussen bevestigd; er is geen nieuw voorstel gemaakt.')
+      return old
+    }
+    replaceable()
     let plan: TrainingPlan
     let warning: string | undefined
     if (aiEnabled()) {
       try {
-        plan = await generateWithClaude(ov, body)
+        plan = await generateWithClaude(ov, body, replaces ? store.plan(replaces) : undefined)
       } catch (e) {
         warning = `AI-generatie mislukt (${(e as Error).message}); regelgebaseerd concept gemaakt.`
         plan = generateRuleBased(body, ov.athlete)
@@ -192,8 +211,14 @@ app.post(
     } else {
       plan = generateRuleBased(body, ov.athlete)
     }
+    // uitzetten duurt even: opnieuw kijken, dan pas het oude voorstel vervangen (de notitie gaat mee)
+    const old = replaceable()
+    if (old) {
+      plan.note = old.note
+      store.deletePlan(old.id)
+    }
     store.savePlan(plan)
-    res.json({ plan, warning })
+    res.json({ plan, warning, replaced: old?.id })
   }),
 )
 
@@ -205,19 +230,16 @@ app.get('/api/plans/:planId', (req, res) => {
 app.put('/api/plans/:planId', (req, res) => {
   const prev = store.plan(req.params.planId)
   if (!prev) return res.status(404).json({ error: 'Plan niet gevonden' })
-  const next = req.body as TrainingPlan
-  const plan: PlanRecord = {
-    ...prev,
-    ...next,
-    id: prev.id,
-    athleteId: prev.athleteId,
-    status: prev.status === 'concept' ? 'concept' : 'gewijzigd',
-  }
+  // tijdens bevestigen gaat precies deze versie naar Intervals.icu: een wijziging zou daarna verloren gaan
+  if (publishing.has(prev.id)) return res.status(409).json({ error: 'Deze koers wordt net bevestigd; je wijziging is niet opgeslagen.' })
+  // Alleen wat de coach mag wijzigen: het voorstel, de bevestiging en de publicatie blijven van de server
+  const plan = mergePlanUpdate(prev, req.body as Partial<PlanRecord>)
   store.savePlan(plan)
   res.json(plan)
 })
 
 app.delete('/api/plans/:planId', (req, res) => {
+  if (publishing.has(req.params.planId)) return res.status(409).json({ error: 'Deze koers wordt net bevestigd; verwijder hem daarna.' })
   store.deletePlan(req.params.planId)
   res.json({ ok: true })
 })
@@ -225,54 +247,69 @@ app.delete('/api/plans/:planId', (req, res) => {
 app.post(
   '/api/plans/:planId/publish',
   wrap(async (req, res) => {
-    const plan = store.plan(req.params.planId)
-    if (!plan) throw httpError(404, 'Plan niet gevonden')
-    const ov = await overview(plan.athleteId)
-    const events = toIntervalsEvents(plan, ov.athlete.ftp)
-    const ids = events.map((e) => e.external_id)
-    const stale = (plan.publishedExternalIds ?? []).filter((x) => !ids.includes(x))
+    const found = store.plan(req.params.planId)
+    if (!found) throw httpError(404, 'Plan niet gevonden')
+    if (publishing.has(found.id)) throw httpError(409, 'Deze koers wordt al bevestigd.')
+    // bevestigde koersen (ook die nu bevestigd worden) delen geen dagen: anders twee trainingen op één dag
+    const others = store.plans(found.athleteId).map((p) => (publishing.has(p.id) ? { ...p, status: 'gepubliceerd' as const } : p))
+    const clash = overlapping(others, found, today())
+    if (clash.length) throw httpError(409, overlapMessage(clash))
+    publishing.add(found.id)
+    try {
+      const plan = found
+      const ov = await overview(plan.athleteId)
+      const events = toIntervalsEvents(plan, ov.athlete.ftp)
+      const ids = events.map((e) => e.external_id)
+      const stale = (plan.publishedExternalIds ?? []).filter((x) => !ids.includes(x))
 
-    let result: PublishResult
-    if (DEMO_IDS.includes(plan.athleteId)) {
-      result = {
-        ok: true,
-        simulated: true,
-        created: events.length,
-        message: `Demo-atleet: ${events.length} workouts klaargezet (gesimuleerd, niets verstuurd).`,
-        payloadPreview: events,
+      let result: PublishResult
+      if (DEMO_IDS.includes(plan.athleteId)) {
+        result = {
+          ok: true,
+          simulated: true,
+          created: events.length,
+          message: `Demo-atleet: ${events.length} workouts klaargezet (gesimuleerd, niets verstuurd).`,
+          payloadPreview: events,
+        }
+      } else {
+        const conn = store.connection(plan.athleteId)!
+        const client = IntervalsClient.forConnection(conn)
+        if (stale.length) await client.deleteEvents(stale)
+        const created = await client.upsertEvents(events)
+        for (const c of created) {
+          const w = plan.workouts.find((w) => c.external_id?.endsWith(`:${w.id}`))
+          if (w) w.remoteId = c.id
+        }
+        cache.delete(plan.athleteId)
+        result = {
+          ok: true,
+          simulated: false,
+          created: created.length,
+          message: `${created.length} workouts in de intervals.icu-kalender gezet${stale.length ? `, ${stale.length} verwijderd` : ''}. Garmin/Wahoo/Zwift synct vanaf daar.`,
+          payloadPreview: events,
+        }
       }
-    } else {
-      const conn = store.connection(plan.athleteId)!
-      const client = IntervalsClient.forConnection(conn)
-      if (stale.length) await client.deleteEvents(stale)
-      const created = await client.upsertEvents(events)
-      for (const c of created) {
-        const w = plan.workouts.find((w) => c.external_id?.endsWith(`:${w.id}`))
-        if (w) w.remoteId = c.id
-      }
-      cache.delete(plan.athleteId)
-      result = {
-        ok: true,
-        simulated: false,
-        created: created.length,
-        message: `${created.length} workouts in de intervals.icu-kalender gezet${stale.length ? `, ${stale.length} verwijderd` : ''}. Garmin/Wahoo/Zwift synct vanaf daar.`,
-        payloadPreview: events,
-      }
+      // opnieuw kijken: verwijderen kan niet tijdens het bevestigen, maar de atleet kan intussen feedback geven
+      const latest = store.plan(plan.id)
+      if (!latest) throw httpError(409, 'Deze koers is tijdens het bevestigen verwijderd.')
+      store.savePlan({ ...confirmPlan(keepFeedback(plan, latest), coachFor(plan.athleteId, ov.athlete.subscription), new Date().toISOString(), !result.simulated), publishedExternalIds: ids })
+      res.json({ result, plan: store.plan(plan.id) })
+    } finally {
+      publishing.delete(found.id)
     }
-    store.savePlan({ ...plan, status: 'gepubliceerd', publishedAt: new Date().toISOString(), publishedExternalIds: ids })
-    res.json({ result, plan: store.plan(plan.id) })
   }),
 )
 
 // ── Feedback van de atleet ──────────────────────────────────────────────────
 app.post('/api/plans/:planId/workouts/:wid/feedback', (req, res) => {
   const plan = store.plan(req.params.planId)
-  const w = plan?.workouts.find((x) => x.id === req.params.wid)
-  if (!plan || !w) return res.status(404).json({ error: 'Workout niet gevonden' })
   const fb = req.body as Omit<FeedbackEntry, 'at'>
-  w.feedback = { rpe: Math.max(1, Math.min(10, Number(fb.rpe) || 5)), feel: fb.feel, comment: String(fb.comment || '').slice(0, 1000), at: new Date().toISOString() }
-  store.savePlan(plan)
-  res.json(plan)
+  const feedback = { rpe: Math.max(1, Math.min(10, Number(fb.rpe) || 5)), feel: fb.feel, comment: String(fb.comment || '').slice(0, 1000), at: new Date().toISOString() }
+  // op de rit die de atleet had staan (bij een gewijzigde koers de bevestigde versie), in het logboek
+  const next = plan && recordFeedback(plan, req.params.wid, feedback)
+  if (!next) return res.status(404).json({ error: 'Workout niet gevonden' })
+  store.savePlan(next)
+  res.json(store.plan(next.id))
 })
 
 // ── Productie: serveer de gebouwde frontend ─────────────────────────────────
@@ -287,8 +324,12 @@ app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: 
   res.status(err.status ?? 500).json({ error: err.message })
 })
 
-// Demo: voorbeeldblok voor Sanne zodat het portaal meteen gevuld is
-if (showDemo() && !store.plans('demo-sanne').length) store.savePlan(seedDemoPlan(demoOverview('demo-sanne')!.athlete))
+// Demo: bevestigde koers voor Sanne (portaal gevuld) en een uitgezette koers voor Joris (Koers reviewen)
+if (showDemo() && !store.plans('demo-sanne').length) {
+  const sanne = demoOverview('demo-sanne')!.athlete
+  store.savePlan(seedDemoPlan(sanne, coachFor(sanne.id, sanne.subscription)))
+}
+if (showDemo() && !store.plans('demo-joris').length) store.savePlan(seedDemoConcept(demoOverview('demo-joris')!.athlete))
 
 // API-key-modus: koppel atleten uit INTERVALS_ATHLETE_IDS automatisch bij het opstarten
 async function autoConnect() {

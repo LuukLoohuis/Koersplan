@@ -34,6 +34,7 @@ interface Persona {
   restDays: number[]
   /** Doelkoersen, in dagen vanaf vandaag */
   goals?: { in: number; label: Goal['label']; name: string }[]
+  subscription?: 'coach' | 'ai'
   /** Een bijsturing van de coach, in dagen vanaf vandaag */
   coachNote?: { in: number; text: string; who: string }
 }
@@ -87,6 +88,7 @@ const PERSONAS: Persona[] = [
     loadTo: 42,
     tail: { days: 6, factor: 0 },
     goal: 'Eerste 200 km-brevet in het voorjaar',
+    subscription: 'ai',
     restDays: [0, 2, 4],
   },
 ]
@@ -190,6 +192,7 @@ export function demoOverview(id: string): AthleteOverview | null {
       activities: recent,
       model,
       goal: p.goal,
+      subscription: p.subscription,
     }),
     wellness,
     activities: recent,
