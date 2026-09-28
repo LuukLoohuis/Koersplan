@@ -21,7 +21,7 @@ export function ConnectPage() {
     try {
       const { id } = await api.addAthlete({ remoteId, apiKey: apiKey || undefined, name: name || undefined })
       reloadAthletes()
-      nav(`/atleet/${id}`)
+      nav(`/app/atleet/${id}`)
     } catch (e2) {
       setErr((e2 as Error).message)
     } finally {

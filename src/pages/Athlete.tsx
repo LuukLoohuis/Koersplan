@@ -62,7 +62,7 @@ export function AthletePage() {
           <h1 className="text-[26px] font-semibold tracking-tight m-0 mt-1">{a.name}</h1>
         </div>
         <div className="ml-auto flex gap-2">
-          <Link className="btn no-underline" to={`/portaal/${a.id}`}>
+          <Link className="btn no-underline" to={`/app/portaal/${a.id}`}>
             Portaal van atleet
           </Link>
           <button className="btn" onClick={() => load(true)} disabled={loading}>

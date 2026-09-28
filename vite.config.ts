@@ -3,9 +3,8 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: mode === 'demo' ? './' : '/',
   resolve: { alias: { '@shared': path.resolve(__dirname, 'shared') } },
   server: {
     port: 5173,
@@ -15,4 +14,4 @@ export default defineConfig(({ mode }) => ({
     },
   },
   test: { include: ['shared/**/*.test.ts'] },
-}))
+})

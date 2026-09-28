@@ -141,7 +141,7 @@ app.get(
   '/auth/intervals/callback',
   wrap(async (req, res) => {
     const { code, state, error } = req.query as Record<string, string>
-    if (error) return res.redirect(`${APP_URL}/?koppeling=geweigerd`)
+    if (error) return res.redirect(`${APP_URL}/app?koppeling=geweigerd`)
     const st = states.get(state)
     states.delete(state)
     if (!st || Date.now() - st.at > 15 * 60_000) throw httpError(400, 'Ongeldige of verlopen OAuth-state')
@@ -168,7 +168,7 @@ app.get(
       connectedAt: new Date().toISOString(),
     })
     cache.delete(id)
-    res.redirect(st.role === 'athlete' ? `${APP_URL}/portaal/${id}?gekoppeld=1` : `${APP_URL}/atleet/${id}`)
+    res.redirect(st.role === 'athlete' ? `${APP_URL}/app/portaal/${id}?gekoppeld=1` : `${APP_URL}/app/atleet/${id}`)
   }),
 )
 

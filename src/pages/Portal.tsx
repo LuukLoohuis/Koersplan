@@ -72,7 +72,7 @@ function Portal() {
             <div className="eyebrow">Jouw trainingsschema</div>
             <h1 className="text-[22px] font-semibold tracking-tight m-0 mt-0.5 truncate">Hoi {a.name.split(' ')[0]}</h1>
           </div>
-          <Link to={`/atleet/${a.id}`} className="btn btn-sm ml-auto no-underline">
+          <Link to={`/app/atleet/${a.id}`} className="btn btn-sm ml-auto no-underline">
             Coachweergave
           </Link>
         </header>

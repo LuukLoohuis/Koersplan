@@ -17,7 +17,7 @@ export function RosterPage() {
           <div className="eyebrow">Coachoverzicht</div>
           <h1 className="text-[26px] font-semibold tracking-tight m-0 mt-1">Je atleten</h1>
         </div>
-        <Link to="/koppelen" className="btn ml-auto no-underline">
+        <Link to="/app/koppelen" className="btn ml-auto no-underline">
           + Atleet koppelen
         </Link>
       </header>
@@ -48,9 +48,9 @@ export function RosterPage() {
             </thead>
             <tbody>
               {list.map((a) => (
-                <tr key={a.id} className="cursor-pointer" onClick={() => nav(`/atleet/${a.id}`)}>
+                <tr key={a.id} className="cursor-pointer" onClick={() => nav(`/app/atleet/${a.id}`)}>
                   <td>
-                    <Link to={`/atleet/${a.id}`} className="text-ink font-medium no-underline hover:underline">
+                    <Link to={`/app/atleet/${a.id}`} className="text-ink font-medium no-underline hover:underline">
                       {a.name}
                     </Link>
                     <div className="text-[11.5px] text-muted truncate max-w-[220px]">{a.goal ?? (a.source === 'demo' ? 'demo' : 'intervals.icu')}</div>
@@ -75,7 +75,7 @@ export function RosterPage() {
         </div>
         {athletes && !list.length && (
           <div className="p-8 text-center text-muted">
-            Nog geen atleten. <Link to="/koppelen">Koppel de eerste via intervals.icu</Link>.
+            Nog geen atleten. <Link to="/app/koppelen">Koppel de eerste via intervals.icu</Link>.
           </div>
         )}
       </Panel>
