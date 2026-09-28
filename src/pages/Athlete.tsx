@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import type { AthleteOverview, TrainingPlan } from '@shared/types'
 import { historyFromOverview, plansForForm } from '@shared/formSeries'
+import { allFeedback } from '@shared/review'
 import { fmtDate, fmtDuration, round, today } from '@shared/util'
 import { api } from '../api'
 import { PdChart } from '../components/charts'
 import { FormChart } from '../components/FormChart'
 import { Empty, FlagChips, KpiStrip, Panel, TabBar, tabPanelProps } from '../components/ui'
-import { PlanTab } from './PlanTab'
+import { PlanTab, useRefetchAfterInflight } from './PlanTab'
 
 type Tab = 'analyse' | 'plan' | 'feedback'
 
@@ -16,17 +17,23 @@ export function AthletePage() {
   const [ov, setOv] = useState<AthleteOverview | null>(null)
   const [plans, setPlans] = useState<TrainingPlan[]>([])
   const [err, setErr] = useState<string | null>(null)
-  const [tab, setTab] = useState<Tab>('analyse')
+  // tab in de URL, zodat "Koers wacht" in Mijn atleten direct naar Koers reviewen gaat (?tab=plan)
+  const [search, setSearch] = useSearchParams()
+  const tab: Tab = search.get('tab') === 'plan' ? 'plan' : search.get('tab') === 'feedback' ? 'feedback' : 'analyse'
+  const setTab = (t: Tab) => setSearch(t === 'analyse' ? {} : { tab: t }, { replace: true })
   const [loading, setLoading] = useState(false)
+  // alleen het laatst gevraagde lijstje koersen telt: een trage eerdere lading overschrijft geen nieuwere
+  const plansReq = useRef(0)
 
   const load = useCallback(
     async (fresh = false) => {
       setLoading(true)
       setErr(null)
+      const n = ++plansReq.current
       try {
         const [o, p] = await Promise.all([api.overview(id, fresh), api.plans(id)])
         setOv(o)
-        setPlans(p)
+        if (n === plansReq.current) setPlans(p)
       } catch (e) {
         setErr((e as Error).message)
       } finally {
@@ -37,9 +44,15 @@ export function AthletePage() {
   )
   useEffect(() => {
     setOv(null)
-    setTab('analyse')
     load()
   }, [load])
+  useRefetchAfterInflight(id, () => {
+    const n = ++plansReq.current
+    api.plans(id).then(
+      (p) => n === plansReq.current && setPlans(p),
+      () => {},
+    )
+  })
 
   if (err)
     return (
@@ -75,7 +88,7 @@ export function AthletePage() {
       {a.flags.length > 0 && (
         <div className="flex items-center gap-2 -mt-1">
           <span className="eyebrow">Aandacht</span>
-          <FlagChips flags={a.flags} />
+          <FlagChips flags={a.flags} rampRate={a.rampRate} />
         </div>
       )}
 
@@ -205,7 +218,8 @@ function Analyse({ ov, plans }: { ov: AthleteOverview; plans: TrainingPlan[] }) 
 }
 
 function FeedbackList({ plans }: { plans: TrainingPlan[] }) {
-  const items = plans.flatMap((p) => p.workouts.filter((w) => w.feedback).map((w) => ({ p, w })))
+  // uit het logboek: ook feedback op ritten die de coach na bevestigen verplaatste of weghaalde
+  const items = allFeedback(plans)
   if (!items.length) return <Empty>Nog geen feedback. Atleten geven RPE en een opmerking per training in hun portaal.</Empty>
   return (
     <Panel title="Feedback van de atleet" pad={false}>
@@ -220,15 +234,15 @@ function FeedbackList({ plans }: { plans: TrainingPlan[] }) {
           </tr>
         </thead>
         <tbody>
-          {items.map(({ w }) => (
-            <tr key={w.id}>
-              <td className="text-muted">{fmtDate(w.date, true)}</td>
-              <td>{w.name}</td>
-              <td className={`num text-right ${w.feedback!.rpe >= 9 ? 'text-crit' : ''}`}>{w.feedback!.rpe}</td>
+          {items.map((r) => (
+            <tr key={`${r.workoutId}|${r.date}`}>
+              <td className="text-muted">{fmtDate(r.date, true)}</td>
+              <td>{r.name}</td>
+              <td className={`num text-right ${r.feedback.rpe >= 9 ? 'text-crit' : ''}`}>{r.feedback.rpe}</td>
               <td>
-                <span className={`chip ${w.feedback!.feel === 'kapot' ? 'chip-crit' : w.feedback!.feel === 'zwaar' ? 'chip-warn' : 'chip-good'}`}>{w.feedback!.feel}</span>
+                <span className={`chip ${r.feedback.feel === 'kapot' ? 'chip-crit' : r.feedback.feel === 'zwaar' ? 'chip-warn' : 'chip-good'}`}>{r.feedback.feel}</span>
               </td>
-              <td className="whitespace-normal text-muted max-w-[420px]">{w.feedback!.comment}</td>
+              <td className="whitespace-normal text-muted max-w-[420px]">{r.feedback.comment}</td>
             </tr>
           ))}
         </tbody>
