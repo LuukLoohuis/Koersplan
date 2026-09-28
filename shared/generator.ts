@@ -2,6 +2,7 @@ import type { AthleteSummary, GenerateRequest, PlanWeek, Section, TrainingPlan, 
 import { TEMPLATES, type TemplateKey } from './library'
 import { workoutMetrics } from './metrics'
 import { addDays, clamp, DAY_LONG, mondayOf, round, today, uid } from './util'
+import { cloneWorkouts } from './review'
 
 /**
  * Regelgebaseerde blokgenerator. Wordt gebruikt als er geen Claude API-key is,
@@ -73,27 +74,35 @@ function makeWorkout(date: string, key: TemplateKey, p: number, mainMin?: number
   }
 }
 
-function mainStepSec(sections: Section[]): number {
-  let best = 0
-  for (const s of sections) if (s.repeat === 1 && s.steps.length === 1) best = Math.max(best, s.steps[0].durationSec)
-  return best
-}
-
-/** Past de hoofdduur van een duur-/herstelworkout aan (de sectie met de langste stap). */
-export function setMainDuration(sections: Section[], minutes: number): Section[] {
+/**
+ * De hoofdmoot van een duurachtige rit: de langste sectie met één constante stap die geen
+ * warming-up of cooling-down is. Zo kan het aanpassen van de duur nooit de warming-up oprekken.
+ */
+export function mainSectionIndex(sections: Section[]): number {
   let best = -1
   let bestDur = 0
   sections.forEach((s, i) => {
-    const d = s.steps.reduce((a, x) => a + x.durationSec, 0) * s.repeat
-    if (s.repeat === 1 && s.steps.length === 1 && d > bestDur) {
+    const st = s.steps[0]
+    if (s.repeat !== 1 || s.steps.length !== 1 || st.kind !== 'steady' || /warm|cool|inrij|uitrij/i.test(s.name)) return
+    if (st.durationSec > bestDur) {
       best = i
-      bestDur = d
+      bestDur = st.durationSec
     }
   })
+  return best
+}
+
+/** Duur van de hoofdmoot in seconden (0 als er geen is). */
+export function mainStepSec(sections: Section[]): number {
+  const i = mainSectionIndex(sections)
+  return i < 0 ? 0 : sections[i].steps[0].durationSec
+}
+
+/** Past de hoofdmoot van een duur-/herstelworkout aan. */
+export function setMainDuration(sections: Section[], minutes: number): Section[] {
+  const best = mainSectionIndex(sections)
   if (best < 0) return sections
-  return sections.map((s, i) =>
-    i === best ? { ...s, steps: [{ ...s.steps[0], durationSec: Math.round(minutes) * 60 }] } : s,
-  )
+  return sections.map((s, i) => (i === best ? { ...s, steps: [{ ...s.steps[0], durationSec: Math.round(minutes) * 60 }] } : s))
 }
 
 export function generateRuleBased(req: GenerateRequest, athlete: AthleteSummary): TrainingPlan {
@@ -228,6 +237,8 @@ export function generateRuleBased(req: GenerateRequest, athlete: AthleteSummary)
     status: 'concept',
     source: 'regels',
     createdAt: new Date().toISOString(),
+    aiWorkouts: cloneWorkouts(workouts),
+    request: req,
   }
 }
 

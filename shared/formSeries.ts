@@ -1,6 +1,7 @@
 import type { AthleteOverview, TrainingPlan, Workout } from './types'
 import { projectPmc, workoutMetrics, zoneIndex } from './metrics'
 import { addDays, daysBetween, round } from './util'
+import { confirmedDays } from './review'
 
 // Dagreeks voor de vormgrafiek: historie (conditie/vermoeidheid/vorm + belasting)
 // en vanaf vandaag de projecties van de AI-koers en van de koers na de coach.
@@ -160,19 +161,19 @@ export function plannedDays(workouts: Workout[], ftp: number, extra: AthleteOver
 
 /**
  * Welke koers is van wie. Een concept is een voorstel dat nog niet bevestigd is;
- * `planAiSource` zegt wie het maakte (AI of de regelgenerator). Een gepubliceerd blok
- * is door de coach bevestigd. De atleet ziet alleen bevestigde koersen: concepten
- * gaan pas naar de atleet als de coach publiceert. Beide koersen krijgen de reeds
- * geplande intervals.icu-belasting erbij.
+ * `planAiSource` zegt wie het maakte (AI of de regelgenerator). De bevestigde koersen staan per dag:
+ * de nieuwste koers die een dag dekt telt (wekelijkse koersen volgen elkaar op). De atleet ziet geen
+ * concepten en bij een gewijzigde koers nog de bevestigde versie; concepten en bijsturing gaan pas
+ * naar de atleet als de coach (opnieuw) bevestigt. Alles krijgt de reeds geplande intervals.icu-belasting erbij.
  */
 export function plansForForm(ov: AthleteOverview, plans: TrainingPlan[], audience: 'coach' | 'atleet' = 'coach') {
   const concept = audience === 'coach' ? plans.find((p) => p.status === 'concept') : undefined
-  const confirmed = plans.find((p) => p.status !== 'concept')
   const ftp = ov.athlete.ftp
+  const confirmed = confirmedDays(plans, audience).map((d) => d.workout)
   return {
     planAi: concept ? plannedDays(concept.workouts, ftp, ov.plannedLoad) : [],
     planAiSource: concept?.source ?? 'ai',
-    planCoach: confirmed ? plannedDays(confirmed.workouts, ftp, ov.plannedLoad) : [],
+    planCoach: confirmed.length ? plannedDays(confirmed, ftp, ov.plannedLoad) : [],
   }
 }
 

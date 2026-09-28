@@ -1,6 +1,7 @@
 import type { AthleteSummary, GenerateRequest, Section, Step, StepKind, Stimulus, TrainingPlan, Workout } from './types'
 import { workoutMetrics } from './metrics'
 import { addDays, clamp, mondayOf, round, uid } from './util'
+import { cloneWorkouts } from './review'
 
 /** Vorm waarin de AI (Claude) een blok teruggeeft. Percentages als gehele getallen. */
 export interface AiPlan {
@@ -102,5 +103,7 @@ export function normalizeAiPlan(ai: AiPlan, req: GenerateRequest, athlete: Athle
     status: 'concept',
     source: 'ai',
     createdAt: new Date().toISOString(),
+    aiWorkouts: cloneWorkouts(workouts),
+    request: req,
   }
 }
