@@ -23,7 +23,8 @@ export function summarize(i: Input): AthleteSummary {
   const lastActivity = i.activities[0]?.date
   const flags: string[] = []
 
-  if (tsb < -25) flags.push('Hoge vermoeidheid')
+  // gelijk aan de vormzone "Hoog risico" (design system: < −30); −30…−10 is "Optimaal"
+  if (tsb < -30) flags.push('Hoge vermoeidheid')
   else if (tsb > 15) flags.push('Fris: ruimte voor prikkel')
   if (rampRate > 8) flags.push('Snelle opbouw')
   if (lastActivity && daysBetween(lastActivity, today()) >= 5) flags.push(`${daysBetween(lastActivity, today())} dagen geen training`)

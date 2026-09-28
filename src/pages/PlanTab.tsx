@@ -320,7 +320,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
               <span className={`chip ${plan.status === 'gepubliceerd' ? 'chip-good' : plan.status === 'gewijzigd' ? 'chip-warn' : ''}`}>
                 {plan.status === 'gepubliceerd' ? 'Gepubliceerd' : plan.status === 'gewijzigd' ? 'Gewijzigd na publiceren' : 'Concept'}
               </span>
-              <span className="chip chip-ai">{plan.source === 'ai' ? 'AI-concept' : 'Regelgebaseerd'}</span>
+              {plan.source === 'ai' ? <span className="chip chip-ai">AI-concept</span> : <span className="chip">Regelgebaseerd</span>}
               <span className="text-[11.5px] text-muted">{saving === 'saving' ? 'Opslaan…' : saving === 'saved' ? 'Opgeslagen' : ''}</span>
             </div>
             <input
@@ -409,6 +409,7 @@ function PlanView({ ov, plan, onChange, onDelete }: { ov: AthleteOverview; plan:
           compact
           history={history}
           planAi={plan.status === 'concept' ? planned : []}
+          planAiSource={plan.source}
           planCoach={plan.status === 'concept' ? [] : planned}
           goals={ov.goals}
           ftp={ftp}

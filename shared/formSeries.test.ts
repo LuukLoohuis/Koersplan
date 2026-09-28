@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { buildFormSeries, historyFromOverview, plannedDays, plansForForm, weeklyLoad, weeklyRamp, type HistoryDay } from './formSeries'
 import { projectPmc } from './metrics'
 import { demoOverview } from './demoData'
+import { summarize } from './summary'
 import { generateRuleBased } from './generator'
 import { addDays, mondayOf, today } from './util'
 
@@ -78,6 +79,43 @@ describe('vormreeks uit de app-data', () => {
     expect(planAi).toEqual(plannedDays(concept.workouts, ov.athlete.ftp))
     expect(planCoach.length).toBeGreaterThan(0)
     expect(plansForForm(ov, [published]).planAi).toEqual([])
+  })
+
+  it('de bron van het voorstel volgt de maker, niet de status', () => {
+    const ov = demoOverview('demo-sanne')!
+    const req = { goal: 'x', startDate: mondayOf(today()), weeks: 2, hoursPerWeek: 8, availableDays: [1, 3, 5, 6], longRideDay: 6, focus: 'basis' as const, notes: '' }
+    const regels = generateRuleBased(req, ov.athlete)
+    expect(regels.source).toBe('regels')
+    expect(plansForForm(ov, [regels]).planAiSource).toBe('regels')
+    expect(plansForForm(ov, [{ ...regels, source: 'ai' as const }]).planAiSource).toBe('ai')
+  })
+
+  it('de atleet ziet geen concepten, alleen bevestigde koersen', () => {
+    const ov = demoOverview('demo-sanne')!
+    const req = { goal: 'x', startDate: mondayOf(today()), weeks: 2, hoursPerWeek: 8, availableDays: [1, 3, 5, 6], longRideDay: 6, focus: 'basis' as const, notes: '' }
+    const concept = generateRuleBased(req, ov.athlete)
+    const published = { ...generateRuleBased(req, ov.athlete), status: 'gepubliceerd' as const }
+    const atleet = plansForForm(ov, [concept, published], 'atleet')
+    expect(atleet.planAi).toEqual([])
+    expect(atleet.planCoach.length).toBeGreaterThan(0)
+    expect(plansForForm(ov, [concept], 'atleet').planAi).toEqual([])
+  })
+})
+
+describe('signalen en vlaggen', () => {
+  it('demo-notities zijn signalen uit de data, geen AI', () => {
+    for (const id of ['demo-sanne', 'demo-joris', 'demo-mila']) {
+      const notes = demoOverview(id)!.annotations ?? []
+      expect(notes.filter((n) => n.kind === 'ai')).toEqual([])
+    }
+    expect(demoOverview('demo-joris')!.annotations!.some((n) => n.kind === 'signaal')).toBe(true)
+  })
+
+  it('"Hoge vermoeidheid" pas onder −30, gelijk aan de zone Hoog risico', () => {
+    const base = { id: 'x', name: 'x', source: 'demo' as const, ftp: 250, activities: [], model: null }
+    const at = (tsb: number) => summarize({ ...base, wellness: [{ date: today(), ctl: 60, atl: 60 - tsb }] }).flags
+    expect(at(-28)).not.toContain('Hoge vermoeidheid')
+    expect(at(-31)).toContain('Hoge vermoeidheid')
   })
 })
 

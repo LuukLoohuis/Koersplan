@@ -159,16 +159,19 @@ export function plannedDays(workouts: Workout[], ftp: number, extra: AthleteOver
 }
 
 /**
- * Welke koers is van wie: een concept is door de AI uitgezet en nog niet bevestigd;
- * een gepubliceerd blok is door de coach bevestigd. Beide krijgen de reeds geplande
- * intervals.icu-belasting erbij.
+ * Welke koers is van wie. Een concept is een voorstel dat nog niet bevestigd is;
+ * `planAiSource` zegt wie het maakte (AI of de regelgenerator). Een gepubliceerd blok
+ * is door de coach bevestigd. De atleet ziet alleen bevestigde koersen: concepten
+ * gaan pas naar de atleet als de coach publiceert. Beide koersen krijgen de reeds
+ * geplande intervals.icu-belasting erbij.
  */
-export function plansForForm(ov: AthleteOverview, plans: TrainingPlan[]) {
-  const concept = plans.find((p) => p.status === 'concept')
+export function plansForForm(ov: AthleteOverview, plans: TrainingPlan[], audience: 'coach' | 'atleet' = 'coach') {
+  const concept = audience === 'coach' ? plans.find((p) => p.status === 'concept') : undefined
   const confirmed = plans.find((p) => p.status !== 'concept')
   const ftp = ov.athlete.ftp
   return {
     planAi: concept ? plannedDays(concept.workouts, ftp, ov.plannedLoad) : [],
+    planAiSource: concept?.source ?? 'ai',
     planCoach: confirmed ? plannedDays(confirmed.workouts, ftp, ov.plannedLoad) : [],
   }
 }
