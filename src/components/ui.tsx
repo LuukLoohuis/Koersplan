@@ -159,3 +159,12 @@ export function Toast({ tone = 'good', children, onClose }: { tone?: 'good' | 'w
     </div>
   )
 }
+
+/** Woordmerk in tekst tot er een SVG-logo is (de PNG's hebben een grijzige grond): kapitalen, tracking .18em, de Q in goud. */
+export function Wordmark({ className = 'text-[15px]' }: { className?: string }) {
+  return (
+    <span className={`font-display font-bold tracking-[0.18em] ${className}`}>
+      VELORI<span className="text-accent-text">Q</span>
+    </span>
+  )
+}

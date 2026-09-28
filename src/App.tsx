@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { BrowserRouter, MemoryRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import type { AppConfig, AthleteSummary } from '@shared/types'
-import { api, STATIC_DEMO } from './api'
+import { api } from './api'
 import { RosterPage } from './pages/Roster'
 import { AthletePage } from './pages/Athlete'
 import { PortalPage } from './pages/Portal'
 import { ConnectPage } from './pages/Connect'
+import { HomePage } from './pages/Home'
 import { formState } from './lib/theme'
+import { Wordmark } from './components/ui'
 
 interface Ctx {
   config: AppConfig | null
@@ -25,26 +27,28 @@ export default function App() {
     reloadAthletes()
   }, [])
 
-  const Router = STATIC_DEMO ? MemoryRouter : BrowserRouter
+  // Homepagina op /, de app onder /app. Op Vercel vangt vercel.json /app/* op (SPA-fallback).
   return (
     <AppCtx.Provider value={{ config, athletes, reloadAthletes }}>
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route path="/portaal/:id" element={<PortalPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/app/portaal/:id" element={<PortalPage />} />
           <Route
-            path="*"
+            path="/app/*"
             element={
               <Shell>
                 <Routes>
-                  <Route path="/" element={<RosterPage />} />
-                  <Route path="/atleet/:id" element={<AthletePage />} />
-                  <Route path="/koppelen" element={<ConnectPage />} />
+                  <Route index element={<RosterPage />} />
+                  <Route path="atleet/:id" element={<AthletePage />} />
+                  <Route path="koppelen" element={<ConnectPage />} />
                 </Routes>
               </Shell>
             }
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </AppCtx.Provider>
   )
 }
@@ -59,7 +63,7 @@ function Shell({ children }: { children: ReactNode }) {
     <div className="min-h-screen md:grid md:grid-cols-[248px_1fr]">
       <aside className="border-b md:border-b-0 md:border-r border-line bg-surface md:sticky md:top-0 md:h-screen flex flex-col">
         <div className="flex items-center justify-between px-4 h-14 md:h-16">
-          <NavLink to="/" className="flex items-center gap-2.5 no-underline text-ink">
+          <NavLink to="/app" className="flex items-center gap-2.5 no-underline text-ink">
             <Wordmark />
             <span className="chip !h-5 !text-[10.5px]">coach</span>
           </NavLink>
@@ -68,7 +72,7 @@ function Shell({ children }: { children: ReactNode }) {
           </button>
         </div>
         <nav className={`${open ? 'block' : 'hidden'} md:flex flex-col flex-1 min-h-0 px-2 pb-3`}>
-          <NavLink to="/" end className={navCls}>
+          <NavLink to="/app" end className={navCls}>
             Overzicht
           </NavLink>
           <div className="eyebrow px-3 mt-4 mb-1.5">Atleten</div>
@@ -77,7 +81,7 @@ function Shell({ children }: { children: ReactNode }) {
             {athletes?.map((a) => {
               const st = formState(a.tsb)
               return (
-                <NavLink key={a.id} to={`/atleet/${a.id}`} className={navCls}>
+                <NavLink key={a.id} to={`/app/atleet/${a.id}`} className={navCls}>
                   <span className="truncate">{a.name}</span>
                   <span className="ml-auto flex items-center gap-1.5">
                     {a.flags.length > 0 && <span className="w-1.5 h-1.5 rounded-full bg-warn" title={a.flags.join(', ')} />}
@@ -87,7 +91,7 @@ function Shell({ children }: { children: ReactNode }) {
               )
             })}
           </div>
-          <NavLink to="/koppelen" className={navCls}>
+          <NavLink to="/app/koppelen" className={navCls}>
             + Atleet koppelen
           </NavLink>
           <div className="px-3 pt-3 mt-2 border-t border-line text-[11px] text-muted leading-relaxed">
@@ -110,12 +114,3 @@ function Shell({ children }: { children: ReactNode }) {
 
 const navCls = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-2 h-9 px-3 rounded-lg text-[13px] no-underline ${isActive ? 'bg-raised text-ink font-medium' : 'text-muted hover:bg-raised'}`
-
-function Wordmark() {
-  // Woordmerk in tekst tot er een SVG-logo is: kapitalen, tracking .18em, de Q in goud
-  return (
-    <span className="font-display font-bold text-[15px] tracking-[0.18em]">
-      VELORI<span className="text-accent-text">Q</span>
-    </span>
-  )
-}
