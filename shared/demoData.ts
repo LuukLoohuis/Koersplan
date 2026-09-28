@@ -125,10 +125,13 @@ export function demoOverview(id: string): AthleteOverview | null {
     const base = p.loadFrom + ((p.loadTo - p.loadFrom) * i) / DAYS
     const blockWeek = Math.floor(i / 7) % 4 // 3:1-ritme
     let factor = blockWeek === 3 ? 0.6 : 1 + blockWeek * 0.06
-    if (p.tail && i >= DAYS - p.tail.days) factor *= p.tail.factor
+    const tail = p.tail && i >= DAYS - p.tail.days ? p.tail : undefined
+    if (tail) factor *= tail.factor
+    // Overbelast (factor > 1): elke dag rijden, anders hangt de vermoeidheid af van de weekdag van vandaag
+    const rides = tail && tail.factor > 1 ? true : !p.restDays.includes(wd) && r() > 0.06
     let load = 0
     let kind: keyof typeof NAMES = 'duur'
-    if (!p.restDays.includes(wd) && r() > 0.06) {
+    if (rides) {
       const weekly = base * 7 * factor
       const share = wd === 5 || wd === 6 ? 0.26 : wd === 1 || wd === 3 ? 0.17 : 0.1
       load = weekly * share * (0.8 + r() * 0.4)
