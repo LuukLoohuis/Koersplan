@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fitCpModel, projectPmc, workoutMetrics } from './metrics'
 import { sec, st, ramp, TEMPLATES } from './library'
 import { sectionsToText, toIntervalsEvents, sanitizeNote } from './intervalsText'
@@ -121,7 +121,13 @@ describe('AI-normalisatie', () => {
 })
 
 describe('demo', () => {
-  it('Joris is vermoeid, Mila heeft een gat', () => {
+  afterEach(() => vi.useRealTimers())
+
+  // De demo rekent terug vanaf vandaag en rustdagen hangen aan de weekdag: elke dag van de week proberen
+  const week = Array.from({ length: 7 }, (_, i) => addDays('2026-09-28', i))
+
+  it.each(week)('Joris is vermoeid, Mila heeft een gat (vandaag %s)', (d) => {
+    vi.setSystemTime(new Date(`${d}T12:00:00`))
     const j = demoOverview('demo-joris')!.athlete
     const m = demoOverview('demo-mila')!.athlete
     expect(j.tsb).toBeLessThan(-20)
