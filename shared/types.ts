@@ -242,4 +242,14 @@ export interface AppConfig {
   aiModel?: string
   /** Naam van de coach ("Bevestigd door Ruud") */
   coachName?: string
+  /** Supabase Auth: gezet = inloggen verplicht. Alleen de publishable key, die is voor de browser. */
+  auth?: { url: string; publishableKey: string }
+}
+
+/** De ingelogde gebruiker (GET /api/me). */
+export interface Me {
+  id: string
+  email: string
+  role: 'admin' | 'coach' | 'athlete'
+  name?: string
 }

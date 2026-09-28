@@ -13,6 +13,12 @@
 [data-theme='light'] {
   color-scheme: light;
 }
+/* Donker eiland op een lichte pagina (links op Inloggen): bundle.css kiest dan de lichte
+   hoogtelijnen, omdat <html> licht is. Hier weer de donkere lijnkleur uit bundle.css. */
+[data-theme='light'] [data-theme='dark'].contour::before,
+[data-theme='light'] [data-theme='dark'] .contour::before {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'><g fill='none' stroke='%231e3a41' stroke-width='1'><path d='M-20 150 C 40 110, 80 170, 140 130 S 240 90, 340 120'/><path d='M-20 120 C 40 80, 90 140, 150 100 S 250 60, 340 90'/><path d='M-20 90 C 50 50, 100 110, 160 70 S 260 30, 340 60'/><path d='M-20 180 C 40 140, 80 200, 140 160 S 240 120, 340 150'/><path d='M-20 60 C 50 20, 110 80, 170 40 S 270 0, 340 30'/><path d='M-20 30 C 60 -10, 120 50, 180 10 S 280 -30, 340 0'/></g></svg>");
+}
 
 @theme inline {
   --color-bg: var(--bg);

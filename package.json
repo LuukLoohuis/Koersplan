@@ -12,10 +12,13 @@
     "start": "NODE_ENV=production tsx server/index.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "check": "tsx scripts/check-intervals.ts"
+    "check": "tsx scripts/check-intervals.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "import:lokaal": "tsx scripts/import-local.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
+    "@supabase/supabase-js": "^2.117.2",
     "@visx/curve": "^4.0.0",
     "@visx/event": "^4.0.0",
     "@visx/scale": "^4.0.0",
@@ -36,6 +39,7 @@
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
     "concurrently": "^10.0.5",
+    "postgres": "^3.4.9",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
