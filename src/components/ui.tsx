@@ -259,7 +259,7 @@ const TONES = { good: 'bg-good-soft text-good', warn: 'bg-warn-soft text-warn', 
 
 export function Toast({ tone = 'good', children, onClose }: { tone?: 'good' | 'warn' | 'crit'; children: ReactNode; onClose?: () => void }) {
   return (
-    <div className={`toast flex items-start gap-3 rounded-lg px-3.5 py-2.5 text-[13px] ${TONES[tone]}`} role="status">
+    <div className={`flex items-start gap-3 rounded-lg px-3.5 py-2.5 text-[13px] ${TONES[tone]}`} role="status">
       <div className="flex-1">{children}</div>
       {onClose && (
         <button className="btn btn-sm btn-ghost !h-6 !px-1.5" onClick={onClose} aria-label="Sluiten">
