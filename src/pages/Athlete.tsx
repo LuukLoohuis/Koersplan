@@ -103,7 +103,7 @@ export function AthletePage() {
         onChange={setTab}
       />
 
-      <div {...tabPanelProps('atleet', tab)}>
+      <div key={tab} {...tabPanelProps('atleet', tab)}>
         {tab === 'analyse' && <Analyse ov={ov} plans={plans} />}
         {tab === 'plan' && <PlanTab ov={ov} plans={plans} setPlans={setPlans} />}
         {tab === 'feedback' && <FeedbackList plans={plans} />}
