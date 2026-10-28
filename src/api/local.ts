@@ -25,6 +25,9 @@ export const localApi: Api = {
   async config() {
     return { mode: 'static-demo', oauthEnabled: false, apiKeyEnabled: false, aiEnabled: false, coachName: 'Ruud' }
   },
+  async me() {
+    return { id: 'demo', email: 'demo', role: 'coach', name: 'Ruud' }
+  },
   async athletes() {
     return DEMO_IDS.map((id) => {
       const o = demoOverview(id)!
@@ -38,6 +41,12 @@ export const localApi: Api = {
   },
   async addAthlete() {
     throw new Error('In de demo kun je geen echte atleten koppelen. Draai de app lokaal met je intervals.icu-gegevens.')
+  },
+  async intervalsConnect() {
+    throw new Error('In de demo kun je geen echte atleten koppelen.')
+  },
+  async intervalsInvite() {
+    throw new Error('In de demo kun je geen echte atleten koppelen.')
   },
   async plans(athleteId) {
     return plansOf(athleteId).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(clone)

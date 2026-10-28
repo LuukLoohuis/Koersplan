@@ -10,6 +10,8 @@ import { WorkoutProfile } from '../components/charts'
 import { FormChart } from '../components/FormChart'
 import { initialsOf, TabBar, Toast, tabPanelProps } from '../components/ui'
 import { ThemeContext } from '../lib/theme'
+import { signOut } from '../lib/auth'
+import { useApp } from '../App'
 
 /** Portaal van de atleet: schema, uitleg van de coach en feedback per training. Altijd in het donkere thema. */
 export function PortalPage() {
@@ -24,6 +26,7 @@ export function PortalPage() {
 
 function Portal() {
   const { id = '' } = useParams()
+  const { me } = useApp()
   const [ov, setOv] = useState<AthleteOverview | null>(null)
   const [plans, setPlans] = useState<TrainingPlan[]>([])
   const [search, setSearch] = useSearchParams()
@@ -73,9 +76,15 @@ function Portal() {
             <div className="eyebrow">Jouw trainingsschema</div>
             <h1 className="text-[22px] font-semibold tracking-tight m-0 mt-0.5 truncate">Hoi {a.name.split(' ')[0]}</h1>
           </div>
-          <Link to={`/app/atleet/${a.id}`} className="btn btn-sm ml-auto no-underline">
-            Coachweergave
-          </Link>
+          {me?.role === 'athlete' ? (
+            <button className="btn btn-sm btn-ghost ml-auto" onClick={() => void signOut()}>
+              Uitloggen
+            </button>
+          ) : (
+            <Link to={`/app/atleet/${a.id}`} className="btn btn-sm ml-auto no-underline">
+              Coachweergave
+            </Link>
+          )}
         </header>
 
         <TabBar

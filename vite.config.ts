@@ -13,5 +13,5 @@ export default defineConfig({
       '/auth': 'http://localhost:8787',
     },
   },
-  test: { include: ['shared/**/*.test.ts'] },
+  test: { include: ['shared/**/*.test.ts', 'server/**/*.test.ts'] },
 })

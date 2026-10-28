@@ -32,6 +32,18 @@ Voor de API-key-modus heb je geen domein en geen OAuth-app nodig.
 
 Heb je later wel een domein? Zet dan bij je OAuth-app een extra redirect-URL, bijvoorbeeld `https://jouwdomein.nl/auth/intervals/callback`. Wildcards werken niet bij intervals.icu, dus elke URL moet je exact opgeven.
 
+## Login en opslag (Supabase)
+
+Zonder Supabase draait de app zonder login en bewaart hij alles in `data/db.json`. Met Supabase moet iedereen inloggen, staat alles in Postgres en zijn Intervals-tokens versleuteld.
+
+1. Maak een Supabase-project in regio Frankfurt. Zet onder Authentication → URL Configuration de Site URL op `http://localhost:5173` en voeg `http://localhost:5173/**` toe aan de Redirect URLs. Zet onder Sign In / Providers "Allow new users to sign up" uit.
+2. Vul de `SUPABASE_*`-regels, `TOKEN_ENCRYPTION_KEY` en `ADMIN_EMAILS` in `.env` in (zie `.env.example`).
+3. Draai `npm run migrate`. Die maakt de tabellen uit `supabase/migrations/`.
+4. Had je al data in `data/db.json`? Draai `npm run import:lokaal`.
+5. Start `npm run dev`. De server maakt de accounts uit `ADMIN_EMAILS` aan. Log in op http://localhost:5173/app met een e-maillink.
+
+Rollen staan in `server/access.ts`: een admin ziet alles, een coach ziet zijn eigen atleten en de demo, een atleet alleen zichzelf en geen voorstellen die nog bij de coach liggen. De browser leest nooit rechtstreeks uit de database: alleen de server, die per verzoek de rol controleert. In productie (`NODE_ENV=production`) start de server niet zonder Supabase.
+
 ## Hoe het werkt
 
 ```
@@ -71,7 +83,7 @@ intervals.icu ──(OAuth / API-key)──▶ server/intervals.ts ──▶ Ath
 
 ## Naar productie (fase 1 → echt product)
 
-1. **Opslag en login:** vervang `server/store.ts` (een JSON-bestand) door Supabase. Maak tabellen voor `coaches`, `athletes` (met versleutelde tokens), `plans`, `workouts` en `feedback`. Gebruik Supabase Auth, zodat coaches en atleten alleen hun eigen data zien. Nu heeft de app nog geen login.
+1. **Login voor coaches en atleten:** admins en de opslag in Supabase staan (zie hierboven). Nog te doen: coaches uitnodigen vanuit een beheerscherm (`design-system/components/AdminCoaches`) en atleten laten inloggen, gekoppeld aan hun Intervals-account.
 2. **Hosting:** zet de Express-routes om naar Vercel-functies, of draai de server op Fly.io of Railway.
 3. **Webhooks van intervals.icu** (`ACTIVITY_UPLOADED`, `CALENDAR_UPDATED`): na elke rit de analyse bijwerken en afwijkingen melden, zoals een gemiste training of een RPE van 9 of hoger.
 4. **AVG:** HRV, hartslag en slaap zijn gezondheidsgegevens. Je hebt nodig: expliciete toestemming, een verwerkersovereenkomst (Anthropic, hosting), hosting in de EU en een privacyverklaring. Train geen modellen op gebruikersdata.
